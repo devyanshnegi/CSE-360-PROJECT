@@ -73,25 +73,6 @@ class DatabaseHelper {
 		}
 	}
 	
-//	public boolean isOTPValid(String otp) {
-//	    String query = "SELECT COUNT(*) FROM otp WHERE password = ?";
-//	    try (PreparedStatement pstmt = connection.prepareStatement(query)) {
-//	        
-//	        pstmt.setString(1, otp);
-//	        ResultSet rs = pstmt.executeQuery();
-//	        
-//	        if (rs.next()) {
-//	            // If the count is greater than 0, the user exists
-//	            if (rs.getInt(1) > 0) {
-//	            	return rs.getBoolean("flag");
-//	            }
-//	        }
-//	    } catch (SQLException e) {
-//	        e.printStackTrace();
-//	    }
-//	    return false; // If an error occurs, assume user doesn't exist
-//	}
-	
 	public boolean isOTPValid(int otp) {
 	    String query = "SELECT COUNT(*) FROM cse360users WHERE otp = ?";
 	    try (PreparedStatement pstmt = connection.prepareStatement(query)) {

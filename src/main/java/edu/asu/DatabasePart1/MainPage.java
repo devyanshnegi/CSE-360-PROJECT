@@ -5,6 +5,9 @@ import javafx.application.Application;
 
 import java.time.format.DateTimeFormatter;
 import java.time.LocalDateTime;
+import java.util.Random;
+import java.util.Scanner;
+import java.sql.SQLException;
 
 import javafx.scene.Scene;
 import javafx.scene.layout.Pane;
@@ -46,14 +49,17 @@ public class MainPage extends Application {
 	public HomePage HomeGui;
 	public RegisterPage RegisterGui;
 	
-	
+	private static final DatabaseHelper databaseHelper = new DatabaseHelper();
+	private static final Scanner scanner = new Scanner(System.in);
+	private static final Random rand = new Random();
 	
 	public MainPage() {
 
 	}
 
+	@Override
 	public void start(Stage theStage) throws Exception {
-
+		
 		theStage.setTitle("Choose or Register"); // Label the stage (a window)
 
 		Pane StartPane = new Pane(); // Create a pane within the window
@@ -98,10 +104,14 @@ public class MainPage extends Application {
 		
 		theStage.setScene(StartScene);
 		theStage.show();
-
+		
 	}
 
 	public static void main(String[] args) { // This method may not be required
 		launch(args); // for all JavaFX applications using
 	} 
+	
+	public void setupAdministrator() {
+		
+	}
 }

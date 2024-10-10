@@ -68,7 +68,7 @@ public class StartCSE360 {
 		String username = scanner.nextLine();
 		System.out.print("Enter Admin Password: ");
 		String password = scanner.nextLine();
-		databaseHelper.storeOTP(000000);
+//		databaseHelper.storeOTP(000000);
 		databaseHelper.register(username, password, 000000);
 		System.out.println("Administrator setup completed.");
 

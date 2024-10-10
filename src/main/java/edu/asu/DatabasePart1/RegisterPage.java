@@ -1,529 +1,3 @@
-//
-//package edu.asu.DatabasePart1;
-//
-//// JavaFX imports needed to support the Graphical User Interface
-//import javafx.geometry.Pos;  
-//import javafx.scene.control.Button;
-//import javafx.scene.control.Label;
-//import javafx.scene.control.TextField;
-//import javafx.scene.layout.Pane;
-//import javafx.scene.paint.Color;
-//import javafx.scene.text.Font;
-//import javafx.scene.text.FontPosture;
-//import javafx.scene.text.Text;
-//import javafx.scene.text.TextFlow;
-// 
-///**
-// * <p>
-// * UserInterface Class
-// * </p>
-// * 
-// * <p>
-// * Description: The Java/FX-based user interface testbed to develop and test UI
-// * ideas.
-// * </p>
-// * 
-// * <p>
-// * Copyright: Lynn Robert Carter © 2024
-// * </p>
-// * 
-// * @author Lynn Robert Carter
-// * 
-// * @version 1.00 2022-02-21 The JavaFX-based GUI for the implementation of a
-// *          testbed
-// * @version 2.00 2024-09-22 Updated for use at ASU
-// * 
-// */
-//
-//public class RegisterPage {
-//
-//	/**********************************************************************************************
-//	 * 
-//	 * Attributes
-//	 * 
-//	 **********************************************************************************************/
-//
-//	// These are the application values required by the Graphical User Interface
-//	// The names of the variables specify their function and each is initialize as
-//	// required
-//	private Label label_ApplicationTitle = new Label("Register");
-//	private Label label_Username = new Label("Enter the username here");
-//	private Label label_Password = new Label("Enter the password here");
-//	private Label label_Password_Confirm = new Label("Re-enter the password here");
-//	private Label label_Username_Validity = new Label("");
-//	private Label label_Password_Validity = new Label("");
-//	private Label label_Password_Confirm_Validity = new Label("");
-//	
-//	private TextField text_Username = new TextField();
-//	private TextField text_Password = new TextField();
-//	private TextField text_Password_Confirm = new TextField();
-//	
-//	private Button button_Submit = new Button("Submit");
-//	
-//	private PasswordEvaluator PwdEval = new PasswordEvaluator();
-//	private UserNameRecognizer UserNameEval = new UserNameRecognizer();
-//	
-//	private int WINDOW_WIDTH = 700;
-//
-//
-//	/**********************************************************************************************
-//	 * 
-//	 * Constructors
-//	 * 
-//	 **********************************************************************************************/
-//
-//	/**********
-//	 * This method initializes all of the elements of the graphical user interface.
-//	 * These assignments determine the location, size, font, color, and change and
-//	 * event handlers for each GUI object.
-//	 */
-//	public RegisterPage(Pane theRoot) {
-//
-//		// Label theScene with the name of the test bed, centered at the top of the pane
-//		setupLabelUI(label_ApplicationTitle, "Arial", 24, WINDOW_WIDTH, Pos.CENTER, 0, 10);
-//
-//		setupLabelUI(label_Username, "Arial", 14, WINDOW_WIDTH - 10, Pos.BASELINE_LEFT, 10,
-//				50);
-//		
-//		setupTextUI(text_Username, "Arial", 18, WINDOW_WIDTH - 20, Pos.BASELINE_LEFT, 10,
-//				70, true);
-//
-//		setupLabelUI(label_Username_Validity, "Arial", 14, WINDOW_WIDTH - 10, Pos.BASELINE_LEFT, 10,
-//				115);
-//
-//		// Label the password input field with a title just above it, left aligned
-//		setupLabelUI(label_Password, "Arial", 14, WINDOW_WIDTH - 10, Pos.BASELINE_LEFT, 10,
-//				150);
-//		
-//		setupTextUI(text_Password, "Arial", 18, WINDOW_WIDTH - 20, Pos.BASELINE_LEFT, 10,
-//				170, true);
-//		
-//		setupLabelUI(label_Password_Validity, "Arial", 14, WINDOW_WIDTH - 10, Pos.BASELINE_LEFT, 10,
-//				215);
-//
-//		// Label the password input field with a title just above it, left aligned
-//		setupLabelUI(label_Password_Confirm, "Arial", 14, WINDOW_WIDTH - 10,
-//				Pos.BASELINE_LEFT, 10, 250);
-//
-//		setupTextUI(text_Password_Confirm, "Arial", 18, WINDOW_WIDTH - 20,
-//				Pos.BASELINE_LEFT, 10, 270, true);
-//		
-//		setupLabelUI(label_Password_Confirm_Validity, "Arial", 14, WINDOW_WIDTH - 10, Pos.BASELINE_LEFT, 10,
-//				315);
-//
-//		text_Username.textProperty().addListener((observable, oldValue, newValue) -> {
-//			setUsername();
-//		});
-//		text_Password.textProperty().addListener((observable, oldValue, newValue) -> {
-//			setPassword();
-//		});
-//		
-//		text_Password_Confirm.textProperty().addListener((observable, oldValue, newValue) -> {
-//			setPasswordConfirm();
-//		});
-//		
-//		setupButtonUI(button_Submit, "Arial",14 ,100, Pos.CENTER, WINDOW_WIDTH/2-50, 400);
-//		
-//
-//		// Place all of the just-initialized GUI elements into the pane, whether they
-//		// have text or not
-//		theRoot.getChildren().addAll(label_ApplicationTitle, label_Username, label_Password, label_Password_Validity, label_Username_Validity,
-//				label_Password_Confirm, label_Password_Confirm_Validity, text_Username, text_Password, text_Password_Confirm, button_Submit);
-//	}
-//
-//	/**********
-//	 * Private local method to initialize the standard fields for a label
-//	 */
-//	private void setupLabelUI(Label l, String ff, double f, double w, Pos p, double x, double y) {
-//		l.setFont(Font.font(ff, f));
-//		l.setMinWidth(w);
-//		l.setAlignment(p);
-//		l.setLayoutX(x);
-//		l.setLayoutY(y);
-//	}
-//
-//	/**********
-//	 * Private local method to initialize the standard fields for a text field
-//	 */
-//	private void setupTextUI(TextField t, String ff, double f, double w, Pos p, double x, double y, boolean e) {
-//		t.setFont(Font.font(ff, f));
-//		t.setMinWidth(w);
-//		t.setMaxWidth(w);
-//		t.setAlignment(p);
-//		t.setLayoutX(x);
-//		t.setLayoutY(y);
-//		t.setEditable(e);
-//	}
-//	
-//	private void setupButtonUI(Button b, String ff, double f, double w, Pos p, double x, double y) {
-//		b.setFont(Font.font(ff, f));
-//		b.setMinWidth(w);
-//		b.setMaxWidth(w);
-//		b.setAlignment(p);
-//		b.setLayoutX(x);
-//		b.setLayoutY(y);
-//	}
-//
-//	/**********************************************************************************************
-//	 * 
-//	 * User Interface Actions
-//	 * 
-//	 **********************************************************************************************/
-//
-//	/**********
-//	 * Reset all the relevant flags and error messages whenever the user changes the
-//	 * input
-//	 */
-//	private void setUsername() {
-//		usernamePerformEvaluation(); // Perform the evaluation to set all the assessment flags
-//	}
-//	
-//	private void setPassword() {
-//		passwordPerformEvaluation(); // Perform the evaluation to set all the assessment flags
-//	}
-//	
-//	private void setPasswordConfirm() {
-//		if(	text_Password_Confirm.getText().equals(text_Password.getText())) {
-//			label_Password_Confirm_Validity.setTextFill(Color.GREEN);
-//			label_Password_Confirm_Validity.setText("The passwords match!");
-//		}
-//		else {
-//			label_Password_Confirm_Validity.setTextFill(Color.RED);
-//			label_Password_Confirm_Validity.setText("The passwords do not match!");
-//		}
-//	}
-//	
-//
-//	/**********
-//	 * Evaluate the input whenever the user changes it and update the GUI and the
-//	 * console so the user knows what is going on
-//	 */
-//	private void passwordPerformEvaluation() {
-//		// Get the user input string from the GUI
-//		String inputText = text_Password.getText();
-//
-//		// If the input is empty, set that flag and stop
-//		if (inputText.isEmpty()) {
-//			label_Password_Validity.setTextFill(Color.RED);
-//			label_Password_Validity.setText("No input text found!");
-//		}
-//		else {
-//			// There is input to process. Call the evaluatePassword method to assess each of the remaining criteria
-//			String errMessage = PwdEval.evaluatePassword(inputText);
-//			
-//			if (errMessage != "") {
-//				updateFlags(); 
-//			}
-//			// If no error message was found, check to see if all the criteria has been met
-//			else if (PwdEval.foundUpperCase && PwdEval.foundLowerCase
-//					&& PwdEval.foundNumericDigit && PwdEval.foundSpecialChar
-//					&& PwdEval.foundLongEnough) {
-//				// All the criteria has been met. display the success message to the console
-//				System.out.println("Success! The password satisfies the requirements.");
-//
-//				// Display the success message and make it green on the GUI
-//				label_Password_Validity.setTextFill(Color.GREEN);
-//				label_Password_Validity.setText("Success! The password satisfies the requirements.");
-//			} else {
-//				// At least one criterion has not been satisfied. Display an appropriate message
-//				// in red on the console
-//				label_Password_Validity.setTextFill(Color.RED);
-//				label_Password_Validity.setText("The password as currently entered is not yet valid.");	
-//			}
-//		}
-//	}
-//	
-//	/**********
-//	 * Evaluate the input whenever the user changes it and update the GUI and the
-//	 * console so the user knows what is going on
-//	 */
-//	private void usernamePerformEvaluation() {
-//		// Get the user input string from the GUI
-//		String inputText = text_Username.getText();
-//
-//		// If the input is empty, set that flag and stop
-//		if (inputText.isEmpty()) {
-//			label_Username_Validity.setTextFill(Color.RED);
-//			label_Username_Validity.setText("No input text found!");
-//		}
-//		else {
-//			// There is input to process. Call the evaluatePassword method to assess each of the remaining criteria
-//			String errMessage = UserNameEval.checkForValidUserName(inputText);
-//
-//			System.out.println(errMessage);
-//			label_Username_Validity.setTextFill(Color.RED);
-//			label_Username_Validity.setText(errMessage); 
-//			if (errMessage != "") {
-//				label_Username_Validity.setTextFill(Color.RED);
-//				label_Username_Validity.setText(errMessage); 
-//			}
-//			// If no error message was found, check to see if all the criteria has been met
-//			else {
-//				// All the criteria has been met. display the success message to the console
-//				System.out.println("Success! The username satisfies the requirements.");
-//
-//				// Display the success message and make it green on the GUI
-//				label_Username_Validity.setTextFill(Color.GREEN);
-//				label_Username_Validity.setText("Success! The username satisfies the requirements.");
-//			}
-//		}
-//	}
-//
-//	/**********
-//	 * Check each criterion. If not satisfied, update the text and turn it red
-//	 */
-//	
-//	public Button getButton1() {
-//		return button_Submit;
-//	}
-//	private void updateFlags() {
-//		// Upper case character
-//		if (!PwdEval.foundUpperCase) {
-//			label_Password_Validity.setTextFill(Color.RED);
-//			label_Password_Validity.setText("At least one upper case letter");
-//		}
-//
-//		// Lower case character
-//		else if (!PwdEval.foundLowerCase) {
-//			label_Password_Validity.setTextFill(Color.RED);
-//			label_Password_Validity.setText("At least one lower case letter");
-//		}
-//
-//		// Numeric character
-//		else if (!PwdEval.foundNumericDigit) {
-//			label_Password_Validity.setTextFill(Color.RED);
-//			label_Password_Validity.setText("At least one numeric digit");
-//		}
-//
-//		// Special character
-//		else if (!PwdEval.foundSpecialChar) {
-//			label_Password_Validity.setTextFill(Color.RED);
-//			label_Password_Validity.setText("At least one special character");
-//		}
-//
-//		// Long enough
-//		else if (!PwdEval.foundLongEnough) {
-//			label_Password_Validity.setTextFill(Color.RED);
-//			label_Password_Validity.setText("At least eight characters");
-//		}
-//	}
-//}
-
-//package edu.asu.DatabasePart1;
-//
-//// JavaFX imports needed to support the Graphical User Interface
-//import javafx.geometry.Pos;  
-//import javafx.scene.control.Button;
-//import javafx.scene.control.Label;
-//import javafx.scene.control.TextField;
-//import javafx.scene.layout.Pane;
-//import javafx.scene.paint.Color;
-//import javafx.scene.text.Font;
-//import javafx.scene.text.FontPosture;
-//import javafx.scene.text.Text;
-//import javafx.scene.text.TextFlow;
-//import javafx.stage.Stage;
-//import javafx.scene.Scene;
-//
-//public class RegisterPage {
-//
-//	/**********************************************************************************************
-//	 * 
-//	 * Attributes
-//	 * 
-//	 **********************************************************************************************/
-//
-//	private Label label_ApplicationTitle = new Label("Register");
-//	private Label label_Username = new Label("Enter the username here");
-//	private Label label_Password = new Label("Enter the password here");
-//	private Label label_Password_Confirm = new Label("Re-enter the password here");
-//	private Label label_Username_Validity = new Label("");
-//	private Label label_Password_Validity = new Label("");
-//	private Label label_Password_Confirm_Validity = new Label("");
-//
-//	private TextField text_Username = new TextField();
-//	private TextField text_Password = new TextField();
-//	private TextField text_Password_Confirm = new TextField();
-//
-//	private Button button_Submit = new Button("Submit");
-//
-//	private PasswordEvaluator PwdEval = new PasswordEvaluator();
-//	private UserNameRecognizer UserNameEval = new UserNameRecognizer();
-//
-//	private int WINDOW_WIDTH = 700;
-//
-//	/**********************************************************************************************
-//	 * 
-//	 * Constructors
-//	 * 
-//	 **********************************************************************************************/
-//
-//	// Constructor now takes Pane, Stage, and LoginScene to switch to the login page
-//	public RegisterPage(Pane theRoot, Stage theStage, Scene loginScene) {
-//
-//		// Label theScene with the name of the test bed, centered at the top of the pane
-//		setupLabelUI(label_ApplicationTitle, "Arial", 24, WINDOW_WIDTH, Pos.CENTER, 0, 10);
-//
-//		setupLabelUI(label_Username, "Arial", 14, WINDOW_WIDTH - 10, Pos.BASELINE_LEFT, 10, 50);
-//
-//		setupTextUI(text_Username, "Arial", 18, WINDOW_WIDTH - 20, Pos.BASELINE_LEFT, 10, 70, true);
-//
-//		setupLabelUI(label_Username_Validity, "Arial", 14, WINDOW_WIDTH - 10, Pos.BASELINE_LEFT, 10, 115);
-//
-//		setupLabelUI(label_Password, "Arial", 14, WINDOW_WIDTH - 10, Pos.BASELINE_LEFT, 10, 150);
-//
-//		setupTextUI(text_Password, "Arial", 18, WINDOW_WIDTH - 20, Pos.BASELINE_LEFT, 10, 170, true);
-//
-//		setupLabelUI(label_Password_Validity, "Arial", 14, WINDOW_WIDTH - 10, Pos.BASELINE_LEFT, 10, 215);
-//
-//		setupLabelUI(label_Password_Confirm, "Arial", 14, WINDOW_WIDTH - 10, Pos.BASELINE_LEFT, 10, 250);
-//
-//		setupTextUI(text_Password_Confirm, "Arial", 18, WINDOW_WIDTH - 20, Pos.BASELINE_LEFT, 10, 270, true);
-//
-//		setupLabelUI(label_Password_Confirm_Validity, "Arial", 14, WINDOW_WIDTH - 10, Pos.BASELINE_LEFT, 10, 315);
-//
-//		text_Username.textProperty().addListener((observable, oldValue, newValue) -> {
-//			setUsername();
-//		});
-//		text_Password.textProperty().addListener((observable, oldValue, newValue) -> {
-//			setPassword();
-//		});
-//
-//		text_Password_Confirm.textProperty().addListener((observable, oldValue, newValue) -> {
-//			setPasswordConfirm();
-//		});
-//
-//		setupButtonUI(button_Submit, "Arial", 14, 100, Pos.CENTER, WINDOW_WIDTH / 2 - 50, 400);
-//
-//		// Add Submit button action to switch to the login page upon clicking
-//		button_Submit.setOnAction(event -> {
-//			System.out.println("Registration complete. Redirecting to Login Page...");
-//			theStage.setScene(loginScene); // Switch to the login page
-//		});
-//
-//		// Place all of the just-initialized GUI elements into the pane
-//		theRoot.getChildren().addAll(label_ApplicationTitle, label_Username, label_Password, label_Password_Validity,
-//				label_Username_Validity, label_Password_Confirm, label_Password_Confirm_Validity, text_Username,
-//				text_Password, text_Password_Confirm, button_Submit);
-//	}
-//
-//	/**********
-//	 * Private local method to initialize the standard fields for a label
-//	 */
-//	private void setupLabelUI(Label l, String ff, double f, double w, Pos p, double x, double y) {
-//		l.setFont(Font.font(ff, f));
-//		l.setMinWidth(w);
-//		l.setAlignment(p);
-//		l.setLayoutX(x);
-//		l.setLayoutY(y);
-//	}
-//
-//	/**********
-//	 * Private local method to initialize the standard fields for a text field
-//	 */
-//	private void setupTextUI(TextField t, String ff, double f, double w, Pos p, double x, double y, boolean e) {
-//		t.setFont(Font.font(ff, f));
-//		t.setMinWidth(w);
-//		t.setMaxWidth(w);
-//		t.setAlignment(p);
-//		t.setLayoutX(x);
-//		t.setLayoutY(y);
-//		t.setEditable(e);
-//	}
-//
-//	private void setupButtonUI(Button b, String ff, double f, double w, Pos p, double x, double y) {
-//		b.setFont(Font.font(ff, f));
-//		b.setMinWidth(w);
-//		b.setMaxWidth(w);
-//		b.setAlignment(p);
-//		b.setLayoutX(x);
-//		b.setLayoutY(y);
-//	}
-//
-//	/**********************************************************************************************
-//	 * 
-//	 * User Interface Actions
-//	 * 
-//	 **********************************************************************************************/
-//
-//	private void setUsername() {
-//		usernamePerformEvaluation(); // Perform the evaluation to set all the assessment flags
-//	}
-//
-//	private void setPassword() {
-//		passwordPerformEvaluation(); // Perform the evaluation to set all the assessment flags
-//	}
-//
-//	private void setPasswordConfirm() {
-//		if (text_Password_Confirm.getText().equals(text_Password.getText())) {
-//			label_Password_Confirm_Validity.setTextFill(Color.GREEN);
-//			label_Password_Confirm_Validity.setText("The passwords match!");
-//		} else {
-//			label_Password_Confirm_Validity.setTextFill(Color.RED);
-//			label_Password_Confirm_Validity.setText("The passwords do not match!");
-//		}
-//	}
-//
-//	private void passwordPerformEvaluation() {
-//		String inputText = text_Password.getText();
-//		if (inputText.isEmpty()) {
-//			label_Password_Validity.setTextFill(Color.RED);
-//			label_Password_Validity.setText("No input text found!");
-//		} else {
-//			String errMessage = PwdEval.evaluatePassword(inputText);
-//			if (!errMessage.equals("")) {
-//				updateFlags();
-//			} else if (PwdEval.foundUpperCase && PwdEval.foundLowerCase && PwdEval.foundNumericDigit
-//					&& PwdEval.foundSpecialChar && PwdEval.foundLongEnough) {
-//				System.out.println("Success! The password satisfies the requirements.");
-//				label_Password_Validity.setTextFill(Color.GREEN);
-//				label_Password_Validity.setText("Success! The password satisfies the requirements.");
-//			} else {
-//				label_Password_Validity.setTextFill(Color.RED);
-//				label_Password_Validity.setText("The password as currently entered is not yet valid.");
-//			}
-//		}
-//	}
-//
-//	private void usernamePerformEvaluation() {
-//		String inputText = text_Username.getText();
-//		if (inputText.isEmpty()) {
-//			label_Username_Validity.setTextFill(Color.RED);
-//			label_Username_Validity.setText("No input text found!");
-//		} else {
-//			String errMessage = UserNameEval.checkForValidUserName(inputText);
-//			label_Username_Validity.setTextFill(Color.RED);
-//			label_Username_Validity.setText(errMessage);
-//			if (errMessage.equals("")) {
-//				System.out.println("Success! The username satisfies the requirements.");
-//				label_Username_Validity.setTextFill(Color.GREEN);
-//				label_Username_Validity.setText("Success! The username satisfies the requirements.");
-//			}
-//		}
-//	}
-//
-//	private void updateFlags() {
-//		if (!PwdEval.foundUpperCase) {
-//			label_Password_Validity.setTextFill(Color.RED);
-//			label_Password_Validity.setText("At least one upper case letter");
-//		} else if (!PwdEval.foundLowerCase) {
-//			label_Password_Validity.setTextFill(Color.RED);
-//			label_Password_Validity.setText("At least one lower case letter");
-//		} else if (!PwdEval.foundNumericDigit) {
-//			label_Password_Validity.setTextFill(Color.RED);
-//			label_Password_Validity.setText("At least one numeric digit");
-//		} else if (!PwdEval.foundSpecialChar) {
-//			label_Password_Validity.setTextFill(Color.RED);
-//			label_Password_Validity.setText("At least one special character");
-//		} else if (!PwdEval.foundLongEnough) {
-//			label_Password_Validity.setTextFill(Color.RED);
-//			label_Password_Validity.setText("At least eight characters");
-//		}
-//	}
-//}
-
-
-
 package edu.asu.DatabasePart1;
 
 // JavaFX imports needed to support the Graphical User Interface
@@ -540,199 +14,305 @@ import javafx.scene.text.TextFlow;
 import javafx.stage.Stage;
 import javafx.scene.Scene;
 
+/*******
+ * <p> RegisterPage Class </p>
+ * 
+ * <p> Description: RegisterPage provides the graphical user interface for the registration screen. 
+ *                  It allows users to enter their username and password, confirming the password, 
+ *                  and provides feedback on the validity of the input. </p>
+ * 
+ * <p> Copyright: Arizona State University © 2024 </p>
+ * 
+ * @version 1.00   2024-10-09 Initial implementation of the RegisterPage class for handling user 
+ *                  registration and validation of input.
+ */
+
 public class RegisterPage {
 
-	/**********************************************************************************************
-	 * 
-	 * Attributes
-	 * 
-	 **********************************************************************************************/
+    /**********************************************************************************************
+     * 
+     * Attributes
+     * 
+     **********************************************************************************************/
 
-	private Label label_ApplicationTitle = new Label("Register");
-	private Label label_Username = new Label("Enter the username here");
-	private Label label_Password = new Label("Enter the password here");
-	private Label label_Password_Confirm = new Label("Re-enter the password here");
-	private Label label_Username_Validity = new Label("");
-	private Label label_Password_Validity = new Label("");
-	private Label label_Password_Confirm_Validity = new Label("");
+    /** Label for the application title */
+    private Label label_ApplicationTitle = new Label("Register");
+    
+    /** Label prompting the user to enter the username */
+    private Label label_Username = new Label("Enter the username here");
+    
+    /** Label prompting the user to enter the password */
+    private Label label_Password = new Label("Enter the password here");
+    
+    /** Label prompting the user to re-enter the password */
+    private Label label_Password_Confirm = new Label("Re-enter the password here");
+    
+    /** Label for displaying the username validity message */
+    private Label label_Username_Validity = new Label("");
+    
+    /** Label for displaying the password validity message */
+    private Label label_Password_Validity = new Label("");
+    
+    /** Label for displaying the password confirmation validity message */
+    private Label label_Password_Confirm_Validity = new Label("");
 
-	private TextField text_Username = new TextField();
-	private TextField text_Password = new TextField();
-	private TextField text_Password_Confirm = new TextField();
+    /** TextField for entering the username */
+    private TextField text_Username = new TextField();
+    
+    /** TextField for entering the password */
+    private TextField text_Password = new TextField();
+    
+    /** TextField for re-entering the password */
+    private TextField text_Password_Confirm = new TextField();
 
-	private Button button_Submit = new Button("Submit");
+    /** Button to submit the registration form */
+    private Button button_Submit = new Button("Submit");
 
-	private PasswordEvaluator PwdEval = new PasswordEvaluator();
-	private UserNameRecognizer UserNameEval = new UserNameRecognizer();
+    /** PasswordEvaluator for evaluating password criteria */
+    private PasswordEvaluator PwdEval = new PasswordEvaluator();
+    
+    /** UserNameRecognizer for checking the validity of the username */
+    private UserNameRecognizer UserNameEval = new UserNameRecognizer();
 
-	private int WINDOW_WIDTH = 700;
+    /** The width of the window for the registration page */
+    private int WINDOW_WIDTH = 700;
 
-	/**********************************************************************************************
-	 * 
-	 * Constructors
-	 * 
-	 **********************************************************************************************/
+    /**********************************************************************************************
+     * 
+     * Constructors
+     * 
+     **********************************************************************************************/
 
-	// Constructor now takes Pane, Stage, and LoginScene to switch to the login page
-	public RegisterPage(Pane theRoot, Stage theStage, Scene loginScene) {
+    /**********
+     * Constructor for RegisterPage
+     * 
+     * <p> Sets up the user interface for the registration page, including input fields for username 
+     *     and password, validation messages, and a submit button. The constructor also adds 
+     *     listeners for input changes and an action to the submit button to switch to the login 
+     *     page. </p>
+     * 
+     * @param theRoot The root Pane where the UI components will be added.
+     * @param theStage The primary Stage for switching scenes.
+     * @param loginScene The scene to redirect to after successful registration.
+     */
+    public RegisterPage(Pane theRoot, Stage theStage, Scene loginScene) {
 
-		// Label theScene with the name of the test bed, centered at the top of the pane
-		setupLabelUI(label_ApplicationTitle, "Arial", 24, WINDOW_WIDTH, Pos.CENTER, 0, 10);
+        // Label the scene with the name of the test bed, centered at the top of the pane
+        setupLabelUI(label_ApplicationTitle, "Arial", 24, WINDOW_WIDTH, Pos.CENTER, 0, 10);
 
-		setupLabelUI(label_Username, "Arial", 14, WINDOW_WIDTH - 10, Pos.BASELINE_LEFT, 10, 50);
+        setupLabelUI(label_Username, "Arial", 14, WINDOW_WIDTH - 10, Pos.BASELINE_LEFT, 10, 50);
+        setupTextUI(text_Username, "Arial", 18, WINDOW_WIDTH - 20, Pos.BASELINE_LEFT, 10, 70, true);
+        setupLabelUI(label_Username_Validity, "Arial", 14, WINDOW_WIDTH - 10, Pos.BASELINE_LEFT, 10, 115);
 
-		setupTextUI(text_Username, "Arial", 18, WINDOW_WIDTH - 20, Pos.BASELINE_LEFT, 10, 70, true);
+        setupLabelUI(label_Password, "Arial", 14, WINDOW_WIDTH - 10, Pos.BASELINE_LEFT, 10, 150);
+        setupTextUI(text_Password, "Arial", 18, WINDOW_WIDTH - 20, Pos.BASELINE_LEFT, 10, 170, true);
+        setupLabelUI(label_Password_Validity, "Arial", 14, WINDOW_WIDTH - 10, Pos.BASELINE_LEFT, 10, 215);
 
-		setupLabelUI(label_Username_Validity, "Arial", 14, WINDOW_WIDTH - 10, Pos.BASELINE_LEFT, 10, 115);
+        setupLabelUI(label_Password_Confirm, "Arial", 14, WINDOW_WIDTH - 10, Pos.BASELINE_LEFT, 10, 250);
+        setupTextUI(text_Password_Confirm, "Arial", 18, WINDOW_WIDTH - 20, Pos.BASELINE_LEFT, 10, 270, true);
+        setupLabelUI(label_Password_Confirm_Validity, "Arial", 14, WINDOW_WIDTH - 10, Pos.BASELINE_LEFT, 10, 315);
 
-		setupLabelUI(label_Password, "Arial", 14, WINDOW_WIDTH - 10, Pos.BASELINE_LEFT, 10, 150);
+        // Listeners for input fields to perform validation
+        text_Username.textProperty().addListener((observable, oldValue, newValue) -> setUsername());
+        text_Password.textProperty().addListener((observable, oldValue, newValue) -> setPassword());
+        text_Password_Confirm.textProperty().addListener((observable, oldValue, newValue) -> setPasswordConfirm());
 
-		setupTextUI(text_Password, "Arial", 18, WINDOW_WIDTH - 20, Pos.BASELINE_LEFT, 10, 170, true);
+        setupButtonUI(button_Submit, "Arial", 14, 100, Pos.CENTER, WINDOW_WIDTH / 2 - 50, 400);
 
-		setupLabelUI(label_Password_Validity, "Arial", 14, WINDOW_WIDTH - 10, Pos.BASELINE_LEFT, 10, 215);
+        // Submit button action to switch to the login page upon successful registration
+        button_Submit.setOnAction(event -> {
+            System.out.println("Registration complete. Redirecting to Login Page...");
+            theStage.setScene(loginScene); // Switch to the login page
+        });
 
-		setupLabelUI(label_Password_Confirm, "Arial", 14, WINDOW_WIDTH - 10, Pos.BASELINE_LEFT, 10, 250);
+        // Place all of the just-initialized GUI elements into the pane
+        theRoot.getChildren().addAll(label_ApplicationTitle, label_Username, label_Password, label_Password_Validity,
+                label_Username_Validity, label_Password_Confirm, label_Password_Confirm_Validity, text_Username,
+                text_Password, text_Password_Confirm, button_Submit);
+    }
 
-		setupTextUI(text_Password_Confirm, "Arial", 18, WINDOW_WIDTH - 20, Pos.BASELINE_LEFT, 10, 270, true);
+    /**********
+     * setupLabelUI method
+     * 
+     * <p> Configures a Label component's properties such as font, width, alignment, 
+     *     and position on the screen. </p>
+     * 
+     * @param l The Label to configure.
+     * @param ff The font family for the Label.
+     * @param f The font size for the Label.
+     * @param w The minimum width of the Label.
+     * @param p The alignment of the Label text.
+     * @param x The x-coordinate position of the Label.
+     * @param y The y-coordinate position of the Label.
+     */
+    private void setupLabelUI(Label l, String ff, double f, double w, Pos p, double x, double y) {
+        l.setFont(Font.font(ff, f));
+        l.setMinWidth(w);
+        l.setAlignment(p);
+        l.setLayoutX(x);
+        l.setLayoutY(y);
+    }
 
-		setupLabelUI(label_Password_Confirm_Validity, "Arial", 14, WINDOW_WIDTH - 10, Pos.BASELINE_LEFT, 10, 315);
+    /**********
+     * setupTextUI method
+     * 
+     * <p> Configures a TextField component's properties such as font, width, alignment, 
+     *     editability, and position on the screen. </p>
+     * 
+     * @param t The TextField to configure.
+     * @param ff The font family for the TextField.
+     * @param f The font size for the TextField.
+     * @param w The minimum width of the TextField.
+     * @param p The alignment of the TextField text.
+     * @param x The x-coordinate position of the TextField.
+     * @param y The y-coordinate position of the TextField.
+     * @param e Specifies if the TextField is editable.
+     */
+    private void setupTextUI(TextField t, String ff, double f, double w, Pos p, double x, double y, boolean e) {
+        t.setFont(Font.font(ff, f));
+        t.setMinWidth(w);
+        t.setMaxWidth(w);
+        t.setAlignment(p);
+        t.setLayoutX(x);
+        t.setLayoutY(y);
+        t.setEditable(e);
+    }
 
-		text_Username.textProperty().addListener((observable, oldValue, newValue) -> {
-			setUsername();
-		});
-		text_Password.textProperty().addListener((observable, oldValue, newValue) -> {
-			setPassword();
-		});
+    /**********
+     * setupButtonUI method
+     * 
+     * <p> Configures a Button component's properties such as font, width, and position 
+     *     on the screen. </p>
+     * 
+     * @param b The Button to configure.
+     * @param ff The font family for the Button.
+     * @param f The font size for the Button.
+     * @param w The minimum width of the Button.
+     * @param p The alignment of the Button text.
+     * @param x The x-coordinate position of the Button.
+     * @param y The y-coordinate position of the Button.
+     */
+    private void setupButtonUI(Button b, String ff, double f, double w, Pos p, double x, double y) {
+        b.setFont(Font.font(ff, f));
+        b.setMinWidth(w);
+        b.setMaxWidth(w);
+        b.setAlignment(p);
+        b.setLayoutX(x);
+        b.setLayoutY(y);
+    }
 
-		text_Password_Confirm.textProperty().addListener((observable, oldValue, newValue) -> {
-			setPasswordConfirm();
-		});
+    /**********************************************************************************************
+     * 
+     * User Interface Actions
+     * 
+     **********************************************************************************************/
 
-		setupButtonUI(button_Submit, "Arial", 14, 100, Pos.CENTER, WINDOW_WIDTH / 2 - 50, 400);
+    /**********
+     * setUsername method
+     * 
+     * <p> Evaluates the username input whenever the user changes it. </p>
+     */
+    private void setUsername() {
+        usernamePerformEvaluation(); // Perform the evaluation to set all the assessment flags
+    }
 
-		// Add Submit button action to switch to the login page upon clicking
-		button_Submit.setOnAction(event -> {
-			System.out.println("Registration complete. Redirecting to Login Page...");
-			theStage.setScene(loginScene); // Switch to the login page
-		});
+    /**********
+     * setPassword method
+     * 
+     * <p> Evaluates the password input whenever the user changes it. </p>
+     */
+    private void setPassword() {
+        passwordPerformEvaluation(); // Perform the evaluation to set all the assessment flags
+    }
 
-		// Place all of the just-initialized GUI elements into the pane
-		theRoot.getChildren().addAll(label_ApplicationTitle, label_Username, label_Password, label_Password_Validity,
-				label_Username_Validity, label_Password_Confirm, label_Password_Confirm_Validity, text_Username,
-				text_Password, text_Password_Confirm, button_Submit);
-	}
+    /**********
+     * setPasswordConfirm method
+     * 
+     * <p> Checks if the password confirmation matches the password input and updates 
+     *     the validity message accordingly. </p>
+     */
+    private void setPasswordConfirm() {
+        if (text_Password_Confirm.getText().equals(text_Password.getText())) {
+            label_Password_Confirm_Validity.setTextFill(Color.GREEN);
+            label_Password_Confirm_Validity.setText("The passwords match!");
+        } else {
+            label_Password_Confirm_Validity.setTextFill(Color.RED);
+            label_Password_Confirm_Validity.setText("The passwords do not match!");
+        }
+    }
 
-	/**********
-	 * Private local method to initialize the standard fields for a label
-	 */
-	private void setupLabelUI(Label l, String ff, double f, double w, Pos p, double x, double y) {
-		l.setFont(Font.font(ff, f));
-		l.setMinWidth(w);
-		l.setAlignment(p);
-		l.setLayoutX(x);
-		l.setLayoutY(y);
-	}
+    /**********
+     * passwordPerformEvaluation method
+     * 
+     * <p> Evaluates the password input against set criteria and updates the validation message 
+     *     based on the evaluation results. </p>
+     */
+    private void passwordPerformEvaluation() {
+        String inputText = text_Password.getText();
+        if (inputText.isEmpty()) {
+            label_Password_Validity.setTextFill(Color.RED);
+            label_Password_Validity.setText("No input text found!");
+        } else {
+            String errMessage = PwdEval.evaluatePassword(inputText);
+            if (!errMessage.equals("")) {
+                updateFlags();
+            } else if (PwdEval.foundUpperCase && PwdEval.foundLowerCase && PwdEval.foundNumericDigit
+                    && PwdEval.foundSpecialChar && PwdEval.foundLongEnough) {
+                System.out.println("Success! The password satisfies the requirements.");
+                label_Password_Validity.setTextFill(Color.GREEN);
+                label_Password_Validity.setText("Success! The password satisfies the requirements.");
+            } else {
+                label_Password_Validity.setTextFill(Color.RED);
+                label_Password_Validity.setText("The password as currently entered is not yet valid.");
+            }
+        }
+    }
 
-	/**********
-	 * Private local method to initialize the standard fields for a text field
-	 */
-	private void setupTextUI(TextField t, String ff, double f, double w, Pos p, double x, double y, boolean e) {
-		t.setFont(Font.font(ff, f));
-		t.setMinWidth(w);
-		t.setMaxWidth(w);
-		t.setAlignment(p);
-		t.setLayoutX(x);
-		t.setLayoutY(y);
-		t.setEditable(e);
-	}
+    /**********
+     * usernamePerformEvaluation method
+     * 
+     * <p> Evaluates the username input for validity and updates the validation message 
+     *     accordingly. </p>
+     */
+    private void usernamePerformEvaluation() {
+        String inputText = text_Username.getText();
+        if (inputText.isEmpty()) {
+            label_Username_Validity.setTextFill(Color.RED);
+            label_Username_Validity.setText("No input text found!");
+        } else {
+            String errMessage = UserNameEval.checkForValidUserName(inputText);
+            label_Username_Validity.setTextFill(Color.RED);
+            label_Username_Validity.setText(errMessage);
+            if (errMessage.equals("")) {
+                System.out.println("Success! The username satisfies the requirements.");
+                label_Username_Validity.setTextFill(Color.GREEN);
+                label_Username_Validity.setText("Success! The username satisfies the requirements.");
+            }
+        }
+    }
 
-	private void setupButtonUI(Button b, String ff, double f, double w, Pos p, double x, double y) {
-		b.setFont(Font.font(ff, f));
-		b.setMinWidth(w);
-		b.setMaxWidth(w);
-		b.setAlignment(p);
-		b.setLayoutX(x);
-		b.setLayoutY(y);
-	}
-
-	/**********************************************************************************************
-	 * 
-	 * User Interface Actions
-	 * 
-	 **********************************************************************************************/
-
-	private void setUsername() {
-		usernamePerformEvaluation(); // Perform the evaluation to set all the assessment flags
-	}
-
-	private void setPassword() {
-		passwordPerformEvaluation(); // Perform the evaluation to set all the assessment flags
-	}
-
-	private void setPasswordConfirm() {
-		if (text_Password_Confirm.getText().equals(text_Password.getText())) {
-			label_Password_Confirm_Validity.setTextFill(Color.GREEN);
-			label_Password_Confirm_Validity.setText("The passwords match!");
-		} else {
-			label_Password_Confirm_Validity.setTextFill(Color.RED);
-			label_Password_Confirm_Validity.setText("The passwords do not match!");
-		}
-	}
-
-	private void passwordPerformEvaluation() {
-		String inputText = text_Password.getText();
-		if (inputText.isEmpty()) {
-			label_Password_Validity.setTextFill(Color.RED);
-			label_Password_Validity.setText("No input text found!");
-		} else {
-			String errMessage = PwdEval.evaluatePassword(inputText);
-			if (!errMessage.equals("")) {
-				updateFlags();
-			} else if (PwdEval.foundUpperCase && PwdEval.foundLowerCase && PwdEval.foundNumericDigit
-					&& PwdEval.foundSpecialChar && PwdEval.foundLongEnough) {
-				System.out.println("Success! The password satisfies the requirements.");
-				label_Password_Validity.setTextFill(Color.GREEN);
-				label_Password_Validity.setText("Success! The password satisfies the requirements.");
-			} else {
-				label_Password_Validity.setTextFill(Color.RED);
-				label_Password_Validity.setText("The password as currently entered is not yet valid.");
-			}
-		}
-	}
-
-	private void usernamePerformEvaluation() {
-		String inputText = text_Username.getText();
-		if (inputText.isEmpty()) {
-			label_Username_Validity.setTextFill(Color.RED);
-			label_Username_Validity.setText("No input text found!");
-		} else {
-			String errMessage = UserNameEval.checkForValidUserName(inputText);
-			label_Username_Validity.setTextFill(Color.RED);
-			label_Username_Validity.setText(errMessage);
-			if (errMessage.equals("")) {
-				System.out.println("Success! The username satisfies the requirements.");
-				label_Username_Validity.setTextFill(Color.GREEN);
-				label_Username_Validity.setText("Success! The username satisfies the requirements.");
-			}
-		}
-	}
-
-	private void updateFlags() {
-		if (!PwdEval.foundUpperCase) {
-			label_Password_Validity.setTextFill(Color.RED);
-			label_Password_Validity.setText("At least one upper case letter");
-		} else if (!PwdEval.foundLowerCase) {
-			label_Password_Validity.setTextFill(Color.RED);
-			label_Password_Validity.setText("At least one lower case letter");
-		} else if (!PwdEval.foundNumericDigit) {
-			label_Password_Validity.setTextFill(Color.RED);
-			label_Password_Validity.setText("At least one numeric digit");
-		} else if (!PwdEval.foundSpecialChar) {
-			label_Password_Validity.setTextFill(Color.RED);
-			label_Password_Validity.setText("At least one special character");
-		} else if (!PwdEval.foundLongEnough) {
-			label_Password_Validity.setTextFill(Color.RED);
-			label_Password_Validity.setText("At least eight characters");
-		}
-	}
+    /**********
+     * updateFlags method
+     * 
+     * <p> Checks each password criterion and updates the password validity message 
+     *     accordingly. </p>
+     */
+    private void updateFlags() {
+        if (!PwdEval.foundUpperCase) {
+            label_Password_Validity.setTextFill(Color.RED);
+            label_Password_Validity.setText("At least one upper case letter");
+        } else if (!PwdEval.foundLowerCase) {
+            label_Password_Validity.setTextFill(Color.RED);
+            label_Password_Validity.setText("At least one lower case letter");
+        } else if (!PwdEval.foundNumericDigit) {
+            label_Password_Validity.setTextFill(Color.RED);
+            label_Password_Validity.setText("At least one numeric digit");
+        } else if (!PwdEval.foundSpecialChar) {
+            label_Password_Validity.setTextFill(Color.RED);
+            label_Password_Validity.setText("At least one special character");
+        } else if (!PwdEval.foundLongEnough) {
+            label_Password_Validity.setTextFill(Color.RED);
+            label_Password_Validity.setText("At least eight characters");
+        }
+    }
 }

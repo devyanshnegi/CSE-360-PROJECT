@@ -1,4 +1,3 @@
-
 package edu.asu.DatabasePart1;
 
 import javafx.geometry.Pos;
@@ -11,21 +10,57 @@ import javafx.scene.text.Font;
 import javafx.stage.Stage;
 import javafx.scene.Scene;
 
+/*******
+ * <p> LoginPage Class </p>
+ * 
+ * <p> Description: LoginPage provides the user interface for the login screen. It includes 
+ *                  fields for entering a username and password, and a login button that 
+ *                  validates user input and redirects to the appropriate page based on whether 
+ *                  the login follows a registration. </p>
+ * 
+ * <p> Copyright: Arizona State University © 2024 </p>
+ * 
+ * @version 1.00   2024-10-09 Initial implementation of the LoginPage class for handling 
+ *                  user authentication and navigation in the multi-page application.
+ */
+
 public class LoginPage {
 
+    /** Label for the username field */
     private Label usernameLabel = new Label("Username:");
+    
+    /** TextField for entering the username */
     private TextField usernameField = new TextField();
 
+    /** Label for the password field */
     private Label passwordLabel = new Label("Password:");
+    
+    /** PasswordField for entering the password */
     private PasswordField passwordField = new PasswordField();
 
+    /** Button for logging in */
     private Button loginButton = new Button("Login");
+    
+    /** Label for displaying messages (e.g., error messages) */
     private Label messageLabel = new Label();
 
-    // Flag to determine if this login is after registration
+    /** Flag to determine if the login is after registration */
     private boolean isAfterRegister;
 
-    // Constructor takes Pane, Stage, AdminScene, CompleteProfileScene, and isAfterRegister flag
+    /**********
+     * Constructor for LoginPage
+     * 
+     * <p> Sets up the user interface for the login page, including input fields for username 
+     *     and password, a login button, and a message label for feedback. Depending on the 
+     *     isAfterRegister flag, it redirects the user to either the CompleteProfilePage or 
+     *     AdminPage upon successful login. </p>
+     * 
+     * @param root The root Pane where the UI components will be added.
+     * @param theStage The primary Stage for switching scenes.
+     * @param adminScene The scene to redirect to for the AdminPage.
+     * @param completeProfileScene The scene to redirect to for the CompleteProfilePage.
+     * @param isAfterRegister Flag indicating if the login occurs after registration.
+     */
     public LoginPage(Pane root, Stage theStage, Scene adminScene, Scene completeProfileScene, boolean isAfterRegister) {
         this.isAfterRegister = isAfterRegister; // Store the flag
 
@@ -48,7 +83,7 @@ public class LoginPage {
                 System.out.println("Entered Username: " + username);
                 System.out.println("Entered Password: " + password);
 
-                // Check if it's after registration, redirect to CompleteProfilePage, otherwise AdminPage
+                // Redirect based on the isAfterRegister flag
                 if (isAfterRegister) {
                     System.out.println("Redirecting to CompleteProfilePage...");
                     theStage.setScene(completeProfileScene); // Switch to CompleteProfilePage scene
@@ -66,16 +101,42 @@ public class LoginPage {
         root.getChildren().addAll(usernameLabel, usernameField, passwordLabel, passwordField, loginButton, messageLabel);
     }
 
-    // Getter methods to retrieve the username and password
+    /**********
+     * getUsername method
+     * 
+     * <p> Retrieves the text entered in the username field. </p>
+     * 
+     * @return The username entered by the user.
+     */
     public String getUsername() {
         return usernameField.getText();
     }
 
+    /**********
+     * getPassword method
+     * 
+     * <p> Retrieves the text entered in the password field. </p>
+     * 
+     * @return The password entered by the user.
+     */
     public String getPassword() {
         return passwordField.getText();
     }
 
-    // Utility method to set up Label UI properties
+    /**********
+     * setupLabelUI method
+     * 
+     * <p> Configures a Label component's properties such as font, width, alignment, 
+     *     and position on the screen. </p>
+     * 
+     * @param label The Label to configure.
+     * @param fontFamily The font family for the Label.
+     * @param fontSize The font size for the Label.
+     * @param width The minimum width of the Label.
+     * @param alignment The alignment of the Label text.
+     * @param x The x-coordinate position of the Label.
+     * @param y The y-coordinate position of the Label.
+     */
     private void setupLabelUI(Label label, String fontFamily, double fontSize, double width, Pos alignment, double x, double y) {
         label.setFont(Font.font(fontFamily, fontSize));
         label.setMinWidth(width);
@@ -84,7 +145,20 @@ public class LoginPage {
         label.setLayoutY(y);
     }
 
-    // Utility method to set up TextField UI properties
+    /**********
+     * setupTextFieldUI method
+     * 
+     * <p> Configures a TextField component's properties such as font, width, alignment, 
+     *     and position on the screen. </p>
+     * 
+     * @param textField The TextField to configure.
+     * @param fontFamily The font family for the TextField.
+     * @param fontSize The font size for the TextField.
+     * @param width The minimum width of the TextField.
+     * @param alignment The alignment of the TextField text.
+     * @param x The x-coordinate position of the TextField.
+     * @param y The y-coordinate position of the TextField.
+     */
     private void setupTextFieldUI(TextField textField, String fontFamily, double fontSize, double width, Pos alignment, double x, double y) {
         textField.setFont(Font.font(fontFamily, fontSize));
         textField.setMinWidth(width);
@@ -94,7 +168,20 @@ public class LoginPage {
         textField.setLayoutY(y);
     }
 
-    // Utility method to set up Button UI properties
+    /**********
+     * setupButtonUI method
+     * 
+     * <p> Configures a Button component's properties such as font, width, and position 
+     *     on the screen. </p>
+     * 
+     * @param button The Button to configure.
+     * @param fontFamily The font family for the Button.
+     * @param fontSize The font size for the Button.
+     * @param width The minimum width of the Button.
+     * @param alignment The alignment of the Button text.
+     * @param x The x-coordinate position of the Button.
+     * @param y The y-coordinate position of the Button.
+     */
     private void setupButtonUI(Button button, String fontFamily, double fontSize, double width, Pos alignment, double x, double y) {
         button.setFont(Font.font(fontFamily, fontSize));
         button.setMinWidth(width);

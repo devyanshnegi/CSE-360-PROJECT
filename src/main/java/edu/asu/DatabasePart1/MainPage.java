@@ -36,13 +36,18 @@ public class MainPage extends Application {
 	public final static double WINDOW_HEIGHT = 430;
 
 	// A object referencing the application's interface
-	public chooseInterface Gui;
+	public StartPage StartPageGui;
 	
-	public chooseInterfaceController Gui2;
+	public CompleteProfilePage CompleteProfilePageGui;
 	
-	public AdminPage Gui3;
+	public AdminPage AdminPageGui;
 	
-	public LoginPage Gui4;
+	public LoginPage LoginPageGui;
+	
+	public HomePage HomePageGui;
+	
+	public RegisterPage RegisterPageGui;
+	
 	
 	
 	public MainPage() {
@@ -57,9 +62,9 @@ public class MainPage extends Application {
 		
 		
 
-		Gui = new chooseInterface(Root); // Create the Graphical User Interface
+		StartPageGui = new StartPage(Root); // Create the Graphical User Interface
 
-		Button buttonSwitch = Gui.InviteButton();
+		Button buttonSwitch = StartPageGui.InviteButton();
 
 		
 		Scene theScene = new Scene(Root, WINDOW_WIDTH, WINDOW_HEIGHT); // Create the scene
@@ -74,31 +79,63 @@ public class MainPage extends Application {
 		
 		Pane Root1 = new Pane();
 		
-		Gui2 = new chooseInterfaceController(Root1); // Create the Graphical User Interface
+		CompleteProfilePageGui = new CompleteProfilePage(Root1); // Create the Graphical User Interface
 		
-		Scene theScene1 = new Scene(Root1, WINDOW_WIDTH, WINDOW_HEIGHT); // Create the scene
+		Scene CompleteProfileScene = new Scene(Root1, WINDOW_WIDTH, WINDOW_HEIGHT); // Create the scene
 		
-		buttonSwitch.setOnAction(event ->{
-			theStage.setScene(theScene1);
-		});
 		
 		Pane Root2 = new Pane();
 		
 		
-		Gui3 = new AdminPage(Root2);
+		AdminPageGui = new AdminPage(Root2);
 		
-		Scene theScene2 = new Scene(Root2, WINDOW_WIDTH, WINDOW_HEIGHT); // Create the scene
+		Scene AdminPageScene = new Scene(Root2, WINDOW_WIDTH, WINDOW_HEIGHT); // Create the scene
 		
 		Pane Root3 = new Pane();
 		
-		Gui4 = new LoginPage(Root3);
+		Button buttonNavigateToHome = CompleteProfilePageGui.getButton();
 		
-		Scene theScene3 = new Scene(Root3, WINDOW_WIDTH, WINDOW_HEIGHT); // Create the scene
+		LoginPageGui = new LoginPage(Root3);
 		
-		//theStage.setScene(theScene3);
+		Scene LoginPageScene = new Scene(Root3, WINDOW_WIDTH, WINDOW_HEIGHT); // Create the scene
+		
+		
+		//theStage.setScene(LoginPageScene);
 		 //Set the scene on the stage
 
     	//theStage.show();
+		
+		Pane Root4 = new Pane();
+		
+		HomePageGui = new HomePage(Root4);
+		
+		Scene HomePageScene = new Scene(Root4, WINDOW_WIDTH, WINDOW_HEIGHT); // Create the scene
+		
+		buttonNavigateToHome.setOnAction(event ->{
+			theStage.setScene(HomePageScene);
+		});
+		
+		//theStage.setScene(HomePageScene);
+		
+		//theStage.show();
+		
+		Pane Root5 = new Pane();
+		
+		RegisterPageGui = new RegisterPage(Root5);
+		
+		Scene RegisterPageScene = new Scene(Root5, WINDOW_WIDTH, WINDOW_HEIGHT); // Create the scene
+		
+		buttonSwitch.setOnAction(event ->{
+			theStage.setScene(RegisterPageScene);
+		});
+		
+		Button switchToComplete = RegisterPageGui.getButton1();
+		
+		switchToComplete.setOnAction(event ->{
+			theStage.setScene(CompleteProfileScene);
+		});
+		
+		
 	
     	
 		

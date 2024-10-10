@@ -35,7 +35,7 @@ import javafx.scene.text.TextFlow;
  * 
  */
 
-public class UserInterface {
+public class RegisterPage {
 
 	/**********************************************************************************************
 	 * 
@@ -75,7 +75,7 @@ public class UserInterface {
 	 * These assignments determine the location, size, font, color, and change and
 	 * event handlers for each GUI object.
 	 */
-	public UserInterface(Pane theRoot) {
+	public RegisterPage(Pane theRoot) {
 
 		// Label theScene with the name of the test bed, centered at the top of the pane
 		setupLabelUI(label_ApplicationTitle, "Arial", 24, PasswordEvaluationGUITestbed.WINDOW_WIDTH, Pos.CENTER, 0, 10);
@@ -270,6 +270,10 @@ public class UserInterface {
 	/**********
 	 * Check each criterion. If not satisfied, update the text and turn it red
 	 */
+	
+	public Button getButton1() {
+		return button_Submit;
+	}
 	private void updateFlags() {
 		// Upper case character
 		if (!PwdEval.foundUpperCase) {

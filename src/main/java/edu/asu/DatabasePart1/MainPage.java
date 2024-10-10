@@ -36,17 +36,12 @@ public class MainPage extends Application {
 	public final static double WINDOW_HEIGHT = 430;
 
 	// A object referencing the application's interface
-	public StartPage StartPageGui;
-	
-	public CompleteProfilePage CompleteProfilePageGui;
-	
-	public AdminPage AdminPageGui;
-	
-	public LoginPage LoginPageGui;
-	
-	public HomePage HomePageGui;
-	
-	public RegisterPage RegisterPageGui;
+	public StartPage StartGui;
+	public CompleteProfilePage CompleteProfileGui;
+	public AdminPage AdminGui;
+	public LoginPage LoginGui;
+	public HomePage HomeGui;
+	public RegisterPage RegisterGui;
 	
 	
 	
@@ -58,102 +53,52 @@ public class MainPage extends Application {
 
 		theStage.setTitle("Choose or Register"); // Label the stage (a window)
 
-		Pane Root = new Pane(); // Create a pane within the window
+		Pane StartPane = new Pane(); // Create a pane within the window
+		StartGui = new StartPage(StartPane); // Create the Graphical User Interface
+		Scene StartScene = new Scene(StartPane, WINDOW_WIDTH, WINDOW_HEIGHT); // Create the scene
+		Button buttonRegister = StartGui.InviteButton();		
 		
+		Pane AdminPane = new Pane();		
+		AdminGui = new AdminPage(AdminPane);
+		Scene AdminScene = new Scene(AdminPane, WINDOW_WIDTH, WINDOW_HEIGHT); // Create the scene
 		
+		Pane RegisterPane = new Pane();
+		RegisterGui = new RegisterPage(RegisterPane);
+		Scene RegisterScene = new Scene(RegisterPane, WINDOW_WIDTH, WINDOW_HEIGHT); // Create the scene
+		Button switchToComplete = RegisterGui.getButton1();
+		
+		Pane LoginPane = new Pane();
+		LoginGui = new LoginPage(LoginPane);
+		Scene LoginScene = new Scene(LoginPane, WINDOW_WIDTH, WINDOW_HEIGHT); // Create the scene
+		
+		Pane CompleteProfilePane = new Pane();
+		CompleteProfileGui = new CompleteProfilePage(CompleteProfilePane); // Create the Graphical User Interface
+		Scene CompleteProfileScene = new Scene(CompleteProfilePane, WINDOW_WIDTH, WINDOW_HEIGHT); // Create the scene
+		Button buttonNavigateToHome = CompleteProfileGui.getButton();
+		
+		Pane HomePane = new Pane();
+		HomeGui = new HomePage(HomePane);
+		Scene HomeScene = new Scene(HomePane, WINDOW_WIDTH, WINDOW_HEIGHT); // Create the scene
+		Button ExitLogin; // TODO
 
-		StartPageGui = new StartPage(Root); // Create the Graphical User Interface
-
-		Button buttonSwitch = StartPageGui.InviteButton();
-
-		
-		Scene theScene = new Scene(Root, WINDOW_WIDTH, WINDOW_HEIGHT); // Create the scene
-
-		
-		theStage.setScene(theScene);
-		// Set the scene on the stage
-
-		theStage.show();
-		
-		Thread.sleep(3000);
-		
-		Pane Root1 = new Pane();
-		
-		CompleteProfilePageGui = new CompleteProfilePage(Root1); // Create the Graphical User Interface
-		
-		Scene CompleteProfileScene = new Scene(Root1, WINDOW_WIDTH, WINDOW_HEIGHT); // Create the scene
-		
-		
-		Pane Root2 = new Pane();
-		
-		
-		AdminPageGui = new AdminPage(Root2);
-		
-		Scene AdminPageScene = new Scene(Root2, WINDOW_WIDTH, WINDOW_HEIGHT); // Create the scene
-		
-		Pane Root3 = new Pane();
-		
-		Button buttonNavigateToHome = CompleteProfilePageGui.getButton();
-		
-		LoginPageGui = new LoginPage(Root3);
-		
-		Scene LoginPageScene = new Scene(Root3, WINDOW_WIDTH, WINDOW_HEIGHT); // Create the scene
-		
-		
-		//theStage.setScene(LoginPageScene);
-		 //Set the scene on the stage
-
-    	//theStage.show();
-		
-		Pane Root4 = new Pane();
-		
-		HomePageGui = new HomePage(Root4);
-		
-		Scene HomePageScene = new Scene(Root4, WINDOW_WIDTH, WINDOW_HEIGHT); // Create the scene
+		buttonRegister.setOnAction(event ->{
+			theStage.setScene(RegisterScene);
+		});
 		
 		buttonNavigateToHome.setOnAction(event ->{
-			theStage.setScene(HomePageScene);
+			theStage.setScene(HomeScene);
 		});
-		
-		//theStage.setScene(HomePageScene);
-		
-		//theStage.show();
-		
-		Pane Root5 = new Pane();
-		
-		RegisterPageGui = new RegisterPage(Root5);
-		
-		Scene RegisterPageScene = new Scene(Root5, WINDOW_WIDTH, WINDOW_HEIGHT); // Create the scene
-		
-		buttonSwitch.setOnAction(event ->{
-			theStage.setScene(RegisterPageScene);
-		});
-		
-		Button switchToComplete = RegisterPageGui.getButton1();
 		
 		switchToComplete.setOnAction(event ->{
 			theStage.setScene(CompleteProfileScene);
 		});
 		
-		
-	
-    	
-		
-		
-		
-			
- 
-		// When the stage is shown to the user, the pane within the window is visible.
-		// This means
-		// that the labels, fields, and buttons of the Graphical User Interface (GUI)
-		// are visible
-		// and it is now possible for the user to select input fields and enter values
-		// into them,
-		// click on buttons, and read the labels, the results, and the error messages.
-		// Show the stage to the user
+		theStage.setScene(StartScene);
+		theStage.show();
+
 	}
 
 	public static void main(String[] args) { // This method may not be required
 		launch(args); // for all JavaFX applications using
-	} // other IDEs.
+	} 
 }

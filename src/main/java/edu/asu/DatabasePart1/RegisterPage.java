@@ -62,6 +62,8 @@ public class RegisterPage {
 	
 	private PasswordEvaluator PwdEval = new PasswordEvaluator();
 	private UserNameRecognizer UserNameEval = new UserNameRecognizer();
+	
+	private int WINDOW_WIDTH = 700;
 
 
 	/**********************************************************************************************
@@ -78,35 +80,35 @@ public class RegisterPage {
 	public RegisterPage(Pane theRoot) {
 
 		// Label theScene with the name of the test bed, centered at the top of the pane
-		setupLabelUI(label_ApplicationTitle, "Arial", 24, PasswordEvaluationGUITestbed.WINDOW_WIDTH, Pos.CENTER, 0, 10);
+		setupLabelUI(label_ApplicationTitle, "Arial", 24, WINDOW_WIDTH, Pos.CENTER, 0, 10);
 
-		setupLabelUI(label_Username, "Arial", 14, PasswordEvaluationGUITestbed.WINDOW_WIDTH - 10, Pos.BASELINE_LEFT, 10,
+		setupLabelUI(label_Username, "Arial", 14, WINDOW_WIDTH - 10, Pos.BASELINE_LEFT, 10,
 				50);
 		
-		setupTextUI(text_Username, "Arial", 18, PasswordEvaluationGUITestbed.WINDOW_WIDTH - 20, Pos.BASELINE_LEFT, 10,
+		setupTextUI(text_Username, "Arial", 18, WINDOW_WIDTH - 20, Pos.BASELINE_LEFT, 10,
 				70, true);
 
-		setupLabelUI(label_Username_Validity, "Arial", 14, PasswordEvaluationGUITestbed.WINDOW_WIDTH - 10, Pos.BASELINE_LEFT, 10,
+		setupLabelUI(label_Username_Validity, "Arial", 14, WINDOW_WIDTH - 10, Pos.BASELINE_LEFT, 10,
 				115);
 
 		// Label the password input field with a title just above it, left aligned
-		setupLabelUI(label_Password, "Arial", 14, PasswordEvaluationGUITestbed.WINDOW_WIDTH - 10, Pos.BASELINE_LEFT, 10,
+		setupLabelUI(label_Password, "Arial", 14, WINDOW_WIDTH - 10, Pos.BASELINE_LEFT, 10,
 				150);
 		
-		setupTextUI(text_Password, "Arial", 18, PasswordEvaluationGUITestbed.WINDOW_WIDTH - 20, Pos.BASELINE_LEFT, 10,
+		setupTextUI(text_Password, "Arial", 18, WINDOW_WIDTH - 20, Pos.BASELINE_LEFT, 10,
 				170, true);
 		
-		setupLabelUI(label_Password_Validity, "Arial", 14, PasswordEvaluationGUITestbed.WINDOW_WIDTH - 10, Pos.BASELINE_LEFT, 10,
+		setupLabelUI(label_Password_Validity, "Arial", 14, WINDOW_WIDTH - 10, Pos.BASELINE_LEFT, 10,
 				215);
 
 		// Label the password input field with a title just above it, left aligned
-		setupLabelUI(label_Password_Confirm, "Arial", 14, PasswordEvaluationGUITestbed.WINDOW_WIDTH - 10,
+		setupLabelUI(label_Password_Confirm, "Arial", 14, WINDOW_WIDTH - 10,
 				Pos.BASELINE_LEFT, 10, 250);
 
-		setupTextUI(text_Password_Confirm, "Arial", 18, PasswordEvaluationGUITestbed.WINDOW_WIDTH - 20,
+		setupTextUI(text_Password_Confirm, "Arial", 18, WINDOW_WIDTH - 20,
 				Pos.BASELINE_LEFT, 10, 270, true);
 		
-		setupLabelUI(label_Password_Confirm_Validity, "Arial", 14, PasswordEvaluationGUITestbed.WINDOW_WIDTH - 10, Pos.BASELINE_LEFT, 10,
+		setupLabelUI(label_Password_Confirm_Validity, "Arial", 14, WINDOW_WIDTH - 10, Pos.BASELINE_LEFT, 10,
 				315);
 
 		text_Username.textProperty().addListener((observable, oldValue, newValue) -> {
@@ -120,7 +122,7 @@ public class RegisterPage {
 			setPasswordConfirm();
 		});
 		
-		setupButtonUI(button_Submit, "Arial",14 ,100, Pos.CENTER, PasswordEvaluationGUITestbed.WINDOW_WIDTH/2-50, 400);
+		setupButtonUI(button_Submit, "Arial",14 ,100, Pos.CENTER, WINDOW_WIDTH/2-50, 400);
 		
 
 		// Place all of the just-initialized GUI elements into the pane, whether they

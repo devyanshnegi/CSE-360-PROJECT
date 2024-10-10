@@ -48,30 +48,30 @@ public class chooseInterface {
 
 	public chooseInterface(Pane Root) {
 		// Label theScene with the name of the testbed, centered at the top of the pane
-		setupLabelUI(Title, "Arial", 24, chooseOrRegisterPage.WINDOW_WIDTH, Pos.CENTER, 0, 10);
+		setupLabelUI(Title, "Arial", 24, MainPage.WINDOW_WIDTH, Pos.CENTER, 0, 10);
 
 		// Enhancements to the Title of the Page
 		Font font = Font.font("Arial", FontWeight.BOLD, 25);
 		Title.setFont(font);
 
 		// Label the password input field with a title just above it, left aligned
-		setupLabelUI(Invite, "Arial", 14, chooseOrRegisterPage.WINDOW_WIDTH - 10, Pos.BASELINE_LEFT, 10, 70);
+		setupLabelUI(Invite, "Arial", 14, MainPage.WINDOW_WIDTH - 10, Pos.BASELINE_LEFT, 10, 70);
 
 		// Enhancements to the label Text
 		Font font1 = Font.font("Arial", FontWeight.BOLD, 14);
 		Invite.setFont(font1);
 
-		// placeholder text for textfield
+		// placeholder text for textfeild
 		Invite_Code.setPromptText("Enter Code provided by Admin");
 
 		// the code will process the entire input to ensure that it is valid or in
 		// error.
-		setupTextUI(Invite_Code, "Arial", 18, chooseOrRegisterPage.WINDOW_WIDTH - 20, Pos.BASELINE_LEFT, 10, 100, true);
+		setupTextUI(Invite_Code, "Arial", 18, MainPage.WINDOW_WIDTH - 20, Pos.BASELINE_LEFT, 10, 100, true);
 
 		// Establish an error message for the case where there is no input
 		noCode.setTextFill(Color.RED);
 		noCode.setAlignment(Pos.BASELINE_LEFT);
-		setupLabelUI(noCode, "Arial", 16, chooseOrRegisterPage.WINDOW_WIDTH - 10, Pos.BASELINE_LEFT, 10, 120);
+		setupLabelUI(noCode, "Arial", 16, MainPage.WINDOW_WIDTH - 10, Pos.BASELINE_LEFT, 10, 120);
 
 		// redirection on pressing button to the login page
 		// InviteCodeEnter.addEventHandler(null, null);
@@ -81,7 +81,7 @@ public class chooseInterface {
 		InviteCodeEnter.setLayoutY(150);
 
 		// Label the login option
-		setupLabelUI(loginOption, "Arial", 14, chooseOrRegisterPage.WINDOW_WIDTH - 10, Pos.BASELINE_LEFT, 10, 200);
+		setupLabelUI(loginOption, "Arial", 14, MainPage.WINDOW_WIDTH - 10, Pos.BASELINE_LEFT, 10, 200);
 
 		Font font2 = Font.font("Arial", FontWeight.BOLD, 14);
 		loginOption.setFont(font2);
@@ -89,7 +89,7 @@ public class chooseInterface {
 		// set up the button onto the scene
 
 		// action of button redirecting to login page
-		// loginRedirect.addEventHandler(null, null);
+		//loginRedirect.addEventHandler(null, null);
 		loginRedirect.setLayoutX(210);
 		loginRedirect.setLayoutY(240);
 
@@ -97,7 +97,10 @@ public class chooseInterface {
 		Root.getChildren().addAll(Title, Invite, Invite_Code, noCode, InviteCodeEnter, loginOption, loginRedirect);
 	}
 
-	// Private local method to initialize the standard fields for a label
+	// Private local method to initialize the standard fields for a label	
+	public Button InviteButton(){
+		return InviteCodeEnter;
+	}
 
 	private void setupLabelUI(Label l, String ff, double f, double w, Pos p, double x, double y) {
 		l.setFont(Font.font(ff, f));

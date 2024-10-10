@@ -34,7 +34,8 @@ public class PasswordEvaluationGUITestbed extends Application {
 	/** The default constructor */
 	public PasswordEvaluationGUITestbed() {
 	}
-
+	
+	
 	/**********
 	 * This is the start method that is called once the application has been loaded into memory and
 	 * is ready to get to work.
@@ -57,7 +58,8 @@ public class PasswordEvaluationGUITestbed extends Application {
 		
 		theStage.setScene(theScene);						// Set the scene on the stage
 		
-		theStage.show();									// Show the stage to the user
+		theStage.show();	
+		// Show the stage to the user
 		
 		// When the stage is shown to the user, the pane within the window is visible.  This means
 		// that the labels, fields, and buttons of the Graphical User Interface (GUI) are visible 

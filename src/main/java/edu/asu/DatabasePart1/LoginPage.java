@@ -1,3 +1,4 @@
+
 package edu.asu.DatabasePart1;
 
 import javafx.geometry.Pos;
@@ -7,6 +8,8 @@ import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.Pane;
 import javafx.scene.text.Font;
+import javafx.stage.Stage;
+import javafx.scene.Scene;
 
 public class LoginPage {
 
@@ -19,7 +22,13 @@ public class LoginPage {
     private Button loginButton = new Button("Login");
     private Label messageLabel = new Label();
 
-    public LoginPage(Pane Root3) {
+    // Flag to determine if this login is after registration
+    private boolean isAfterRegister;
+
+    // Constructor takes Pane, Stage, AdminScene, CompleteProfileScene, and isAfterRegister flag
+    public LoginPage(Pane root, Stage theStage, Scene adminScene, Scene completeProfileScene, boolean isAfterRegister) {
+        this.isAfterRegister = isAfterRegister; // Store the flag
+
         // Set up the UI components
         setupLabelUI(usernameLabel, "Arial", 14, 100, Pos.CENTER_LEFT, 50, 50);
         setupTextFieldUI(usernameField, "Arial", 14, 200, Pos.CENTER_LEFT, 160, 50);
@@ -29,26 +38,41 @@ public class LoginPage {
 
         setupButtonUI(loginButton, "Arial", 14, 100, Pos.CENTER, 160, 150);
         setupLabelUI(messageLabel, "Arial", 14, 300, Pos.CENTER, 160, 200);
-        
+
         // Set the login button action
         loginButton.setOnAction(event -> {
-            String username = usernameField.getText();
-            String password = passwordField.getText();
+            String username = getUsername();
+            String password = getPassword();
 
             if (!username.isEmpty() && !password.isEmpty()) {
-                // If login is successful, show success message
-                System.out.println("Login successful!");
-                messageLabel.setText("Login successful!");
-                messageLabel.setStyle("-fx-text-fill: green;");
+                System.out.println("Entered Username: " + username);
+                System.out.println("Entered Password: " + password);
+
+                // Check if it's after registration, redirect to CompleteProfilePage, otherwise AdminPage
+                if (isAfterRegister) {
+                    System.out.println("Redirecting to CompleteProfilePage...");
+                    theStage.setScene(completeProfileScene); // Switch to CompleteProfilePage scene
+                } else {
+                    System.out.println("Login successful! Redirecting to Admin Page...");
+                    theStage.setScene(adminScene); // Switch to AdminPage scene
+                }
             } else {
-                // Show an error message
                 messageLabel.setText("Please enter both username and password.");
                 messageLabel.setStyle("-fx-text-fill: red;");
             }
         });
 
         // Add all components to the provided Pane
-        Root3.getChildren().addAll(usernameLabel, usernameField, passwordLabel, passwordField, loginButton, messageLabel);
+        root.getChildren().addAll(usernameLabel, usernameField, passwordLabel, passwordField, loginButton, messageLabel);
+    }
+
+    // Getter methods to retrieve the username and password
+    public String getUsername() {
+        return usernameField.getText();
+    }
+
+    public String getPassword() {
+        return passwordField.getText();
     }
 
     // Utility method to set up Label UI properties

@@ -1,6 +1,6 @@
+
 package edu.asu.DatabasePart1;
 
-//JavaFX imports needed to support the Graphical User Interface
 import javafx.application.Application;
 
 import java.time.format.DateTimeFormatter;
@@ -12,106 +12,86 @@ import java.sql.SQLException;
 import javafx.scene.Scene;
 import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
+import javafx.geometry.Pos;
+import javafx.scene.control.Label;
+import javafx.scene.control.TextField;
+import javafx.scene.layout.Pane;
+import javafx.scene.paint.Color;
+import javafx.scene.text.Font;
+import javafx.scene.text.FontWeight;
 import javafx.scene.control.Button;
-/*******
- * <p>
- * PasswordAddressTestbed Class
- * </p>
- * 
- * <p>
- * Description: A JavaFX demonstration application and baseline for a sequence
- * of projects
- * </p>
- * 
- * <p>
- * Copyright: Lynn Robert Carter © 2022
- * </p>
- * 
- * @author Lynn Robert Carter
- * 
- * @version 4.00 2017-10-16 The mainline of a JavaFX-based GUI implementation of
- *          a User Interface testbed
- * @version 5.00 2022-09-22 Updated for use at ASU
- * 
- */
+import javafx.scene.Scene;
+import javafx.stage.Stage;
+
 
 public class MainPage extends Application {
-	/** The width of the pop-up window for the user interface */
-	public final static double WINDOW_WIDTH = 500;
-	/** The height of the pop-up window for the user interface */
-	public final static double WINDOW_HEIGHT = 430;
 
-	// A object referencing the application's interface
-	public StartPage StartGui;
-	public CompleteProfilePage CompleteProfileGui;
-	public AdminPage AdminGui;
-	public LoginPage LoginGui;
-	public HomePage HomeGui;
-	public RegisterPage RegisterGui;
-	
-	private static final DatabaseHelper databaseHelper = new DatabaseHelper();
-	private static final Scanner scanner = new Scanner(System.in);
-	private static final Random rand = new Random();
-	
-	public MainPage() {
+    // Constants for window size
+    public final static double WINDOW_WIDTH = 500;
+    public final static double WINDOW_HEIGHT = 430;
 
-	}
+    public final static double ADMIN_WINDOW_WIDTH = 600;
+    public final static double ADMIN_WINDOW_HEIGHT = 600;
 
-	@Override
-	public void start(Stage theStage) throws Exception {
-		
-		theStage.setTitle("Choose or Register"); // Label the stage (a window)
+    // Objects referencing the application's interfaces
+    public StartPage StartGui;
+    public AdminPage AdminGui;
+    public LoginPage LoginGui;
+    public RegisterPage RegisterGui;
+    public CompleteProfilePage CompleteProfileGui;
+    public HomePage HomeGui;
 
-		Pane StartPane = new Pane(); // Create a pane within the window
-		StartGui = new StartPage(StartPane); // Create the Graphical User Interface
-		Scene StartScene = new Scene(StartPane, WINDOW_WIDTH, WINDOW_HEIGHT); // Create the scene
-		Button buttonRegister = StartGui.InviteButton();		
-		
-		Pane AdminPane = new Pane();		
-		AdminGui = new AdminPage(AdminPane);
-		Scene AdminScene = new Scene(AdminPane, WINDOW_WIDTH, WINDOW_HEIGHT); // Create the scene
-		
-		Pane RegisterPane = new Pane();
-		RegisterGui = new RegisterPage(RegisterPane);
-		Scene RegisterScene = new Scene(RegisterPane, WINDOW_WIDTH, WINDOW_HEIGHT); // Create the scene
-		Button switchToComplete = RegisterGui.getButton1();
-		
-		Pane LoginPane = new Pane();
-		LoginGui = new LoginPage(LoginPane);
-		Scene LoginScene = new Scene(LoginPane, WINDOW_WIDTH, WINDOW_HEIGHT); // Create the scene
-		
-		Pane CompleteProfilePane = new Pane();
-		CompleteProfileGui = new CompleteProfilePage(CompleteProfilePane); // Create the Graphical User Interface
-		Scene CompleteProfileScene = new Scene(CompleteProfilePane, WINDOW_WIDTH, WINDOW_HEIGHT); // Create the scene
-		Button buttonNavigateToHome = CompleteProfileGui.getButton();
-		
-		Pane HomePane = new Pane();
-		HomeGui = new HomePage(HomePane);
-		Scene HomeScene = new Scene(HomePane, WINDOW_WIDTH, WINDOW_HEIGHT); // Create the scene
-		Button ExitLogin; // TODO
+    @Override
+    public void start(Stage theStage) throws Exception {
 
-		buttonRegister.setOnAction(event ->{
-			theStage.setScene(RegisterScene);
-		});
-		
-		buttonNavigateToHome.setOnAction(event ->{
-			theStage.setScene(HomeScene);
-		});
-		
-		switchToComplete.setOnAction(event ->{
-			theStage.setScene(CompleteProfileScene);
-		});
-		
-		theStage.setScene(StartScene);
-		theStage.show();
-		
-	}
+        theStage.setTitle("Choose or Register"); // Set the window title
 
-	public static void main(String[] args) { // This method may not be required
-		launch(args); // for all JavaFX applications using
-	} 
-	
-	public void setupAdministrator() {
-		
-	}
+        // Set up the HomePage UI
+        Pane HomePane = new Pane();
+        HomeGui = new HomePage(HomePane);
+        Scene HomeScene = new Scene(HomePane, WINDOW_WIDTH, WINDOW_HEIGHT); // HomePage scene
+
+        // Set up the CompleteProfilePage UI
+        Pane CompleteProfilePane = new Pane();
+        CompleteProfileGui = new CompleteProfilePage(CompleteProfilePane, theStage, HomeScene); // Pass HomeScene to CompleteProfilePage
+        Scene CompleteProfileScene = new Scene(CompleteProfilePane, WINDOW_WIDTH, WINDOW_HEIGHT); // CompleteProfilePage scene
+
+        // Set up the AdminPage UI with larger window size
+        Pane AdminPane = new Pane();
+        AdminGui = new AdminPage(AdminPane);
+        Scene AdminScene = new Scene(AdminPane, ADMIN_WINDOW_WIDTH, ADMIN_WINDOW_HEIGHT); // AdminPage scene
+
+        // Set up the LoginPage UI for normal login (not after registration)
+        Pane LoginPaneNormal = new Pane();
+        LoginGui = new LoginPage(LoginPaneNormal, theStage, AdminScene, CompleteProfileScene, false); // Pass AdminScene for normal login
+        Scene LoginSceneNormal = new Scene(LoginPaneNormal, WINDOW_WIDTH, WINDOW_HEIGHT); // LoginPage scene for normal login
+
+        // Set up the LoginPage UI after registration
+        Pane LoginPaneAfterRegister = new Pane();
+        LoginGui = new LoginPage(LoginPaneAfterRegister, theStage, AdminScene, CompleteProfileScene, true); // Pass CompleteProfileScene for login after registration
+        Scene LoginSceneAfterRegister = new Scene(LoginPaneAfterRegister, WINDOW_WIDTH, WINDOW_HEIGHT); // LoginPage scene for login after registration
+
+        // Set up the RegisterPage UI
+        Pane RegisterPane = new Pane();
+        RegisterGui = new RegisterPage(RegisterPane, theStage, LoginSceneAfterRegister); // After registration, redirect to LoginSceneAfterRegister
+        Scene RegisterScene = new Scene(RegisterPane, WINDOW_WIDTH, WINDOW_HEIGHT); // RegisterPage scene
+
+        // Set up the StartPage UI
+        Pane StartPane = new Pane();  // Initialize StartPane
+        StartGui = new StartPage(StartPane, theStage, RegisterScene); // Pass RegisterScene to StartPage
+        Scene StartScene = new Scene(StartPane, WINDOW_WIDTH, WINDOW_HEIGHT); // StartPage scene
+
+        // Handle button actions to switch between scenes
+        Button buttonLogin = StartGui.LoginButton(); // Get the existing Login button from StartPage
+        buttonLogin.setOnAction(event -> {
+            theStage.setScene(LoginSceneNormal); // Switch to the normal login scene
+        });
+
+        theStage.setScene(StartScene); // Show the StartPage first
+        theStage.show();
+    }
+
+    public static void main(String[] args) {
+        launch(args);
+    }
 }

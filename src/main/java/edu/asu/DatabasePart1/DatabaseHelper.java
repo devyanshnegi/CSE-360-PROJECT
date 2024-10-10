@@ -1,5 +1,26 @@
 package edu.asu.DatabasePart1;
 
+/*******
+ * <p>
+ * PasswordAddressTestbed Class
+ * </p>
+ * 
+ * <p>
+ * Description: A Database Helper program that makes SQL calls to the H2 in memory database for the GUI
+ * </p>
+ * 
+ * <p>
+ * Copyright: Lynn Robert Carter © 2022
+ * </p>
+ * 
+ * @author Lynn Robert Carter
+ * 
+ * @version 4.00 2017-10-16 The mainline of a JavaFX-based GUI implementation of
+ *          a User Interface testbed
+ * @version 5.00 2022-09-22 Updated for use at ASU
+ * 
+ */
+
 import java.sql.*;
 
 import java.sql.Connection;

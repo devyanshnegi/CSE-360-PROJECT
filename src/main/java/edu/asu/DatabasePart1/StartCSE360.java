@@ -31,8 +31,9 @@ public class StartCSE360 {
 //				int OTP = 100000 + rand.nextInt(900000);
 //				databaseHelper.storeOTP(OTP);
 				databaseHelper.displayUsersByAdmin();
+				System.out.println();
 				if(databaseHelper.isOTPValid(114897)) {
-					databaseHelper.register("user1", "user1", 114897);
+					databaseHelper.register("user1", "user1", 0);
 				}
 				databaseHelper.displayUsersByAdmin();
 				System.exit(0);

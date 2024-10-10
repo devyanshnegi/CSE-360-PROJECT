@@ -37,30 +37,52 @@ class DatabaseHelper {
 	private void createTables() throws SQLException {
 		String userTable = "CREATE TABLE IF NOT EXISTS cse360users ("
 				+ "id INT AUTO_INCREMENT PRIMARY KEY, "
+				+ "username VARCHAR(16) UNIQUE, "
 				+ "email VARCHAR(255) UNIQUE, "
+				+ "firstname VARCHAR(255), "
+				+ "middlename VARCHAR(255), "
+				+ "lastname VARCHAR(255), "
+				+ "preferredname VARCHAR(255), "
 				+ "password VARCHAR(255), "
-				+ "role VARCHAR(20))";
-		String otpTable = "CREATE TABLE IF NOT EXISTS otp ("
-				+ "id INT AUTO_INCREMENT PRIMARY KEY, "
-				+ "password VARCHAR(255) UNIQUE, "
-				+ "created DATETIME, "
-				+ "flag BIT)";
+				+ "role VARCHAR(20),"
+				+ "otp INT UNIQUE)";
+//		String otpTable = "CREATE TABLE IF NOT EXISTS otp ("
+//				+ "id INT AUTO_INCREMENT PRIMARY KEY, "
+//				+ "password VARCHAR(255) UNIQUE, "
+//				+ "created DATETIME, "
+//				+ "flag BIT)";
 		statement.execute(userTable);
-		statement.execute(otpTable);
+//		statement.execute(otpTable);
 	}
 	
-	public boolean isOTPValid(String otp) {
-	    String query = "SELECT COUNT(*) FROM otp WHERE password = ?";
+//	public void storeOTP(String otp, String Date) throws SQLException {
+//		String insertUser = "INSERT INTO otp (password, created, flag) VALUES (?, ?, True)";
+//		try (PreparedStatement pstmt = connection.prepareStatement(insertUser)) {
+//			pstmt.setString(1, otp);
+//			pstmt.setString(2, Date);
+//			pstmt.executeUpdate();
+//		}
+//	}
+	
+	public void storeOTP(String role, int otp) throws SQLException {
+		String insertUser = "INSERT INTO cse360users (role, otp) VALUES (?, ?)";
+		try (PreparedStatement pstmt = connection.prepareStatement(insertUser)) {
+			pstmt.setString(1, role);
+			pstmt.setInt(2, otp);
+			pstmt.executeUpdate();
+		}
+	}
+	
+	public boolean isOTPValid(int otp) {
+	    String query = "SELECT COUNT(*) FROM cse360users WHERE otp = ?";
 	    try (PreparedStatement pstmt = connection.prepareStatement(query)) {
 	        
-	        pstmt.setString(1, otp);
+	        pstmt.setInt(1, otp);
 	        ResultSet rs = pstmt.executeQuery();
 	        
 	        if (rs.next()) {
 	            // If the count is greater than 0, the user exists
-	            if (rs.getInt(1) > 0) {
-	            	return rs.getBoolean("flag");
-	            }
+	            return rs.getInt(1) > 0;
 	        }
 	    } catch (SQLException e) {
 	        e.printStackTrace();
@@ -79,33 +101,46 @@ class DatabaseHelper {
 		return true;
 	}
 
-	public void register(String email, String password, String role) throws SQLException {
-		String insertUser = "INSERT INTO cse360users (email, password, role) VALUES (?, ?, ?)";
+	public void register(String username, String password, int otp) throws SQLException {
+		String insertUser = "UPDATE cse360users SET username = ?, password = ?, otp = ? WHERE otp = ?";
 		try (PreparedStatement pstmt = connection.prepareStatement(insertUser)) {
-			pstmt.setString(1, email);
+			pstmt.setString(1, username);
 			pstmt.setString(2, password);
-			pstmt.setString(3, role);
+			pstmt.setString(3, null);
+			pstmt.setInt(4, otp);
 			pstmt.executeUpdate();
 		}
 	}
 
-	public boolean login(String email, String password, String role) throws SQLException {
-		String query = "SELECT * FROM cse360users WHERE email = ? AND password = ? AND role = ?";
+	public boolean login(String username, String password) throws SQLException {
+		String query = "SELECT * FROM cse360users WHERE username = ? AND password = ?";
 		try (PreparedStatement pstmt = connection.prepareStatement(query)) {
-			pstmt.setString(1, email);
+			pstmt.setString(1, username);
 			pstmt.setString(2, password);
-			pstmt.setString(3, role);
 			try (ResultSet rs = pstmt.executeQuery()) {
 				return rs.next();
 			}
 		}
 	}
 	
-	public boolean doesUserExist(String email) {
-	    String query = "SELECT COUNT(*) FROM cse360users WHERE email = ?";
+	public void completeProfile(String username, String firstname, String middlename, String lastname, String preferredname,  String email) throws SQLException {
+		String insertUser = "UPDATE cse360users SET firstname = ?, middlename = ?, lastname = ?, email = ?, preferredname = ? WHERE username = ?";
+		try (PreparedStatement pstmt = connection.prepareStatement(insertUser)) {
+			pstmt.setString(1, firstname);
+			pstmt.setString(2, middlename);
+			pstmt.setString(3, lastname);
+			pstmt.setString(4, preferredname);
+			pstmt.setString(5, email);
+			pstmt.setString(6, username);
+			pstmt.executeUpdate();
+		}
+	}
+	
+	public boolean doesUserExist(String username) {
+	    String query = "SELECT COUNT(*) FROM cse360users WHERE username = ?";
 	    try (PreparedStatement pstmt = connection.prepareStatement(query)) {
 	        
-	        pstmt.setString(1, email);
+	        pstmt.setString(1, username);
 	        ResultSet rs = pstmt.executeQuery();
 	        
 	        if (rs.next()) {
@@ -126,15 +161,19 @@ class DatabaseHelper {
 		while(rs.next()) { 
 			// Retrieve by column name 
 			int id  = rs.getInt("id"); 
+			String  username = rs.getString("username"); 
 			String  email = rs.getString("email"); 
 			String password = rs.getString("password"); 
 			String role = rs.getString("role");  
+			String otp = rs.getString("otp");  
 
 			// Display values 
 			System.out.print("ID: " + id); 
-			System.out.print(", Age: " + email); 
-			System.out.print(", First: " + password); 
-			System.out.println(", Last: " + role); 
+			System.out.print(", Username: " + username); 
+			System.out.print(", Email: " + email); 
+			System.out.print(", Password: " + password); 
+			System.out.println(", Role: " + role); 
+			System.out.println(", OTP: " + otp); 
 		} 
 	}
 	
@@ -149,12 +188,14 @@ class DatabaseHelper {
 			String  email = rs.getString("email"); 
 			String password = rs.getString("password"); 
 			String role = rs.getString("role");  
+			String otp = rs.getString("otp");  
 
 			// Display values 
 			System.out.print("ID: " + id); 
-			System.out.print(", Age: " + email); 
-			System.out.print(", First: " + password); 
-			System.out.println(", Last: " + role); 
+			System.out.print(", Email: " + email); 
+			System.out.print(", Password: " + password); 
+			System.out.println(", Role: " + role); 
+			System.out.println(", OTP: " + otp); 
 		} 
 	}
 

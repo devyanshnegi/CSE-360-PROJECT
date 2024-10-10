@@ -68,7 +68,7 @@ public class StartCSE360 {
 		String username = scanner.nextLine();
 		System.out.print("Enter Admin Password: ");
 		String password = scanner.nextLine();
-		databaseHelper.storeOTP(000000);
+//		databaseHelper.storeOTP(000000);
 		databaseHelper.register(username, password, 000000);
 		System.out.println("Administrator setup completed.");
 
@@ -88,7 +88,7 @@ public class StartCSE360 {
 			password = scanner.nextLine(); 
 			// Check if user already exists in the database
 		    if (!databaseHelper.doesUserExist(username)) {
-		        databaseHelper.register(username, password,0); //TODO
+//		        databaseHelper.register(username, password,0); //TODO
 		        System.out.println("User setup completed.");
 		    } else {
 		        System.out.println("User already exists.");

@@ -35,7 +35,7 @@ import javafx.scene.text.FontWeight;
  * 
  */
 
-public class chooseInterfaceController {
+public class CompleteProfilePage {
 	private Label Title1 = new Label("Complete Setting Up your Profile");
 	private Label FirstName = new Label("Enter Your First Name");
 	private TextField firstName = new TextField();
@@ -49,7 +49,7 @@ public class chooseInterfaceController {
 	private TextField emailEnter = new TextField();
 	private Button completeProfile = new Button("Complete Profile");
 
-	public chooseInterfaceController(Pane Root1) {
+	public CompleteProfilePage(Pane Root1) {
 		// Label theScene with the name of the testbed, centered at the top of the pane
 		setupLabelUI(Title1, "Arial", 24, MainPage.WINDOW_WIDTH, Pos.CENTER, 0, 10);
 
@@ -107,6 +107,10 @@ public class chooseInterfaceController {
 	}
 
 //Private local method to initialize the standard fields for a label
+	
+	public Button getButton() {
+		return completeProfile;
+	} 
 
 	private void setupLabelUI(Label l, String ff, double f, double w, Pos p, double x, double y) {
 		l.setFont(Font.font(ff, f));

@@ -35,7 +35,7 @@ import javafx.scene.text.FontWeight;
  * 
  */
 
-public class chooseInterface {
+public class StartPage {
 
 	private Label Title = new Label("Login or Enter Invitation Code");
 	private Label Invite = new Label("Enter the Invitation Code Here:");
@@ -46,7 +46,7 @@ public class chooseInterface {
 	private Label loginOption = new Label("Choose to Login:");
 	private Button loginRedirect = new Button("Login");
 
-	public chooseInterface(Pane Root) {
+	public StartPage(Pane Root) {
 		// Label theScene with the name of the testbed, centered at the top of the pane
 		setupLabelUI(Title, "Arial", 24, MainPage.WINDOW_WIDTH, Pos.CENTER, 0, 10);
 

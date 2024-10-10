@@ -36,7 +36,7 @@ public class ControllerPage extends Application {
 	public final static double WINDOW_HEIGHT = 430;
 
 	// A object referencing the application's interface
-	public chooseInterfaceController Gui;
+	public CompleteProfilePage Gui;
 
 	public ControllerPage() {
 
@@ -48,7 +48,7 @@ public class ControllerPage extends Application {
 
 		Pane Root1 = new Pane(); // Create a pane within the window
 
-		Gui = new chooseInterfaceController(Root1); // Create the Graphical User Interface
+		Gui = new CompleteProfilePage(Root1); // Create the Graphical User Interface
 
 		Scene theScene = new Scene(Root1, WINDOW_WIDTH, WINDOW_HEIGHT); // Create the scene
 

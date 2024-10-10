@@ -1,69 +1,77 @@
 package edu.asu.DatabasePart1;
 
-//JavaFX imports needed to support the Graphical User Interface
-import javafx.application.Application; 
+// JavaFX imports needed to support the Graphical User Interface
+import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.scene.layout.Pane;
-import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
-/*******
+/***
  * <p>
- * PasswordAddressTestbed Class
+ * ControllerPage Class
  * </p>
  * 
  * <p>
- * Description: A JavaFX demonstration application and baseline for a sequence
- * of projects
+ * Description: A JavaFX application that serves as the controller for the user interface,
+ * facilitating user interaction through the CompleteProfilePage.
  * </p>
  * 
  * <p>
- * Copyright: Lynn Robert Carter © 2022
+ * Copyright: Your Name © 2024
  * </p>
  * 
- * @author Lynn Robert Carter
+ * @author Your Name
  * 
- * @version 4.00 2017-10-16 The mainline of a JavaFX-based GUI implementation of
- *          a User Interface testbed
- * @version 5.00 2022-09-22 Updated for use at ASU
+ * @version 1.00 2024-10-09 Initial creation of the ControllerPage class to manage the 
+ *         setup and display of the complete user profile interface.
  * 
  */
 
-
-
 public class ControllerPage extends Application {
-    /** The width of the pop-up window for the user interface */
-    public final static double WINDOW_WIDTH = 500;
-    public final static double WINDOW_HEIGHT = 430;
+	/** The width of the pop-up window for the user interface */
+	public final static double WINDOW_WIDTH = 500;
+	/** The height of the pop-up window for the user interface */
+	public final static double WINDOW_HEIGHT = 430;
 
-    // A reference to the CompleteProfilePage and HomePage
-    public CompleteProfilePage Gui;
-    public HomePage HomeGui;
+	/** An object referencing the application's complete profile page interface */
+	public CompleteProfilePage Gui;
 
-    public ControllerPage() {
-    }
+	/** The default constructor for the ControllerPage class */
+	public ControllerPage() {
+		// No initialization required for the constructor at this moment
+	}
 
-    @Override
-    public void start(Stage theStage) throws Exception {
+	/****
+	 * The start method is called once the application has been loaded into memory
+	 * and is ready to be displayed to the user.
+	 * 
+	 * @param theStage The main stage for the JavaFX application
+	 * @throws Exception If an error occurs during the loading of the application
+	 */
+	public void start(Stage theStage) throws Exception {
+		theStage.setTitle("Complete Set Up Page"); // Set the title of the window
 
-        theStage.setTitle("Complete Set Up Page"); // Label the stage (a window)
+		Pane Root1 = new Pane(); // Create a pane within the window for layout management
 
-        // Set up the HomePage
-        Pane homePane = new Pane();
-        HomeGui = new HomePage(homePane);  // Create the HomePage UI
-        Scene homeScene = new Scene(homePane, WINDOW_WIDTH, WINDOW_HEIGHT);  // Create the HomePage scene
+		Gui = new CompleteProfilePage(Root1); // Instantiate the CompleteProfilePage with the pane
 
-        // Set up the CompleteProfilePage and pass the homeScene to allow redirection
-        Pane profilePane = new Pane(); // Create a pane within the window for CompleteProfilePage
-        Gui = new CompleteProfilePage(profilePane, theStage, homeScene); // Create the CompleteProfilePage and pass the HomePage scene
-        Scene profileScene = new Scene(profilePane, WINDOW_WIDTH, WINDOW_HEIGHT); // Create the CompleteProfilePage scene
+		Scene theScene = new Scene(Root1, WINDOW_WIDTH, WINDOW_HEIGHT); // Create the scene with the pane and dimensions
 
-        theStage.setScene(profileScene); // Set the CompleteProfilePage scene on the stage
+		theStage.setScene(theScene); // Set the scene on the stage
 
-        theStage.show(); // Show the stage to the user
-    }
+		theStage.show(); // Display the stage to the user
 
-    public static void main(String[] args) {
-        launch(args); // Launch the application
-    }
+		// When the stage is shown, the user can interact with the GUI elements
+		// (labels, fields, and buttons) visible within the pane. The user can enter
+		// values, click buttons, and read the results or error messages displayed.
+	}
+
+	/******************************
+	 * This method launches the JavaFX application.
+	 * 
+	 * @param args The standard argument list for a Java Mainline
+	 */
+	public static void main(String[] args) { // Entry point for the JavaFX application
+		launch(args); // Launch the JavaFX application, calling the start method
+	}
 }

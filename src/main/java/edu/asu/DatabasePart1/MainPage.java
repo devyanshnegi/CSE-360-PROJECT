@@ -23,75 +23,116 @@ import javafx.scene.control.Button;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 
-
+/***
+ * <p>
+ * MainPage Class
+ * </p>
+ * 
+ * <p>
+ * Description: A JavaFX application that serves as the main entry point for
+ *              navigating between various user interface pages in the system.
+ * </p>
+ * 
+ * <p>
+ * Copyright: Lynn Robert Carter © 2022
+ * </p>
+ * 
+ * @author Lynn Robert Carter
+ * 
+ * @version 4.00 2017-10-16 The mainline of a JavaFX-based GUI application
+ * @version 5.00 2022-09-22 Updated for use at ASU
+ * 
+ */
 public class MainPage extends Application {
-
-    // Constants for window size
+    /** The width of the pop-up window for the user interface */
     public final static double WINDOW_WIDTH = 500;
+    /** The height of the pop-up window for the user interface */
     public final static double WINDOW_HEIGHT = 430;
 
-    public final static double ADMIN_WINDOW_WIDTH = 600;
-    public final static double ADMIN_WINDOW_HEIGHT = 600;
+    // Objects referencing the various pages of the application
+    public StartPage StartGui;          // Interface for the start page
+    public CompleteProfilePage CompleteProfileGui; // Interface for completing user profiles
+    public AdminPage AdminGui;          // Interface for the admin page
+    public LoginPage LoginGui;          // Interface for the login page
+    public HomePage HomeGui;            // Interface for the home page
+    public RegisterPage RegisterGui;    // Interface for the registration page
 
-    // Objects referencing the application's interfaces
-    public StartPage StartGui;
-    public AdminPage AdminGui;
-    public LoginPage LoginGui;
-    public RegisterPage RegisterGui;
-    public CompleteProfilePage CompleteProfileGui;
-    public HomePage HomeGui;
+    /** The default constructor */
+    public MainPage() {
+    }
 
-    @Override
+    /****
+     * This is the start method that is called once the application has been loaded
+     * into memory and is ready to get to work.
+     * 
+     * Here, multiple panes and scenes are created for different user interfaces,
+     * and action events are set for buttons to navigate between these interfaces.
+     */
     public void start(Stage theStage) throws Exception {
+        theStage.setTitle("Choose or Register"); // Label the stage (a window)
 
-        theStage.setTitle("Choose or Register"); // Set the window title
+        // Create the initial pane for the start page
+        Pane StartPane = new Pane(); 
+        StartGui = new StartPage(StartPane); // Create the Graphical User Interface
+        Scene StartScene = new Scene(StartPane, WINDOW_WIDTH, WINDOW_HEIGHT); // Create the scene
 
-        // Set up the HomePage UI
+        // Create the button for registration on the start page
+        Button buttonRegister = StartGui.InviteButton();		
+		
+        // Create the admin page's pane and scene
+        Pane AdminPane = new Pane();		
+        AdminGui = new AdminPage(AdminPane);
+        Scene AdminScene = new Scene(AdminPane, WINDOW_WIDTH, WINDOW_HEIGHT); // Create the scene
+		
+        // Create the registration page's pane and scene
+        Pane RegisterPane = new Pane();
+        RegisterGui = new RegisterPage(RegisterPane);
+        Scene RegisterScene = new Scene(RegisterPane, WINDOW_WIDTH, WINDOW_HEIGHT); // Create the scene
+        Button switchToComplete = RegisterGui.getButton1(); // Button to switch to complete profile page
+		
+        // Create the login page's pane and scene
+        Pane LoginPane = new Pane();
+        LoginGui = new LoginPage(LoginPane);
+        Scene LoginScene = new Scene(LoginPane, WINDOW_WIDTH, WINDOW_HEIGHT); // Create the scene
+		
+        // Create the complete profile page's pane and scene
+        Pane CompleteProfilePane = new Pane();
+        CompleteProfileGui = new CompleteProfilePage(CompleteProfilePane); // Create the Graphical User Interface
+        Scene CompleteProfileScene = new Scene(CompleteProfilePane, WINDOW_WIDTH, WINDOW_HEIGHT); // Create the scene
+        Button buttonNavigateToHome = CompleteProfileGui.getButton(); // Button to navigate to home page
+		
+        // Create the home page's pane and scene
         Pane HomePane = new Pane();
         HomeGui = new HomePage(HomePane);
-        Scene HomeScene = new Scene(HomePane, WINDOW_WIDTH, WINDOW_HEIGHT); // HomePage scene
+        Scene HomeScene = new Scene(HomePane, WINDOW_WIDTH, WINDOW_HEIGHT); // Create the scene
+        Button ExitLogin; // TODO: Define the button for exiting login
 
-        // Set up the CompleteProfilePage UI
-        Pane CompleteProfilePane = new Pane();
-        CompleteProfileGui = new CompleteProfilePage(CompleteProfilePane, theStage, HomeScene); // Pass HomeScene to CompleteProfilePage
-        Scene CompleteProfileScene = new Scene(CompleteProfilePane, WINDOW_WIDTH, WINDOW_HEIGHT); // CompleteProfilePage scene
-
-        // Set up the AdminPage UI with larger window size
-        Pane AdminPane = new Pane();
-        AdminGui = new AdminPage(AdminPane);
-        Scene AdminScene = new Scene(AdminPane, ADMIN_WINDOW_WIDTH, ADMIN_WINDOW_HEIGHT); // AdminPage scene
-
-        // Set up the LoginPage UI for normal login (not after registration)
-        Pane LoginPaneNormal = new Pane();
-        LoginGui = new LoginPage(LoginPaneNormal, theStage, AdminScene, CompleteProfileScene, false); // Pass AdminScene for normal login
-        Scene LoginSceneNormal = new Scene(LoginPaneNormal, WINDOW_WIDTH, WINDOW_HEIGHT); // LoginPage scene for normal login
-
-        // Set up the LoginPage UI after registration
-        Pane LoginPaneAfterRegister = new Pane();
-        LoginGui = new LoginPage(LoginPaneAfterRegister, theStage, AdminScene, CompleteProfileScene, true); // Pass CompleteProfileScene for login after registration
-        Scene LoginSceneAfterRegister = new Scene(LoginPaneAfterRegister, WINDOW_WIDTH, WINDOW_HEIGHT); // LoginPage scene for login after registration
-
-        // Set up the RegisterPage UI
-        Pane RegisterPane = new Pane();
-        RegisterGui = new RegisterPage(RegisterPane, theStage, LoginSceneAfterRegister); // After registration, redirect to LoginSceneAfterRegister
-        Scene RegisterScene = new Scene(RegisterPane, WINDOW_WIDTH, WINDOW_HEIGHT); // RegisterPage scene
-
-        // Set up the StartPage UI
-        Pane StartPane = new Pane();  // Initialize StartPane
-        StartGui = new StartPage(StartPane, theStage, RegisterScene); // Pass RegisterScene to StartPage
-        Scene StartScene = new Scene(StartPane, WINDOW_WIDTH, WINDOW_HEIGHT); // StartPage scene
-
-        // Handle button actions to switch between scenes
-        Button buttonLogin = StartGui.LoginButton(); // Get the existing Login button from StartPage
-        buttonLogin.setOnAction(event -> {
-            theStage.setScene(LoginSceneNormal); // Switch to the normal login scene
+        // Set action for registration button to switch to registration scene
+        buttonRegister.setOnAction(event -> {
+            theStage.setScene(RegisterScene);
         });
-
-        theStage.setScene(StartScene); // Show the StartPage first
+		
+        // Set action for navigating to home page from complete profile page
+        buttonNavigateToHome.setOnAction(event -> {
+            theStage.setScene(HomeScene);
+        });
+		
+        // Set action for switching to complete profile page from registration page
+        switchToComplete.setOnAction(event -> {
+            theStage.setScene(CompleteProfileScene);
+        });
+		
+        // Set the initial scene to the start page and show the stage
+        theStage.setScene(StartScene);
         theStage.show();
     }
 
-    public static void main(String[] args) {
-        launch(args);
+    /********************************
+     * This is the method that launches the JavaFX application
+     * 
+     * @param args The standard argument list for a Java Mainline
+     */
+    public static void main(String[] args) { // This method may not be required
+        launch(args); // Launch the JavaFX application
     }
 }

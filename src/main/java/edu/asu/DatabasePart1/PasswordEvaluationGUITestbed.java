@@ -24,9 +24,9 @@ import javafx.stage.Stage;
 public class PasswordEvaluationGUITestbed extends Application {
 	
 	/** The width of the pop-up window for the user interface */
-	public final static double WINDOW_WIDTH = 500;
+	public final static double WINDOW_WIDTH = 700;
 	/** The height of the pop-up window for the user interface */
-	public final static double WINDOW_HEIGHT = 430;
+	public final static double WINDOW_HEIGHT = 600;
 	
 	/** A temporary object referencing the application's user interface */
 	public UserInterface theGUI;
@@ -48,7 +48,7 @@ public class PasswordEvaluationGUITestbed extends Application {
 	@Override
 	public void start(Stage theStage) throws Exception {
 		
-		theStage.setTitle("Lynn Robert Carter");			// Label the stage (a window)
+		theStage.setTitle("Register Page");			// Label the stage (a window)
 		
 		Pane theRoot = new Pane();							// Create a pane within the window
 		

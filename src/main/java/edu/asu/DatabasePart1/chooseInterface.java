@@ -97,8 +97,7 @@ public class chooseInterface {
 		Root.getChildren().addAll(Title, Invite, Invite_Code, noCode, InviteCodeEnter, loginOption, loginRedirect);
 	}
 
-	// Private local method to initialize the standard fields for a label
-	
+	// Private local method to initialize the standard fields for a label	
 	public Button InviteButton(){
 		return InviteCodeEnter;
 	}

@@ -12,7 +12,7 @@ class DatabaseHelper {
 
 	// JDBC driver name and database URL 
 	static final String JDBC_DRIVER = "org.h2.Driver";   
-	static final String DB_URL = "jdbc:h2:~/firstDatabase";  
+	static final String DB_URL = "jdbc:h2:~/Database/firstDatabase";  
 
 	//  Database credentials 
 	static final String USER = "sa"; 
@@ -33,14 +33,39 @@ class DatabaseHelper {
 			System.err.println("JDBC Driver not found: " + e.getMessage());
 		}
 	}
-
+	
 	private void createTables() throws SQLException {
 		String userTable = "CREATE TABLE IF NOT EXISTS cse360users ("
 				+ "id INT AUTO_INCREMENT PRIMARY KEY, "
 				+ "email VARCHAR(255) UNIQUE, "
 				+ "password VARCHAR(255), "
 				+ "role VARCHAR(20))";
+		String otpTable = "CREATE TABLE IF NOT EXISTS otp ("
+				+ "id INT AUTO_INCREMENT PRIMARY KEY, "
+				+ "password VARCHAR(255) UNIQUE, "
+				+ "created DATETIME, "
+				+ "flag BIT)";
 		statement.execute(userTable);
+		statement.execute(otpTable);
+	}
+	
+	public boolean isOTPValid(String otp) {
+	    String query = "SELECT COUNT(*) FROM otp WHERE password = ?";
+	    try (PreparedStatement pstmt = connection.prepareStatement(query)) {
+	        
+	        pstmt.setString(1, otp);
+	        ResultSet rs = pstmt.executeQuery();
+	        
+	        if (rs.next()) {
+	            // If the count is greater than 0, the user exists
+	            if (rs.getInt(1) > 0) {
+	            	return rs.getBoolean("flag");
+	            }
+	        }
+	    } catch (SQLException e) {
+	        e.printStackTrace();
+	    }
+	    return false; // If an error occurs, assume user doesn't exist
 	}
 
 

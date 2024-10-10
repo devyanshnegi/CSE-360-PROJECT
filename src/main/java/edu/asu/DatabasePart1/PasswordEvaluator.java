@@ -14,35 +14,35 @@ package edu.asu.DatabasePart1;
 public class PasswordEvaluator {
 
 	// Stores the error message for an invalid password
-	public static String passwordErrorMessage = "";
+	public String passwordErrorMessage = "";
 	// Stores the input password
-	public static String passwordInput = "";
+	public String passwordInput = "";
 	// Stores the index of the character causing the error
-	public static int passwordIndexofError = -1;
+	public int passwordIndexofError = -1;
 	// Flag to check if a upper case letter exists
-	public static boolean foundUpperCase = false;
+	public boolean foundUpperCase = false;
 	// Flag to check if a lower case letter exists
-	public static boolean foundLowerCase = false;
+	public boolean foundLowerCase = false;
 	// Flag to check if a number exists
-	public static boolean foundNumericDigit = false;
+	public boolean foundNumericDigit = false;
 	// Flag to check if a special character exists
-	public static boolean foundSpecialChar = false;
-	// Flag to check if the length is atleast 8 characters long exists
-	public static boolean foundLongEnough = false;
+	public boolean foundSpecialChar = false;
+	// Flag to check if the length is at least 8 characters long exists
+	public boolean foundLongEnough = false;
 	// Stores the input password string
-	private static String inputLine = "";
+	private String inputLine = "";
 	// Stores the current character being evaluated
-	private static char currentChar;
+	private char currentChar;
 	//	Stores the current index of the character being evaluated
-	private static int currentCharNdx;
+	private int currentCharNdx;
 	// Flag to keep the while loop running
-	private static boolean running;
+	private boolean running;
 
 	/**********************************************************************************************
 	 * This method displays the current state of input evaluation.
 	 * 
 	 */
-	private static void displayInputState() {
+	private void displayInputState() {
 		System.out.println(inputLine);
 		System.out.println(inputLine.substring(0,currentCharNdx) + "?");
 		System.out.println("The password size: " + inputLine.length() + "  |  The currentCharNdx: " + 
@@ -56,7 +56,7 @@ public class PasswordEvaluator {
 	 * 
 	 * @return		An error message if any condition is not met; otherwise, an empty string
 	 */
-	public static String evaluatePassword(String input) {
+	public String evaluatePassword(String input) {
 		
 		// Initialize error message and input variables
 		passwordErrorMessage = "";

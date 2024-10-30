@@ -47,7 +47,7 @@ public class confirmationPage {
      */
     public confirmationPage(Pane Root2) {
         // Set up the title label at the top of the pane
-        setupLabelUI(Title2, "Arial", 24, MainPage.WINDOW_WIDTH, Pos.CENTER, 0, 10);
+        setupLabelUI(Title2, "Arial", 24, MainApp.WINDOW_WIDTH, Pos.CENTER, 0, 10);
 
         Font fontTitle = Font.font("Arial", FontWeight.BOLD, 25);
         Title2.setFont(fontTitle);

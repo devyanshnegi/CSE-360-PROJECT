@@ -60,16 +60,16 @@ public class StartPage {
      * @param theStage The primary Stage for switching scenes.
      * @param registerScene The scene to switch to when a valid invitation code is entered.
      */
-    public StartPage(Pane Root, Stage theStage, Scene registerScene) {
+    public StartPage(Pane Root, SceneController sceneController) {
         // Label the Scene with the name of the testbed, centered at the top of the pane
-        setupLabelUI(Title, "Arial", 24, MainPage.WINDOW_WIDTH, Pos.CENTER, 0, 10);
+        setupLabelUI(Title, "Arial", 24, MainApp.WINDOW_WIDTH, Pos.CENTER, 0, 10);
 
         // Enhancements to the Title of the Page
         Font font = Font.font("Arial", FontWeight.BOLD, 25);
         Title.setFont(font);
 
         // Label for the invitation code field
-        setupLabelUI(Invite, "Arial", 14, MainPage.WINDOW_WIDTH - 10, Pos.BASELINE_LEFT, 10, 70);
+        setupLabelUI(Invite, "Arial", 14, MainApp.WINDOW_WIDTH - 10, Pos.BASELINE_LEFT, 10, 70);
         Font font1 = Font.font("Arial", FontWeight.BOLD, 14);
         Invite.setFont(font1);
 
@@ -77,19 +77,19 @@ public class StartPage {
         Invite_Code.setPromptText("Enter Code provided by Admin");
 
         // Set up the invitation code text field
-        setupTextUI(Invite_Code, "Arial", 18, MainPage.WINDOW_WIDTH - 20, Pos.BASELINE_LEFT, 10, 100, true);
+        setupTextUI(Invite_Code, "Arial", 18, MainApp.WINDOW_WIDTH - 20, Pos.BASELINE_LEFT, 10, 100, true);
 
         // Error message label for missing invitation code
         noCode.setTextFill(Color.RED);
         noCode.setAlignment(Pos.BASELINE_LEFT);
-        setupLabelUI(noCode, "Arial", 16, MainPage.WINDOW_WIDTH - 10, Pos.BASELINE_LEFT, 10, 120);
+        setupLabelUI(noCode, "Arial", 16, MainApp.WINDOW_WIDTH - 10, Pos.BASELINE_LEFT, 10, 120);
 
         // Set up the invitation code button layout
         InviteCodeEnter.setLayoutX(200);
         InviteCodeEnter.setLayoutY(150);
 
         // Label for the login option
-        setupLabelUI(loginOption, "Arial", 14, MainPage.WINDOW_WIDTH - 10, Pos.BASELINE_LEFT, 10, 200);
+        setupLabelUI(loginOption, "Arial", 14, MainApp.WINDOW_WIDTH - 10, Pos.BASELINE_LEFT, 10, 200);
         Font font2 = Font.font("Arial", FontWeight.BOLD, 14);
         loginOption.setFont(font2);
 
@@ -100,12 +100,17 @@ public class StartPage {
         // Add all elements to the scene
         Root.getChildren().addAll(Title, Invite, Invite_Code, noCode, InviteCodeEnter, loginOption, loginRedirect);
 
+    	// Handle button actions to switch between scenes
+        loginRedirect.setOnAction(event -> {
+            sceneController.switchTo("Login");
+        });
+        
         // Add functionality for the Enter Code button to switch to RegisterPage
         InviteCodeEnter.setOnAction(event -> {
             String inviteCode = Invite_Code.getText();
             if (!inviteCode.isEmpty()) {
                 // Switch to the RegisterPage
-                theStage.setScene(registerScene);
+            	sceneController.switchTo("Register");
             } else {
                 // Display an error message if no code is entered
                 noCode.setText("Please enter a valid invitation code.");
@@ -113,27 +118,6 @@ public class StartPage {
         });
     }
 
-    /**********
-     * InviteButton method
-     * 
-     * <p> Returns the invitation code button for external access. </p>
-     * 
-     * @return The button used for submitting the invitation code.
-     */
-    public Button InviteButton() {
-        return InviteCodeEnter;
-    }
-
-    /**********
-     * LoginButton method
-     * 
-     * <p> Returns the login button for external access. </p>
-     * 
-     * @return The button used for navigating to the login screen.
-     */
-    public Button LoginButton() {
-        return loginRedirect;
-    }
 
     /**********
      * setupLabelUI method

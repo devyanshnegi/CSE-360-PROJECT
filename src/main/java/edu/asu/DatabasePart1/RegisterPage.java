@@ -129,10 +129,14 @@ public class RegisterPage {
         button_Submit.setOnAction(event -> {
         	if(validUsername && validPassowrd && validConfirm) {
         		int otp = (int)sceneController.getData("otp");
-        		register(text_Username.getText(), text_Password.getText(), otp);
+        		if(!register(text_Username.getText(), text_Password.getText(), otp)) {
+        			label_Username_Validity.setTextFill(Color.RED);
+                    label_Username_Validity.setText("This username already exists.");
+        		}else {
+        			System.out.println("Registration complete. Redirecting to Login Page...");
+                    sceneController.switchTo("LoginToComplete");
+        		}
         	}
-            System.out.println("Registration complete. Redirecting to Login Page...");
-            sceneController.switchTo("LoginToComplete");
         });
 
         // Place all of the just-initialized GUI elements into the pane
@@ -141,10 +145,11 @@ public class RegisterPage {
                 text_Password, text_Password_Confirm, button_Submit);
     }
     
-    public void register(String username, String password, int otp) {
+    public boolean register(String username, String password, int otp) {
+    	boolean success = false;
     	try {
     		databaseHelper.connectToDatabase();
-    		databaseHelper.register(username, password, otp);
+    		success = databaseHelper.register(username, password, otp);
     	}
     	catch (Exception e){
     		System.out.print(e);
@@ -152,6 +157,7 @@ public class RegisterPage {
     	finally {
     		databaseHelper.closeConnection();
     	}
+    	return success;
     }
 
     /**********

@@ -1,7 +1,8 @@
 package edu.asu.DatabasePart1;
 
 import java.sql.*;
-
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
@@ -45,13 +46,15 @@ class DatabaseHelper {
 				+ "preferredname VARCHAR(255), "
 				+ "password VARCHAR(255), "
 				+ "role VARCHAR(20),"
-				+ "otp INT UNIQUE)";
+				+ "otp INT UNIQUE,"
+				+ "expiry DATETIME)";
+		statement.execute(userTable);
+		
 //		String otpTable = "CREATE TABLE IF NOT EXISTS otp ("
 //				+ "id INT AUTO_INCREMENT PRIMARY KEY, "
 //				+ "code VARCHAR(255) UNIQUE, "
 //				+ "created DATETIME, "
 //				+ "flag BIT)";
-		statement.execute(userTable);
 //		statement.execute(otpTable);
 	}
 	
@@ -64,16 +67,18 @@ class DatabaseHelper {
 //		}
 //	}
 	
-	public void storeOTP(String role, int otp) throws SQLException {
+	public void storeOTP(String role, int otp) {
 		String insertUser = "INSERT INTO cse360users (role, otp) VALUES (?, ?)";
 		try (PreparedStatement pstmt = connection.prepareStatement(insertUser)) {
 			pstmt.setString(1, role);
 			pstmt.setInt(2, otp);
 			pstmt.executeUpdate();
+		}catch (SQLException e) {
+			e.printStackTrace();
 		}
 	}
 	
-	public boolean isOTPValid(int otp) {
+	public boolean isOtpValid(int otp) {
 	    String query = "SELECT COUNT(*) FROM cse360users WHERE otp = ?";
 	    try (PreparedStatement pstmt = connection.prepareStatement(query)) {
 	        
@@ -82,14 +87,71 @@ class DatabaseHelper {
 	        
 	        if (rs.next()) {
 	            // If the count is greater than 0, the user exists
-	            return rs.getInt(1) > 0;
+	            if (rs.getInt(1) > 0) {
+	            	
+	        		return rs.getInt(1) > 0;
+	            }
 	        }
 	    } catch (SQLException e) {
 	        e.printStackTrace();
 	    }
 	    return false; // If an error occurs, assume user doesn't exist
 	}
+	
+		public boolean isOtpPresentAndValid(int otp) {
+		String query = "SELECT COUNT(*) FROM cse360users WHERE otp = ?";
+	    try (PreparedStatement pstmt = connection.prepareStatement(query)) {
+	        
+	        pstmt.setInt(1, otp);
+	        ResultSet rs = pstmt.executeQuery();
+	        
+	        if (rs.next()) {
+	            // If the count is greater than 0, the user exists
+	            if(rs.getInt(1) > 0) {
+	            	LocalDateTime currentDateTime = LocalDateTime.now();
 
+	            	String expiry = rs.getString("expiry"); 
+	            	DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+	            	LocalDateTime dateTime = LocalDateTime.parse(expiry, formatter);
+	            	
+	            	String insertUser = "UPDATE cse360users SET otp = ?, expiry = ? WHERE otp = ?";
+	        		try (PreparedStatement pstmt1 = connection.prepareStatement(insertUser)) {
+	        			pstmt1.setNull(1, java.sql.Types.INTEGER); // Set otp to null
+	        		    pstmt.setNull(2, java.sql.Types.TIMESTAMP); // Set the DATETIME field to NULL
+	        			pstmt1.setInt(3, otp); 
+	        			pstmt1.executeUpdate();
+	        		} catch (SQLException e) {
+	        	        e.printStackTrace();
+	        	    }
+	            	
+	            	if(dateTime.isBefore(currentDateTime)) {
+	            		return false;
+	            	}
+	            	else {
+	            		return true;
+	            	}
+	            }
+	        }
+	    } catch (SQLException e) {
+	        e.printStackTrace();
+	    }
+	    return true; // If an error occurs, assume user doesn't exist
+	}
+
+	public void storeResetPasswordOtp(int otp) {
+		
+		LocalDateTime currentDateTime = LocalDateTime.now();
+    	String expiry = currentDateTime.toString(); 
+    	
+    	String insertUser = "INSERT INTO cse360users (otp, expiry) VALUES (?, ?)";
+		try (PreparedStatement pstmt = connection.prepareStatement(insertUser)) {
+			pstmt.setInt(1, otp);
+			pstmt.setString(2, expiry);
+			pstmt.executeUpdate();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+	}
 
 	// Check if the database is empty
 	public boolean isDatabaseEmpty() throws SQLException {
@@ -101,15 +163,22 @@ class DatabaseHelper {
 		return true;
 	}
 
-	public void register(String username, String password, int otp) throws SQLException {
+	public boolean register(String username, String password, int otp) throws SQLException {
+		if(doesUserExist(username)){
+			return false;
+		}
 		String insertUser = "UPDATE cse360users SET username = ?, password = ?, otp = ? WHERE otp = ?";
 		try (PreparedStatement pstmt = connection.prepareStatement(insertUser)) {
 			pstmt.setString(1, username);
 			pstmt.setString(2, password);
-			pstmt.setString(3, null);
+			pstmt.setNull(3, java.sql.Types.INTEGER); // Set otp to null
 			pstmt.setInt(4, otp);
 			pstmt.executeUpdate();
-		}
+		} catch (SQLException e) {
+	        e.printStackTrace();
+	        return false;
+	    }
+		return true;
 	}
 
 	public boolean login(String username, String password) throws SQLException {
@@ -136,6 +205,47 @@ class DatabaseHelper {
 		}
 	}
 	
+	public boolean deleteUser(String username) {
+		if(doesUserExist(username)){
+			return false;
+		}
+		String query = "DELETE FROM cse360users WHERE username = ?";
+	    try (PreparedStatement pstmt = connection.prepareStatement(query)) {
+	        pstmt.setString(1, username);
+	    } catch (SQLException e) {
+	        e.printStackTrace();
+	        return false;
+	    }
+	    return true;
+	}
+	
+	public boolean resetPassword(int otp, String password) {
+		String insertUser = "UPDATE cse360users SET password = ? WHERE otp = ?";
+		try (PreparedStatement pstmt = connection.prepareStatement(insertUser)) {
+			pstmt.setString(1, password);
+			pstmt.setInt(2, otp);
+			pstmt.executeUpdate();
+		} catch (SQLException e) {
+	        e.printStackTrace();
+	        return false;
+	    }
+		return true;
+	}
+	
+	public boolean editRole(int id, String role) {
+		String insertUser = "UPDATE cse360users SET role = ? WHERE id = ?";
+		try (PreparedStatement pstmt = connection.prepareStatement(insertUser)) {
+			pstmt.setString(1, role);
+			pstmt.setInt(2, id);
+			pstmt.executeUpdate();
+		} catch (SQLException e) {
+	        e.printStackTrace();
+	        return false;
+	    }
+		return true;
+	}
+	
+	
 	public boolean doesUserExist(String username) {
 	    String query = "SELECT COUNT(*) FROM cse360users WHERE username = ?";
 	    try (PreparedStatement pstmt = connection.prepareStatement(query)) {
@@ -152,6 +262,8 @@ class DatabaseHelper {
 	    }
 	    return false; // If an error occurs, assume user doesn't exist
 	}
+	
+	
 
 	public void displayUsersByAdmin() throws SQLException{
 		String sql = "SELECT * FROM cse360users"; 
@@ -164,16 +276,16 @@ class DatabaseHelper {
 			String  username = rs.getString("username"); 
 			String  email = rs.getString("email"); 
 			String password = rs.getString("password"); 
-			String role = rs.getString("role");  
-			String otp = rs.getString("otp");  
+			String role = rs.getString("role"); 
+			String otp = rs.getString("otp"); 
 
 			// Display values 
 			System.out.print("ID: " + id); 
 			System.out.print(", Username: " + username); 
 			System.out.print(", Email: " + email); 
 			System.out.print(", Password: " + password); 
-			System.out.println(", Role: " + role); 
-			System.out.println(", OTP: " + otp); 
+			System.out.println(", Role: " + role);  
+			System.out.println(", Otp: " + otp); 
 		} 
 	}
 	
@@ -198,7 +310,6 @@ class DatabaseHelper {
 			System.out.println(", OTP: " + otp); 
 		} 
 	}
-
 
 	public void closeConnection() {
 		try{ 

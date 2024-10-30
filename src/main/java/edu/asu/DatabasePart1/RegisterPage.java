@@ -95,7 +95,7 @@ public class RegisterPage {
      * @param theStage The primary Stage for switching scenes.
      * @param loginScene The scene to redirect to after successful registration.
      */
-    public RegisterPage(Pane theRoot, Stage theStage, Scene loginScene) {
+    public RegisterPage(Pane theRoot, SceneController sceneController) {
 
         // Label the scene with the name of the test bed, centered at the top of the pane
         setupLabelUI(label_ApplicationTitle, "Arial", 24, WINDOW_WIDTH, Pos.CENTER, 0, 10);
@@ -122,7 +122,7 @@ public class RegisterPage {
         // Submit button action to switch to the login page upon successful registration
         button_Submit.setOnAction(event -> {
             System.out.println("Registration complete. Redirecting to Login Page...");
-            theStage.setScene(loginScene); // Switch to the login page
+            sceneController.switchTo("LoginToComplete");
         });
 
         // Place all of the just-initialized GUI elements into the pane

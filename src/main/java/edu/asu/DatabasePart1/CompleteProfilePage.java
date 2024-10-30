@@ -74,32 +74,32 @@ public class CompleteProfilePage {
      * @param theStage The primary stage for switching scenes.
      * @param homeScene The Scene to redirect to after completing the profile.
      */
-    public CompleteProfilePage(Pane Root1, Stage theStage, Scene homeScene) {
+    public CompleteProfilePage(Pane Root1, SceneController sceneController) {
         // Set up the layout and UI components
-        setupLabelUI(Title1, "Arial", 24, MainPage.WINDOW_WIDTH, Pos.CENTER, 0, 10);
+        setupLabelUI(Title1, "Arial", 24, MainApp.WINDOW_WIDTH, Pos.CENTER, 0, 10);
 
         Font font3 = Font.font("Arial", FontWeight.BOLD, 25);
         Title1.setFont(font3);
 
         // First Name
-        setupLabelUI(FirstName, "Arial", 14, MainPage.WINDOW_WIDTH - 10, Pos.BASELINE_LEFT, 10, 50);
-        setupTextUI(firstName, "Arial", 18, MainPage.WINDOW_WIDTH - 20, Pos.BASELINE_LEFT, 10, 75, true);
+        setupLabelUI(FirstName, "Arial", 14, MainApp.WINDOW_WIDTH - 10, Pos.BASELINE_LEFT, 10, 50);
+        setupTextUI(firstName, "Arial", 18, MainApp.WINDOW_WIDTH - 20, Pos.BASELINE_LEFT, 10, 75, true);
 
         // Middle Name
-        setupLabelUI(MiddleName, "Arial", 14, MainPage.WINDOW_WIDTH - 10, Pos.BASELINE_LEFT, 10, 115);
-        setupTextUI(middleName, "Arial", 18, MainPage.WINDOW_WIDTH - 20, Pos.BASELINE_LEFT, 10, 145, true);
+        setupLabelUI(MiddleName, "Arial", 14, MainApp.WINDOW_WIDTH - 10, Pos.BASELINE_LEFT, 10, 115);
+        setupTextUI(middleName, "Arial", 18, MainApp.WINDOW_WIDTH - 20, Pos.BASELINE_LEFT, 10, 145, true);
 
         // Last Name
-        setupLabelUI(LastName, "Arial", 14, MainPage.WINDOW_WIDTH - 10, Pos.BASELINE_LEFT, 10, 190);
-        setupTextUI(lastName, "Arial", 18, MainPage.WINDOW_WIDTH - 20, Pos.BASELINE_LEFT, 10, 215, true);
+        setupLabelUI(LastName, "Arial", 14, MainApp.WINDOW_WIDTH - 10, Pos.BASELINE_LEFT, 10, 190);
+        setupTextUI(lastName, "Arial", 18, MainApp.WINDOW_WIDTH - 20, Pos.BASELINE_LEFT, 10, 215, true);
 
         // Preferred Name
-        setupLabelUI(PrefName, "Arial", 14, MainPage.WINDOW_WIDTH - 10, Pos.BASELINE_LEFT, 10, 260);
-        setupTextUI(prefName, "Arial", 18, MainPage.WINDOW_WIDTH - 20, Pos.BASELINE_LEFT, 10, 290, true);
+        setupLabelUI(PrefName, "Arial", 14, MainApp.WINDOW_WIDTH - 10, Pos.BASELINE_LEFT, 10, 260);
+        setupTextUI(prefName, "Arial", 18, MainApp.WINDOW_WIDTH - 20, Pos.BASELINE_LEFT, 10, 290, true);
 
         // Email
-        setupLabelUI(Email, "Arial", 14, MainPage.WINDOW_WIDTH - 10, Pos.BASELINE_LEFT, 10, 335);
-        setupTextUI(emailEnter, "Arial", 18, MainPage.WINDOW_WIDTH - 20, Pos.BASELINE_LEFT, 10, 355, true);
+        setupLabelUI(Email, "Arial", 14, MainApp.WINDOW_WIDTH - 10, Pos.BASELINE_LEFT, 10, 335);
+        setupTextUI(emailEnter, "Arial", 18, MainApp.WINDOW_WIDTH - 20, Pos.BASELINE_LEFT, 10, 355, true);
 
         // Complete Profile Button
         completeProfile.setLayoutX(200);
@@ -112,7 +112,7 @@ public class CompleteProfilePage {
         // Add action to Complete Profile button to switch to HomePage
         completeProfile.setOnAction(event -> {
             printProfileInputs();  // Print the inputs to console
-            theStage.setScene(homeScene);  // Redirect to HomePage
+            sceneController.switchTo("Home");
         });
     }
 

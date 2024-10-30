@@ -73,64 +73,50 @@ public class AdminPage {
      *     such as inviting users, listing users, deleting users, modifying roles, resetting 
      *     passwords, and logging out. </p>
      * 
-     * @param Root2 The root Pane where the UI components will be added.
+     * @param Root The root Pane where the UI components will be added.
      */
-    public AdminPage(Pane Root2) {
+    public AdminPage(Pane Root, SceneController sceneController) {
         // Label the scene with the name of the testbed, centered at the top of the pane
-        setupLabelUI(Title2, "Arial", 24, MainPage.WINDOW_WIDTH, Pos.CENTER, 0, 10);
+        setupLabelUI(Title2, "Arial", 24, MainApp.WINDOW_WIDTH, Pos.CENTER, 0, 10);
         Font fontTitle = Font.font("Arial", FontWeight.BOLD, 25);
         Title2.setFont(fontTitle);
 
         // Set up the Invite label and button
-        setupLabelUI(Invite, "Arial", 14, MainPage.WINDOW_WIDTH, Pos.CENTER, 10, 70);
+        setupLabelUI(Invite, "Arial", 14, MainApp.WINDOW_WIDTH, Pos.CENTER, 10, 70);
         Font fontInvite = Font.font("Arial", FontWeight.BOLD, 14);
         Invite.setFont(fontInvite);
         InviteAction.setLayoutX(190);
         InviteAction.setLayoutY(100);
 
         // Set up the List Users label and button
-        setupLabelUI(ListUsers, "Arial", 24, MainPage.WINDOW_WIDTH, Pos.CENTER, 10, 140);
+        setupLabelUI(ListUsers, "Arial", 24, MainApp.WINDOW_WIDTH, Pos.CENTER, 10, 140);
         Font fontList = Font.font("Arial", FontWeight.BOLD, 14);
         ListUsers.setFont(fontList);
         ShowList.setLayoutX(190);
         ShowList.setLayoutY(170);
 
         // Set up the Delete User label and button
-        setupLabelUI(DeleteUsers, "Arial", 14, MainPage.WINDOW_WIDTH - 10, Pos.CENTER, 10, 210);
+        setupLabelUI(DeleteUsers, "Arial", 14, MainApp.WINDOW_WIDTH - 10, Pos.CENTER, 10, 210);
         Font fontDelete = Font.font("Arial", FontWeight.BOLD, 14);
         DeleteUsers.setFont(fontDelete);
         deleteUser.setLayoutX(190);
         deleteUser.setLayoutY(240);
 
         // Set up the Add or Remove Role label and button
-        setupLabelUI(AddorRemoveRole, "Arial", 14, MainPage.WINDOW_WIDTH - 10, Pos.CENTER, 10, 280);
+        setupLabelUI(AddorRemoveRole, "Arial", 14, MainApp.WINDOW_WIDTH - 10, Pos.CENTER, 10, 280);
         Font fontRole = Font.font("Arial", FontWeight.BOLD, 14);
         AddorRemoveRole.setFont(fontRole);
         addOrRemove.setLayoutX(190);
         addOrRemove.setLayoutY(310);
 
         // Set up the Password Reset label and button
-        setupLabelUI(passwordReset, "Arial", 14, MainPage.WINDOW_WIDTH - 10, Pos.CENTER, 10, 360);
+        setupLabelUI(passwordReset, "Arial", 14, MainApp.WINDOW_WIDTH - 10, Pos.CENTER, 10, 360);
         Font fontReset = Font.font("Arial", FontWeight.BOLD, 14);
         passwordReset.setFont(fontReset);
         PasswordReset.setLayoutX(170);
         PasswordReset.setLayoutY(390);
 
         // Set up the Logout button
-        setupLogoutButton();
-
-        // Add all elements to the root pane
-        Root2.getChildren().addAll(Title2, Invite, InviteAction, ListUsers, ShowList, DeleteUsers, deleteUser,
-                AddorRemoveRole, addOrRemove, passwordReset, PasswordReset, logoutButton);
-    }
-
-    /**********
-     * setupLogoutButton method
-     * 
-     * <p> Initializes and sets up the logout button, including its layout and the action to 
-     *     perform when clicked, which closes the application. </p>
-     */
-    private void setupLogoutButton() {
         logoutButton.setText("Logout");
         logoutButton.setLayoutX(190); // Set X position
         logoutButton.setLayoutY(440); // Move the Y position higher, closer to the bottom of the visible window
@@ -138,11 +124,14 @@ public class AdminPage {
 
         // Set action to close the application when clicked
         logoutButton.setOnAction(event -> {
-            System.out.println("Logging out... Closing application.");
-            Stage stage = (Stage) logoutButton.getScene().getWindow(); // Get the current stage
-            stage.close(); // Close the stage
+            sceneController.exit();
         });
+
+        // Add all elements to the root pane
+        Root.getChildren().addAll(Title2, Invite, InviteAction, ListUsers, ShowList, DeleteUsers, deleteUser,
+                AddorRemoveRole, addOrRemove, passwordReset, PasswordReset, logoutButton);
     }
+
 
     /**********
      * setupLabelUI method

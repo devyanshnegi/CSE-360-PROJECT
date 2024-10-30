@@ -61,7 +61,7 @@ public class LoginPage {
      * @param completeProfileScene The scene to redirect to for the CompleteProfilePage.
      * @param isAfterRegister Flag indicating if the login occurs after registration.
      */
-    public LoginPage(Pane root, Stage theStage, Scene adminScene, Scene completeProfileScene, boolean isAfterRegister) {
+    public LoginPage(Pane root, SceneController sceneController, boolean isAfterRegister) {
         this.isAfterRegister = isAfterRegister; // Store the flag
 
         // Set up the UI components
@@ -86,10 +86,10 @@ public class LoginPage {
                 // Redirect based on the isAfterRegister flag
                 if (isAfterRegister) {
                     System.out.println("Redirecting to CompleteProfilePage...");
-                    theStage.setScene(completeProfileScene); // Switch to CompleteProfilePage scene
+                    sceneController.switchTo("CompleteProfile");
                 } else {
                     System.out.println("Login successful! Redirecting to Admin Page...");
-                    theStage.setScene(adminScene); // Switch to AdminPage scene
+                    sceneController.switchTo("Admin");
                 }
             } else {
                 messageLabel.setText("Please enter both username and password.");

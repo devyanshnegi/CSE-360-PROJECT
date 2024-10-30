@@ -41,17 +41,17 @@ public class HomePage {
      *     logout prompt, and logout button. The constructor also adds an action to the 
      *     logout button to close the application when clicked. </p>
      * 
-     * @param Root4 The root Pane where the UI components will be added.
+     * @param Root The root Pane where the UI components will be added.
      */
-    public HomePage(Pane Root4) {
+    public HomePage(Pane Root, SceneController sceneController) {
         // Label the scene with the home page title, centered at the top of the pane
-        setupLabelUI(Title2, "Arial", 24, MainPage.WINDOW_WIDTH, Pos.CENTER, 0, 10);
+        setupLabelUI(Title2, "Arial", 24, MainApp.WINDOW_WIDTH, Pos.CENTER, 0, 10);
 
         Font fontTitle1 = Font.font("Arial", FontWeight.BOLD, 25);
         Title2.setFont(fontTitle1);
 
         // Label for the logout action
-        setupLabelUI(logOut, "Arial", 14, MainPage.WINDOW_WIDTH, Pos.CENTER, 0, 70);
+        setupLabelUI(logOut, "Arial", 14, MainApp.WINDOW_WIDTH, Pos.CENTER, 0, 70);
 
         Font fontlogout = Font.font("Arial", FontWeight.BOLD, 14);
         logOut.setFont(fontlogout);
@@ -67,7 +67,7 @@ public class HomePage {
         });
 
         // Add all components to the pane
-        Root4.getChildren().addAll(Title2, logOut, logOutButton);
+        Root.getChildren().addAll(Title2, logOut, logOutButton);
     }
 
     /**********

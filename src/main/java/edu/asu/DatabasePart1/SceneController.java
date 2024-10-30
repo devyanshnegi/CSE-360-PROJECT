@@ -9,6 +9,7 @@ import javafx.stage.Stage;
 public class SceneController {
     private Stage stage;
     private Map<String, Scene> scenes = new HashMap<>();
+    private Map<String, Object> sharedData = new HashMap<>();
     
     public SceneController(Stage stage) {
         this.stage = stage;
@@ -27,6 +28,16 @@ public class SceneController {
         } else {
             System.out.println("Scene not found: " + name);
         }
+    }
+    
+    // Store data to be shared
+    public void setData(String key, Object value) {
+        sharedData.put(key, value);
+    }
+
+    // Retrieve shared data
+    public Object getData(String key) {
+        return sharedData.get(key);
     }
     
     public void exit() {

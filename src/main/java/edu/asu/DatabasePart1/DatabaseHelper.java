@@ -48,7 +48,7 @@ class DatabaseHelper {
 				+ "otp INT UNIQUE)";
 //		String otpTable = "CREATE TABLE IF NOT EXISTS otp ("
 //				+ "id INT AUTO_INCREMENT PRIMARY KEY, "
-//				+ "password VARCHAR(255) UNIQUE, "
+//				+ "code VARCHAR(255) UNIQUE, "
 //				+ "created DATETIME, "
 //				+ "flag BIT)";
 		statement.execute(userTable);
@@ -211,6 +211,7 @@ class DatabaseHelper {
 		} catch(SQLException se){ 
 			se.printStackTrace(); 
 		} 
+		System.out.println("Closing connection to database...");
 	}
 
 }

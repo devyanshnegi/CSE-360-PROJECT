@@ -43,9 +43,9 @@ public class LoginPage {
     
     /** Label for displaying messages (e.g., error messages) */
     private Label messageLabel = new Label();
+    
+    private static DatabaseHelper databaseHelper = new DatabaseHelper();
 
-    /** Flag to determine if the login is after registration */
-    private boolean isAfterRegister;
 
     /**********
      * Constructor for LoginPage
@@ -62,8 +62,6 @@ public class LoginPage {
      * @param isAfterRegister Flag indicating if the login occurs after registration.
      */
     public LoginPage(Pane root, SceneController sceneController, boolean isAfterRegister) {
-        this.isAfterRegister = isAfterRegister; // Store the flag
-
         // Set up the UI components
         setupLabelUI(usernameLabel, "Arial", 14, 100, Pos.CENTER_LEFT, 50, 50);
         setupTextFieldUI(usernameField, "Arial", 14, 200, Pos.CENTER_LEFT, 160, 50);
@@ -74,55 +72,51 @@ public class LoginPage {
         setupButtonUI(loginButton, "Arial", 14, 100, Pos.CENTER, 160, 150);
         setupLabelUI(messageLabel, "Arial", 14, 300, Pos.CENTER, 160, 200);
 
+        usernameField.textProperty().addListener((observable, oldValue, newValue) -> errorMessage(""));
+        passwordField.textProperty().addListener((observable, oldValue, newValue) -> errorMessage(""));
+        
         // Set the login button action
         loginButton.setOnAction(event -> {
-            String username = getUsername();
-            String password = getPassword();
+            String username = usernameField.getText();
+            String password = passwordField.getText();
 
-            if (!username.isEmpty() && !password.isEmpty()) {
-                System.out.println("Entered Username: " + username);
-                System.out.println("Entered Password: " + password);
-
-                // Redirect based on the isAfterRegister flag
-                if (isAfterRegister) {
-                    System.out.println("Redirecting to CompleteProfilePage...");
-                    sceneController.switchTo("CompleteProfile");
-                } else {
-                    System.out.println("Login successful! Redirecting to Admin Page...");
-                    sceneController.switchTo("Admin");
-                }
-            } else {
-                messageLabel.setText("Please enter both username and password.");
-                messageLabel.setStyle("-fx-text-fill: red;");
+            if(login(username,password)) {
+            	if(isAfterRegister) {
+            		sceneController.switchTo("CompleteProfile");
+            	} else {
+            		sceneController.switchTo("Home");
+            	}
+            }
+            else {
+                errorMessage("Invalid username or password.");
             }
         });
 
         // Add all components to the provided Pane
         root.getChildren().addAll(usernameLabel, usernameField, passwordLabel, passwordField, loginButton, messageLabel);
     }
-
-    /**********
-     * getUsername method
-     * 
-     * <p> Retrieves the text entered in the username field. </p>
-     * 
-     * @return The username entered by the user.
-     */
-    public String getUsername() {
-        return usernameField.getText();
+    
+    public void errorMessage(String message) {
+    	messageLabel.setStyle("-fx-text-fill: red;");
+    	messageLabel.setText(message);
     }
 
-    /**********
-     * getPassword method
-     * 
-     * <p> Retrieves the text entered in the password field. </p>
-     * 
-     * @return The password entered by the user.
-     */
-    public String getPassword() {
-        return passwordField.getText();
+    public boolean login(String username, String password) {
+    	boolean valid = false;
+    	try {
+    		databaseHelper.connectToDatabase();
+    		valid = databaseHelper.login(username, password);
+    	}
+    	catch (Exception e){
+    		System.out.print(e);
+    		valid = false;
+    	}
+    	finally {
+    		databaseHelper.closeConnection();
+    	}
+    	return valid;
     }
-
+    
     /**********
      * setupLabelUI method
      * 

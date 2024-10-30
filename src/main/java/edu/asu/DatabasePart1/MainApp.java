@@ -64,6 +64,7 @@ public class MainApp extends Application {
     /** Reference to the application's HomePage interface */
     public HomePage HomeGui;
 
+    private static DatabaseHelper databaseHelper = new DatabaseHelper();
     
     /**********
      * start method
@@ -81,7 +82,7 @@ public class MainApp extends Application {
 
     	SceneController sceneController = new SceneController(theStage);
     	
-        theStage.setTitle("Choose or Register"); // Set the window title
+        theStage.setTitle("CSE-360 Application"); // Set the window title
 
         // Set up the HomePage UI
         Pane HomePane = new Pane();
@@ -111,7 +112,7 @@ public class MainApp extends Application {
         Pane LoginToCompletePane = new Pane();
         new LoginPage(LoginToCompletePane, sceneController, true); // Pass AdminScene for normal login
         Scene LoginToCompleteScene = new Scene(LoginToCompletePane, WINDOW_WIDTH, WINDOW_HEIGHT); // LoginPage scene for normal login
-        sceneController.addScene("LoginToCompelete", LoginToCompleteScene);
+        sceneController.addScene("LoginToComplete", LoginToCompleteScene);
         
         // Set up the RegisterPage UI
         Pane RegisterPane = new Pane();
@@ -125,7 +126,30 @@ public class MainApp extends Application {
         Scene StartScene = new Scene(StartPane, WINDOW_WIDTH, WINDOW_HEIGHT); // StartPage scene
         sceneController.addScene("Start", StartScene);
         
-        theStage.setScene(StartScene); // Show the StartPage first
+       
+        try {
+	        databaseHelper.connectToDatabase();
+	        
+	        databaseHelper.displayUsersByAdmin(); // REMOVE LATER
+	        
+	        if(databaseHelper.isDatabaseEmpty()) {
+	        	int otp = 0;
+	        	databaseHelper.storeOTP("admin", otp);
+	        	sceneController.setData("otp", otp);
+	        	sceneController.switchTo("Register");
+	        }
+	        else {
+	        	sceneController.switchTo("Start");
+	        }
+	    } catch (SQLException e) {
+	        // Handle SQL exceptions
+	        System.err.println("Database error: " + e.getMessage());
+	        e.printStackTrace();
+	    } finally {
+	        // Ensure the database connection is closed when the application exits
+	        databaseHelper.closeConnection();
+	    }
+        
         theStage.show();
     }
 

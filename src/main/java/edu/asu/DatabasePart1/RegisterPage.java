@@ -76,7 +76,11 @@ public class RegisterPage {
 
     /** The width of the window for the registration page */
     private int WINDOW_WIDTH = 700;
+    
+    private boolean validUsername , validPassowrd, validConfirm;
 
+    private static DatabaseHelper databaseHelper = new DatabaseHelper();
+    
     /**********************************************************************************************
      * 
      * Constructors
@@ -96,7 +100,9 @@ public class RegisterPage {
      * @param loginScene The scene to redirect to after successful registration.
      */
     public RegisterPage(Pane theRoot, SceneController sceneController) {
-
+        validUsername = false; 
+        validPassowrd = false;
+        validConfirm = false;
         // Label the scene with the name of the test bed, centered at the top of the pane
         setupLabelUI(label_ApplicationTitle, "Arial", 24, WINDOW_WIDTH, Pos.CENTER, 0, 10);
 
@@ -121,6 +127,10 @@ public class RegisterPage {
 
         // Submit button action to switch to the login page upon successful registration
         button_Submit.setOnAction(event -> {
+        	if(validUsername && validPassowrd && validConfirm) {
+        		int otp = (int)sceneController.getData("otp");
+        		register(text_Username.getText(), text_Password.getText(), otp);
+        	}
             System.out.println("Registration complete. Redirecting to Login Page...");
             sceneController.switchTo("LoginToComplete");
         });
@@ -129,6 +139,19 @@ public class RegisterPage {
         theRoot.getChildren().addAll(label_ApplicationTitle, label_Username, label_Password, label_Password_Validity,
                 label_Username_Validity, label_Password_Confirm, label_Password_Confirm_Validity, text_Username,
                 text_Password, text_Password_Confirm, button_Submit);
+    }
+    
+    public void register(String username, String password, int otp) {
+    	try {
+    		databaseHelper.connectToDatabase();
+    		databaseHelper.register(username, password, otp);
+    	}
+    	catch (Exception e){
+    		System.out.print(e);
+    	}
+    	finally {
+    		databaseHelper.closeConnection();
+    	}
     }
 
     /**********
@@ -235,9 +258,11 @@ public class RegisterPage {
         if (text_Password_Confirm.getText().equals(text_Password.getText())) {
             label_Password_Confirm_Validity.setTextFill(Color.GREEN);
             label_Password_Confirm_Validity.setText("The passwords match!");
+            validConfirm = true;
         } else {
             label_Password_Confirm_Validity.setTextFill(Color.RED);
             label_Password_Confirm_Validity.setText("The passwords do not match!");
+            validConfirm = false;
         }
     }
 
@@ -252,20 +277,25 @@ public class RegisterPage {
         if (inputText.isEmpty()) {
             label_Password_Validity.setTextFill(Color.RED);
             label_Password_Validity.setText("No input text found!");
+            validPassowrd = false;
         } else {
             String errMessage = PwdEval.evaluatePassword(inputText);
             if (!errMessage.equals("")) {
                 updateFlags();
+                validPassowrd = false;
             } else if (PwdEval.foundUpperCase && PwdEval.foundLowerCase && PwdEval.foundNumericDigit
                     && PwdEval.foundSpecialChar && PwdEval.foundLongEnough) {
                 System.out.println("Success! The password satisfies the requirements.");
                 label_Password_Validity.setTextFill(Color.GREEN);
                 label_Password_Validity.setText("Success! The password satisfies the requirements.");
+                validPassowrd = true;
             } else {
                 label_Password_Validity.setTextFill(Color.RED);
                 label_Password_Validity.setText("The password as currently entered is not yet valid.");
+                validPassowrd = false;
             }
         }
+        setPasswordConfirm();
     }
 
     /**********
@@ -279,14 +309,19 @@ public class RegisterPage {
         if (inputText.isEmpty()) {
             label_Username_Validity.setTextFill(Color.RED);
             label_Username_Validity.setText("No input text found!");
+            validUsername = false;
         } else {
             String errMessage = UserNameEval.checkForValidUserName(inputText);
-            label_Username_Validity.setTextFill(Color.RED);
-            label_Username_Validity.setText(errMessage);
             if (errMessage.equals("")) {
                 System.out.println("Success! The username satisfies the requirements.");
                 label_Username_Validity.setTextFill(Color.GREEN);
                 label_Username_Validity.setText("Success! The username satisfies the requirements.");
+                validUsername = true;
+            }
+            else {
+                label_Username_Validity.setTextFill(Color.RED);
+                label_Username_Validity.setText(errMessage);
+                validUsername = false;
             }
         }
     }

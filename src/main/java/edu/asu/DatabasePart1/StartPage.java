@@ -47,6 +47,8 @@ public class StartPage {
     
     /** Button to navigate to the login screen */
     private Button loginRedirect = new Button("Login");
+    
+    private static DatabaseHelper databaseHelper = new DatabaseHelper();
 
     /**********
      * Constructor for StartPage
@@ -108,14 +110,34 @@ public class StartPage {
         // Add functionality for the Enter Code button to switch to RegisterPage
         InviteCodeEnter.setOnAction(event -> {
             String inviteCode = Invite_Code.getText();
-            if (!inviteCode.isEmpty()) {
+            if (checkInviteCode(inviteCode)) {
                 // Switch to the RegisterPage
+            	sceneController.setData("otp", Integer.parseInt(inviteCode));
             	sceneController.switchTo("Register");
-            } else {
-                // Display an error message if no code is entered
+            }
+            else {
                 noCode.setText("Please enter a valid invitation code.");
             }
         });
+    }
+    
+    public boolean checkInviteCode(String inviteCode) {
+    	if(inviteCode.length() != 6) {
+    		return false;
+    	}
+    	boolean check = false;
+    	try {
+    		databaseHelper.connectToDatabase();
+    		int otp = Integer.parseInt(inviteCode);  
+    		check = databaseHelper.isOTPValid(otp);
+    	}
+    	catch (Exception e){
+    		System.out.print(e);
+    	}
+    	finally {
+    		databaseHelper.closeConnection();
+    	}
+    	return check;
     }
 
 

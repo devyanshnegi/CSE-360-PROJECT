@@ -136,6 +136,7 @@ public class MainApp extends Application {
 	        	int otp = 0;
 	        	databaseHelper.storeOTP("admin", otp);
 	        	sceneController.setData("otp", otp);
+	        	databaseHelper.displayUsersByAdmin();
 	        	sceneController.switchTo("Register");
 	        }
 	        else {

@@ -129,7 +129,7 @@ public class StartPage {
     	try {
     		databaseHelper.connectToDatabase();
     		int otp = Integer.parseInt(inviteCode);  
-    		check = databaseHelper.isOTPValid(otp);
+    		check = databaseHelper.isOtpValid(otp);
     	}
     	catch (Exception e){
     		System.out.print(e);

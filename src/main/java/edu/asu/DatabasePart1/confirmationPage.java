@@ -45,20 +45,29 @@ public class confirmationPage {
      * 
      * @param Root2 The root Pane where the UI components will be added.
      */
-    public confirmationPage(Pane Root2) {
+    public confirmationPage(Pane Root2, SceneController sceneController) {
         // Set up the title label at the top of the pane
-        setupLabelUI(Title2, "Arial", 24, MainApp.WINDOW_WIDTH, Pos.CENTER, 0, 10);
-
-        Font fontTitle = Font.font("Arial", FontWeight.BOLD, 25);
-        Title2.setFont(fontTitle);
+    	setupLabelUI(Title2, "Arial", 24, MainApp.WINDOW_WIDTH, Pos.CENTER, 0, 10);
+        Title2.setFont(Font.font("Arial", FontWeight.BOLD, 25));
 
         // Set up the "Yes" button
         yesAction.setLayoutX(150);
         yesAction.setLayoutY(100);
+        yesAction.setOnAction(e -> {
+            System.out.println("Yes button clicked.");
+            // Add logic to handle confirmation (e.g., proceed with an action)
+            sceneController.switchTo("NextPage"); // Change "NextPage" to the relevant page
+        });
 
         // Set up the "No" button
         noAction.setLayoutX(300);
         noAction.setLayoutY(100);
+        noAction.setOnAction(e -> {
+            System.out.println("No button clicked.");
+            // Navigate back to the previous page
+            sceneController.switchTo("PreviousPage"); // Change "PreviousPage" to the relevant page
+        });
+        
 
         // Add components to the pane
         Root2.getChildren().addAll(Title2, yesAction, noAction);

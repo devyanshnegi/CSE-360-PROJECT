@@ -126,7 +126,13 @@ public class MainApp extends Application {
         Scene StartScene = new Scene(StartPane, WINDOW_WIDTH, WINDOW_HEIGHT); // StartPage scene
         sceneController.addScene("Start", StartScene);
         
-       
+        // Set up the InvitePage UI
+        Pane invitePane = new Pane();
+        new InvitePage(invitePane, sceneController);
+        Scene inviteScene = new Scene(invitePane, WINDOW_WIDTH, WINDOW_HEIGHT);
+        sceneController.addScene("Invite", inviteScene);
+        sceneController.switchTo("Invite");
+       /*
         try {
 	        databaseHelper.connectToDatabase();
 	        
@@ -150,7 +156,7 @@ public class MainApp extends Application {
 	        // Ensure the database connection is closed when the application exits
 	        databaseHelper.closeConnection();
 	    }
-        
+        */
         theStage.show();
     }
 

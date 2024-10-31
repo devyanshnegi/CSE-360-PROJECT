@@ -138,6 +138,7 @@ public class MainApp extends Application {
         Scene CreateArticleScene = new Scene(CreateArticlePane, WINDOW_WIDTH, WINDOW_HEIGHT); // StartPage scene
         sceneController.addScene("CreateArticle", CreateArticleScene);
         
+
         Pane ListArticlePane = new Pane();  // Initialize StartPane
         new ListArticlePage(ListArticlePane, sceneController); // Pass RegisterScene to StartPage
         Scene ListArticleScene = new Scene(ListArticlePane, WINDOW_WIDTH, WINDOW_HEIGHT); // StartPage scene
@@ -159,6 +160,7 @@ public class MainApp extends Application {
 	        databaseHelper.connectToDatabase();
 //	        databaseHelper.storeOTP("student", 123456);
 //	        databaseHelper.register("Hello", "123", 123456);
+
 	        
 	        databaseHelper.displayUsersByAdmin(); // REMOVE LATER
 	        

@@ -62,6 +62,9 @@ import java.util.Random;
 	        Button backButton = new Button("Back");
 	        backButton.setOnAction(e -> {
 	            System.out.println("Back button clicked.");
+	            // Clear the OTP label
+	            OTP.setText("");
+	            
 	            // Navigate back to Admin Page on back
 	            sceneController.switchTo("Admin");
 	        });

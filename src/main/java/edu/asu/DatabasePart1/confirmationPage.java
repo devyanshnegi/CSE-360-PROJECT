@@ -1,5 +1,7 @@
 package edu.asu.DatabasePart1;
 
+import java.sql.SQLException;
+
 // JavaFX imports needed to support the Graphical User Interface
 import javafx.geometry.Pos;
 import javafx.scene.control.Label;
@@ -37,6 +39,8 @@ public class confirmationPage {
     /** Button for canceling the action */
     private Button noAction = new Button("No");
 
+    private static DatabaseHelper databaseHelper = new DatabaseHelper();
+
     /**********
      * Constructor for confirmationPage
      * 
@@ -45,7 +49,7 @@ public class confirmationPage {
      * 
      * @param Root2 The root Pane where the UI components will be added.
      */
-    public confirmationPage(Pane Root2) {
+    public confirmationPage(Pane Root2, SceneController sceneController) {
         // Set up the title label at the top of the pane
         setupLabelUI(Title2, "Arial", 24, MainApp.WINDOW_WIDTH, Pos.CENTER, 0, 10);
 
@@ -60,6 +64,34 @@ public class confirmationPage {
         noAction.setLayoutX(300);
         noAction.setLayoutY(100);
 
+        yesAction.setOnAction(e -> {
+        	boolean deleted = false;
+        	String selectedUsername = (String) sceneController.getData("Modifying User");
+        	try {
+        		databaseHelper.connectToDatabase();
+        		deleted = databaseHelper.deleteUser(selectedUsername);
+        		databaseHelper.closeConnection();
+        	} catch(SQLException err) {
+        		err.printStackTrace();
+        	}
+        	finally {
+        		databaseHelper.closeConnection();
+        	}
+			if (deleted) {
+			    System.out.println("User deleted: " + selectedUsername);
+			} else {
+			    System.out.println("Failed to delete user: " + selectedUsername);
+			}
+
+        	sceneController.removeData("Modifying User");
+        	sceneController.switchTo("Admin");
+        });
+        
+        noAction.setOnAction(e -> {
+        	sceneController.removeData("Modifying User");
+        	sceneController.switchTo("Admin");
+        });
+        
         // Add components to the pane
         Root2.getChildren().addAll(Title2, yesAction, noAction);
     }

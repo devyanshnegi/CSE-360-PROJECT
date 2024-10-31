@@ -3,12 +3,14 @@ package edu.asu.DatabasePart1;
 import java.sql.*;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
+import java.util.List;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.sql.Statement;
 
-
+	
 class DatabaseHelper {
 
 	// JDBC driver name and database URL 
@@ -117,7 +119,7 @@ class DatabaseHelper {
 	            	String insertUser = "UPDATE cse360users SET otp = ?, expiry = ? WHERE otp = ?";
 	        		try (PreparedStatement pstmt1 = connection.prepareStatement(insertUser)) {
 	        			pstmt1.setNull(1, java.sql.Types.INTEGER); // Set otp to null
-	        		    pstmt.setNull(2, java.sql.Types.TIMESTAMP); // Set the DATETIME field to NULL
+	        		    pstmt1.setNull(2, java.sql.Types.TIMESTAMP); // Set the DATETIME field to NULL
 	        			pstmt1.setInt(3, otp); 
 	        			pstmt1.executeUpdate();
 	        		} catch (SQLException e) {
@@ -192,6 +194,19 @@ class DatabaseHelper {
 		}
 	}
 	
+	public String getRole(String username) throws SQLException {
+		String query = "SELECT * FROM cse360users WHERE username = ?";
+		try (PreparedStatement pstmt = connection.prepareStatement(query)) {
+			pstmt.setString(1, username);
+			try (ResultSet rs = pstmt.executeQuery()) {
+				if(rs.next()) {
+					return rs.getString("role");  
+				}
+			}
+		}
+		return "";
+	}
+	
 	public void completeProfile(String username, String firstname, String middlename, String lastname, String preferredname,  String email) throws SQLException {
 		String insertUser = "UPDATE cse360users SET firstname = ?, middlename = ?, lastname = ?, email = ?, preferredname = ? WHERE username = ?";
 		try (PreparedStatement pstmt = connection.prepareStatement(insertUser)) {
@@ -206,12 +221,13 @@ class DatabaseHelper {
 	}
 	
 	public boolean deleteUser(String username) {
-		if(doesUserExist(username)){
+		if(!doesUserExist(username)){
 			return false;
 		}
 		String query = "DELETE FROM cse360users WHERE username = ?";
 	    try (PreparedStatement pstmt = connection.prepareStatement(query)) {
 	        pstmt.setString(1, username);
+	        pstmt.executeUpdate();
 	    } catch (SQLException e) {
 	        e.printStackTrace();
 	        return false;
@@ -232,11 +248,11 @@ class DatabaseHelper {
 		return true;
 	}
 	
-	public boolean editRole(int id, String role) {
-		String insertUser = "UPDATE cse360users SET role = ? WHERE id = ?";
+	public boolean editRole(String username, String role) {
+		String insertUser = "UPDATE cse360users SET role = ? WHERE username = ?";
 		try (PreparedStatement pstmt = connection.prepareStatement(insertUser)) {
 			pstmt.setString(1, role);
-			pstmt.setInt(2, id);
+			pstmt.setString(2, username);
 			pstmt.executeUpdate();
 		} catch (SQLException e) {
 	        e.printStackTrace();
@@ -263,7 +279,32 @@ class DatabaseHelper {
 	    return false; // If an error occurs, assume user doesn't exist
 	}
 	
+	public int numberOfUsers() throws SQLException {
+		String sql = "SELECT COUNT(*) FROM cse360users WHERE username IS NOT NULL"; 
+	    try (Statement stmt = connection.createStatement();
+	         ResultSet rs = stmt.executeQuery(sql)) {
+	        if (rs.next()) {
+	            return rs.getInt(1); // Retrieve the count from the result set
+	        }
+	    }
+	    return 0; // Return 0 if no result
+	}
 	
+	public List<String[]> getAllUsers() throws SQLException {
+	    String sql = "SELECT * FROM cse360users ORDER BY id ASC OFFSET 1"; // Skips the first row
+	    List<String[]> users = new ArrayList<>();
+	    
+	    try (Statement stmt = connection.createStatement();
+	         ResultSet rs = stmt.executeQuery(sql)) {
+	        while (rs.next()) {
+	            users.add(new String[] {rs.getString("username"),rs.getString("preferredname"),rs.getString("role")}); // Adjust to retrieve specific columns
+	        }
+	    }
+	    return users;
+	}
+
+
+
 
 	public void displayUsersByAdmin() throws SQLException{
 		String sql = "SELECT * FROM cse360users"; 

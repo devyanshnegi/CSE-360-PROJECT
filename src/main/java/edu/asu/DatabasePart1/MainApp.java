@@ -138,33 +138,33 @@ public class MainApp extends Application {
         Scene CreateArticleScene = new Scene(CreateArticlePane, WINDOW_WIDTH, WINDOW_HEIGHT); // StartPage scene
         sceneController.addScene("CreateArticle", CreateArticleScene);
         
-        sceneController.switchTo("ListArticle");
+//        sceneController.switchTo("ListArticle");
         
-//        try {
-//	        databaseHelper.connectToDatabase();
-////	        databaseHelper.storeOTP("student", 123456);
-////	        databaseHelper.register("Hello", "123", 123456);
-//	        
-//	        databaseHelper.displayUsersByAdmin(); // REMOVE LATER
-//	        
-//	        if(databaseHelper.isDatabaseEmpty()) {
-//	        	int otp = 0;
-//	        	databaseHelper.storeOTP("admin", otp);
-//	        	sceneController.setData("otp", otp);
-//	        	databaseHelper.displayUsersByAdmin();
-//	        	sceneController.switchTo("Register");
-//	        }
-//	        else {
-//	        	sceneController.switchTo("Start");
-//	        }
-//	    } catch (SQLException e) {
-//	        // Handle SQL exceptions
-//	        System.err.println("Database error: " + e.getMessage());
-//	        e.printStackTrace();
-//	    } finally {
-//	        // Ensure the database connection is closed when the application exits
-//	        databaseHelper.closeConnection();
-//	    }
+        try {
+	        databaseHelper.connectToDatabase();
+	        //databaseHelper.storeOTP("student", 123456);
+	        //databaseHelper.register("Hello", "123", 123456);
+	        
+	        databaseHelper.displayUsersByAdmin(); // REMOVE LATER
+	        
+	        if(databaseHelper.isDatabaseEmpty()) {
+	        	int otp = 0;
+	        	databaseHelper.storeOTP("admin", otp);
+	        	sceneController.setData("otp", otp);
+	        	databaseHelper.displayUsersByAdmin();
+	        	sceneController.switchTo("Register");
+	        }
+	        else {
+	        	sceneController.switchTo("Start");
+	        }
+	    } catch (SQLException e) {
+	        // Handle SQL exceptions
+	        System.err.println("Database error: " + e.getMessage());
+	        e.printStackTrace();
+	    } finally {
+	        // Ensure the database connection is closed when the application exits
+	        databaseHelper.closeConnection();
+	    }
         
         theStage.show();
     }

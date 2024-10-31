@@ -46,22 +46,22 @@ public class AdminPage {
     private Button ShowList = new Button("Click here to List all Users");
 
     /** Label for deleting a user */
-    private Label DeleteUsers = new Label("Delete User");
+    //private Label DeleteUsers = new Label("Delete User");
 
     /** Button to delete a user */
-    private Button deleteUser = new Button("Click here to Delete User");
+    //private Button deleteUser = new Button("Click here to Delete User");
 
     /** Label for adding or removing a user role */
-    private Label AddorRemoveRole = new Label("Add or Remove Role of a User");
+    //private Label AddorRemoveRole = new Label("Add or Remove Role of a User");
 
     /** Button to edit a user's role */
-    private Button addOrRemove = new Button("Click here to edit Role");
+    //private Button addOrRemove = new Button("Click here to edit Role");
 
     /** Label for password reset */
-    private Label passwordReset = new Label("Password Reset");
+    //private Label passwordReset = new Label("Password Reset");
 
     /** Button to reset the password */
-    private Button PasswordReset = new Button("Click here to Reset Password");
+    //private Button PasswordReset = new Button("Click here to Reset Password");
 
     /** Button for logging out */
     private Button logoutButton = new Button("Logout");
@@ -80,6 +80,9 @@ public class AdminPage {
         setupLabelUI(Title2, "Arial", 24, MainApp.WINDOW_WIDTH, Pos.CENTER, 0, 10);
         Font fontTitle = Font.font("Arial", FontWeight.BOLD, 25);
         Title2.setFont(fontTitle);
+        
+        Button InviteAction = new Button("Invite a New User");
+        InviteAction.setOnAction(e -> sceneController.switchTo("Invite"));
 
         // Set up the Invite label and button
         setupLabelUI(Invite, "Arial", 14, MainApp.WINDOW_WIDTH, Pos.CENTER, 10, 70);
@@ -87,15 +90,18 @@ public class AdminPage {
         Invite.setFont(fontInvite);
         InviteAction.setLayoutX(190);
         InviteAction.setLayoutY(100);
-
+        
+        Button ShowList = new Button("View User List");
+        ShowList.setOnAction(e -> sceneController.switchTo("UserList"));
+        
         // Set up the List Users label and button
         setupLabelUI(ListUsers, "Arial", 24, MainApp.WINDOW_WIDTH, Pos.CENTER, 10, 140);
         Font fontList = Font.font("Arial", FontWeight.BOLD, 14);
         ListUsers.setFont(fontList);
         ShowList.setLayoutX(190);
-        ShowList.setLayoutY(170);
+        ShowList.setLayoutY(170);        
 
-        // Set up the Delete User label and button
+        /* Set up the Delete User label and button
         setupLabelUI(DeleteUsers, "Arial", 14, MainApp.WINDOW_WIDTH - 10, Pos.CENTER, 10, 210);
         Font fontDelete = Font.font("Arial", FontWeight.BOLD, 14);
         DeleteUsers.setFont(fontDelete);
@@ -114,7 +120,7 @@ public class AdminPage {
         Font fontReset = Font.font("Arial", FontWeight.BOLD, 14);
         passwordReset.setFont(fontReset);
         PasswordReset.setLayoutX(170);
-        PasswordReset.setLayoutY(390);
+        PasswordReset.setLayoutY(390);*/
 
         // Set up the Logout button
         logoutButton.setText("Logout");
@@ -128,8 +134,7 @@ public class AdminPage {
         });
 
         // Add all elements to the root pane
-        Root.getChildren().addAll(Title2, Invite, InviteAction, ListUsers, ShowList, DeleteUsers, deleteUser,
-                AddorRemoveRole, addOrRemove, passwordReset, PasswordReset, logoutButton);
+        Root.getChildren().addAll(Title2, Invite, InviteAction, ListUsers, ShowList, logoutButton);
     }
 
 

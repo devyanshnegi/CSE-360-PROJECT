@@ -70,9 +70,16 @@ public class UserListPage {
 
             Button deleteUserButton = new Button("Delete User");
             deleteUserButton.setOnAction(e -> handleDeleteUser(sceneController));
+            
+            Button backButton = new Button("Back");
+	        backButton.setOnAction(e -> {
+	            System.out.println("Back button clicked.");
+	            // Navigate back to Admin Page on back
+	            sceneController.switchTo("Admin");
+	        });
 
             // Arrange buttons in an HBox
-            HBox buttonBox = new HBox(10, resetPasswordButton, editRoleButton, deleteUserButton);
+            HBox buttonBox = new HBox(10, resetPasswordButton, editRoleButton, deleteUserButton, backButton);
             mainLayout.getChildren().add(buttonBox);
 
         } catch (SQLException e) {

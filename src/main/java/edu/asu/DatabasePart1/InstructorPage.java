@@ -49,12 +49,12 @@ public class InstructorPage {
         // Set up the View Articles button
         viewArticlesButton.setLayoutX(150);
         viewArticlesButton.setLayoutY(100);
-        viewArticlesButton.setOnAction(e -> showAlert("View Articles", "Displaying all articles..."));
+        viewArticlesButton.setOnAction(e -> sceneController.switchTo("ListArticle"));
 
         // Set up the Publish Articles button
         publishArticlesButton.setLayoutX(150);
         publishArticlesButton.setLayoutY(150);
-        publishArticlesButton.setOnAction(e -> showAlert("Publish Articles", "Publishing new article..."));
+        publishArticlesButton.setOnAction(e -> sceneController.switchTo("CreateArticle"));
 
         // Add all components to the root pane
         root.getChildren().addAll(titleLabel, viewArticlesButton, publishArticlesButton);

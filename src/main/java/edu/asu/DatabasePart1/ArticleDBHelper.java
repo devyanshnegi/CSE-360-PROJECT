@@ -13,6 +13,8 @@
 	import java.sql.DriverManager;
 	import java.sql.SQLException;
 	import java.sql.Statement;
+import java.util.ArrayList;
+import java.util.List;
 	
 	
 	/*******
@@ -99,13 +101,61 @@
 	
 	        while(rs.next()) { 
 	            // Retrieve by column name 
-	            int id  = rs.getInt("id"); 
+	            long id  = rs.getLong("uid"); 
 	            String title = rs.getString("title"); 
 	            String author = rs.getString("author");   
 	            System.out.print("ID: " + id); 
 	            System.out.print(", Title: " + title);
 	            System.out.println(", Author(s): " + author);
 	        } 
+	    }
+	    
+	    public List<String[]> listArticlesByGroups(String group) throws SQLException{
+	    	String query = "SELECT * FROM cse360articles WHERE groupName LIKE ?";
+	    	List<String[]> articles = new ArrayList<>();
+	    	try(PreparedStatement pstmt = connection.prepareStatement(query)){
+	    		pstmt.setString(1, "%" + group + "%");
+	    		ResultSet rs = pstmt.executeQuery();
+	    		while (rs.next()) {
+	    			long uid = rs.getLong("uid");
+	    			String level = rs.getString("level");
+	                String title = rs.getString("title");
+	                String authors = rs.getString("author");
+	                String groups = rs.getString("groupName");
+	                
+	                articles.add(new String[] {Long.toString(uid), level, title, authors, groups});
+	    			
+	    			
+	    		}
+	    		
+	    	}catch(SQLException e) {
+	    		System.out.println(e.getMessage());
+	    	}
+	    	return articles;
+	    				
+	    }
+	    
+	    public List<String[]> viewArticle(long uid) throws Exception {
+	        String query = "SELECT * FROM cse360articles WHERE uid = ?"; 
+	        List<String[]> articles = new ArrayList<>();
+	        try (PreparedStatement pstmt = connection.prepareStatement(query)) {
+	            pstmt.setLong(1, uid);
+	            try (ResultSet rs = pstmt.executeQuery()) {
+	                if(rs.next()) {
+	                	String level = rs.getString("level"); 
+	                	String title = rs.getString("title"); 
+	                    String author = rs.getString("author");
+	                    String articleAbstract = rs.getString("abstract");
+	                    String keywords = rs.getString("keywords");
+	                    String body = rs.getString("body");
+	                    String references = rs.getString("references");
+	                    String groupName = rs.getString("groupName");
+	
+	                    articles.add(new String[] {Long.toString(uid), level, title, author, articleAbstract, keywords, body , references, groupName});
+	                }
+	            }
+	        }
+			return articles;        
 	    }
 	
 	    /*******
@@ -172,6 +222,23 @@
 	            pstmt.executeUpdate();
 	        }    
 	    }
+	    
+public void updateArticle(long uid, String level, String title, String author, String abstracts, String keywords, String body, String references, String groupName) throws Exception {
+	            	
+	        String query = "UPDATE cse360articles SET level = ?, title = ?, author = ?, abstract = ?, keywords = ?, body = ?, references = ?, groupName = ?) WHERE uid = ?";
+	        try (PreparedStatement pstmt = connection.prepareStatement(query)) {
+	            pstmt.setString(1, level);
+	            pstmt.setString(2, title);
+	            pstmt.setString(3, author);
+	            pstmt.setString(4, abstracts);
+	            pstmt.setString(5, keywords);
+	            pstmt.setString(6, body);
+	            pstmt.setString(7, references);
+	            pstmt.setString(8, groupName);
+	            pstmt.setLong(9, uid);
+	            pstmt.executeUpdate();
+	        }    
+	    }
 	
 	    /*******
 	     * Deletes an article from the database based on the provided article ID.
@@ -179,10 +246,10 @@
 	     * @param id The ID of the article to be deleted.
 	     * @throws Exception If there is an error during the article deletion process.
 	     */
-	    public void deleteArticle(int id) throws Exception {
-	        String query = "DELETE FROM cse360articles WHERE id = ?";
+	    public void deleteArticle(long uid) throws Exception {
+	        String query = "DELETE FROM cse360articles WHERE uid = ?";
 	        try (PreparedStatement pstmt = connection.prepareStatement(query)) {
-	            pstmt.setInt(1, id);
+	            pstmt.setLong(1, uid);
 	            pstmt.executeUpdate();
 	        }    
 	    }

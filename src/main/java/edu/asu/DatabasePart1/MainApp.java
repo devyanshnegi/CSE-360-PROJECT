@@ -46,24 +46,6 @@ public class MainApp extends Application {
     /** The height of the admin page window in pixels */
     public final static double ADMIN_WINDOW_HEIGHT = 600;
 
-    /** Reference to the application's StartPage interface */
-    public StartPage StartGui;
-    
-    /** Reference to the application's AdminPage interface */
-    public AdminPage AdminGui;
-    
-    /** Reference to the application's LoginPage interface */
-    public LoginPage LoginGui;
-    
-    /** Reference to the application's RegisterPage interface */
-    public RegisterPage RegisterGui;
-    
-    /** Reference to the application's CompleteProfilePage interface */
-    public CompleteProfilePage CompleteProfileGui;
-    
-    /** Reference to the application's HomePage interface */
-    public StudentPage HomeGui;
-
     private static DatabaseHelper databaseHelper = new DatabaseHelper();
     
     /**********
@@ -142,40 +124,47 @@ public class MainApp extends Application {
         sceneController.addScene("EditRole", EditRoleScene);
         
         Pane InvitePane = new Pane();  // Initialize StartPane
-        new UserListPage(InvitePane, sceneController); // Pass RegisterScene to StartPage
+        new InvitePage(InvitePane, sceneController); // Pass RegisterScene to StartPage
         Scene InviteScene = new Scene(InvitePane, WINDOW_WIDTH, WINDOW_HEIGHT); // StartPage scene
         sceneController.addScene("Invite", InviteScene);
         
         Pane ConfirmationPane = new Pane();  // Initialize StartPane
-        new UserListPage(ConfirmationPane, sceneController); // Pass RegisterScene to StartPage
+        new confirmationPage(ConfirmationPane, sceneController); // Pass RegisterScene to StartPage
         Scene ConfirmationScene = new Scene(ConfirmationPane, WINDOW_WIDTH, WINDOW_HEIGHT); // StartPage scene
         sceneController.addScene("Confirmation", ConfirmationScene);
         
-        try {
-	        databaseHelper.connectToDatabase();
-//	        databaseHelper.storeOTP("student", 123456);
-//	        databaseHelper.register("Hello", "123", 123456);
-	        
-	        databaseHelper.displayUsersByAdmin(); // REMOVE LATER
-	        
-	        if(databaseHelper.isDatabaseEmpty()) {
-	        	int otp = 0;
-	        	databaseHelper.storeOTP("admin", otp);
-	        	sceneController.setData("otp", otp);
-	        	databaseHelper.displayUsersByAdmin();
-	        	sceneController.switchTo("Register");
-	        }
-	        else {
-	        	sceneController.switchTo("Start");
-	        }
-	    } catch (SQLException e) {
-	        // Handle SQL exceptions
-	        System.err.println("Database error: " + e.getMessage());
-	        e.printStackTrace();
-	    } finally {
-	        // Ensure the database connection is closed when the application exits
-	        databaseHelper.closeConnection();
-	    }
+        Pane CreateArticlePane = new Pane();  // Initialize StartPane
+        new CreateArticlePage(CreateArticlePane, sceneController); // Pass RegisterScene to StartPage
+        Scene CreateArticleScene = new Scene(CreateArticlePane, WINDOW_WIDTH, WINDOW_HEIGHT); // StartPage scene
+        sceneController.addScene("CreateArticle", CreateArticleScene);
+        
+        sceneController.switchTo("ListArticle");
+        
+//        try {
+//	        databaseHelper.connectToDatabase();
+////	        databaseHelper.storeOTP("student", 123456);
+////	        databaseHelper.register("Hello", "123", 123456);
+//	        
+//	        databaseHelper.displayUsersByAdmin(); // REMOVE LATER
+//	        
+//	        if(databaseHelper.isDatabaseEmpty()) {
+//	        	int otp = 0;
+//	        	databaseHelper.storeOTP("admin", otp);
+//	        	sceneController.setData("otp", otp);
+//	        	databaseHelper.displayUsersByAdmin();
+//	        	sceneController.switchTo("Register");
+//	        }
+//	        else {
+//	        	sceneController.switchTo("Start");
+//	        }
+//	    } catch (SQLException e) {
+//	        // Handle SQL exceptions
+//	        System.err.println("Database error: " + e.getMessage());
+//	        e.printStackTrace();
+//	    } finally {
+//	        // Ensure the database connection is closed when the application exits
+//	        databaseHelper.closeConnection();
+//	    }
         
         theStage.show();
     }

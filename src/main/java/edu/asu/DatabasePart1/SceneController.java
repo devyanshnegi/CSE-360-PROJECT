@@ -40,6 +40,16 @@ public class SceneController {
         return sharedData.get(key);
     }
     
+    // Remove data from sharedData map
+    public void removeData(String key) {
+        if (sharedData.containsKey(key)) {
+            sharedData.remove(key);
+            System.out.println("Data removed for key: " + key);
+        } else {
+            System.out.println("No data found for key: " + key);
+        }
+    }
+    
     public void exit() {
     	System.out.println("Closing application.");
         stage.close(); // Close the stage

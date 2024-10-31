@@ -23,7 +23,7 @@ import javafx.application.Platform;
  *                  home screen and handling the logout functionality.
  */
 
-public class HomePage {
+public class StudentPage {
 
     /** Label displaying the title of the home page */
     private Label Title2 = new Label("Home Page");
@@ -43,7 +43,7 @@ public class HomePage {
      * 
      * @param Root The root Pane where the UI components will be added.
      */
-    public HomePage(Pane Root, SceneController sceneController) {
+    public StudentPage(Pane Root, SceneController sceneController) {
         // Label the scene with the home page title, centered at the top of the pane
         setupLabelUI(Title2, "Arial", 24, MainApp.WINDOW_WIDTH, Pos.CENTER, 0, 10);
 

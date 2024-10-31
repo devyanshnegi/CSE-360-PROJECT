@@ -62,7 +62,7 @@ public class MainApp extends Application {
     public CompleteProfilePage CompleteProfileGui;
     
     /** Reference to the application's HomePage interface */
-    public HomePage HomeGui;
+    public StudentPage HomeGui;
 
     private static DatabaseHelper databaseHelper = new DatabaseHelper();
     
@@ -84,11 +84,21 @@ public class MainApp extends Application {
     	
         theStage.setTitle("CSE-360 Application"); // Set the window title
 
+        Pane UserListPane = new Pane();
+        new UserListPage(UserListPane, sceneController); // After registration, redirect to LoginSceneAfterRegister
+        Scene UserListScene = new Scene(UserListPane, WINDOW_WIDTH, WINDOW_HEIGHT); // RegisterPage scene
+        sceneController.addScene("UserList", UserListScene);
+        
         // Set up the HomePage UI
-        Pane HomePane = new Pane();
-        new HomePage(HomePane, sceneController);
-        Scene HomeScene = new Scene(HomePane, WINDOW_WIDTH, WINDOW_HEIGHT); // HomePage scene
-        sceneController.addScene("Home",HomeScene);
+        Pane StudentHomePane = new Pane();
+        new StudentPage(StudentHomePane, sceneController);
+        Scene StudentHomeScene = new Scene(StudentHomePane, WINDOW_WIDTH, WINDOW_HEIGHT); // HomePage scene
+        sceneController.addScene("StudentHome",StudentHomeScene);
+        
+        Pane InstructorHomePane = new Pane();
+        new InstructorPage(InstructorHomePane, sceneController);
+        Scene InstructorHomeScene = new Scene(InstructorHomePane, WINDOW_WIDTH, WINDOW_HEIGHT); // HomePage scene
+        sceneController.addScene("InstructorHome",InstructorHomeScene);
 
         // Set up the CompleteProfilePage UI
         Pane CompleteProfilePane = new Pane();
@@ -126,9 +136,25 @@ public class MainApp extends Application {
         Scene StartScene = new Scene(StartPane, WINDOW_WIDTH, WINDOW_HEIGHT); // StartPage scene
         sceneController.addScene("Start", StartScene);
         
-       
+        Pane EditRolePane = new Pane();  // Initialize StartPane
+        new UserListPage(EditRolePane, sceneController); // Pass RegisterScene to StartPage
+        Scene EditRoleScene = new Scene(EditRolePane, WINDOW_WIDTH, WINDOW_HEIGHT); // StartPage scene
+        sceneController.addScene("EditRole", EditRoleScene);
+        
+        Pane InvitePane = new Pane();  // Initialize StartPane
+        new UserListPage(InvitePane, sceneController); // Pass RegisterScene to StartPage
+        Scene InviteScene = new Scene(InvitePane, WINDOW_WIDTH, WINDOW_HEIGHT); // StartPage scene
+        sceneController.addScene("Invite", InviteScene);
+        
+        Pane ConfirmationPane = new Pane();  // Initialize StartPane
+        new UserListPage(ConfirmationPane, sceneController); // Pass RegisterScene to StartPage
+        Scene ConfirmationScene = new Scene(ConfirmationPane, WINDOW_WIDTH, WINDOW_HEIGHT); // StartPage scene
+        sceneController.addScene("Confirmation", ConfirmationScene);
+        
         try {
 	        databaseHelper.connectToDatabase();
+//	        databaseHelper.storeOTP("student", 123456);
+//	        databaseHelper.register("Hello", "123", 123456);
 	        
 	        databaseHelper.displayUsersByAdmin(); // REMOVE LATER
 	        

@@ -81,10 +81,32 @@ public class LoginPage {
             String password = passwordField.getText();
 
             if(login(username,password)) {
+            	String role = "";
+            	try {
+            		databaseHelper.connectToDatabase();
+            		role = databaseHelper.getRole(username);
+            	}
+            	catch (Exception e){
+            		System.out.print(e);
+            	}
+            	finally {
+            		databaseHelper.closeConnection();
+            	}
+            	
+            	sceneController.setData("username", username);
+            	sceneController.setData("role", role);
             	if(isAfterRegister) {
             		sceneController.switchTo("CompleteProfile");
             	} else {
-            		sceneController.switchTo("Home");
+            		if(role.equals("admin")) {
+            			sceneController.switchTo("Admin");
+            		}
+            		else if(role.equals("student")) {            			
+            			sceneController.switchTo("StudentHome");
+            		}
+            		else if(role.equals("instructor")) {
+            			sceneController.switchTo("InstructorHome");
+            		}
             	}
             }
             else {

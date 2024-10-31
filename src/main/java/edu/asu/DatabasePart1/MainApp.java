@@ -1,4 +1,4 @@
-package edu.asu.DatabasePart1;
+	package edu.asu.DatabasePart1;
 
 import javafx.application.Application;
 import java.time.format.DateTimeFormatter;
@@ -138,12 +138,29 @@ public class MainApp extends Application {
         Scene CreateArticleScene = new Scene(CreateArticlePane, WINDOW_WIDTH, WINDOW_HEIGHT); // StartPage scene
         sceneController.addScene("CreateArticle", CreateArticleScene);
         
-//        sceneController.switchTo("ListArticle");
+
+        Pane ListArticlePane = new Pane();  // Initialize StartPane
+        new ListArticlePage(ListArticlePane, sceneController); // Pass RegisterScene to StartPage
+        Scene ListArticleScene = new Scene(ListArticlePane, WINDOW_WIDTH, WINDOW_HEIGHT); // StartPage scene
+        sceneController.addScene("ListArticle", ListArticleScene);
+        
+//        Pane UpdateArticlePane = new Pane();  // Initialize StartPane
+//        new UpdateArticlePage(UpdateArticlePane, sceneController); // Pass RegisterScene to StartPage
+//        Scene UpdateArticleScene = new Scene(UpdateArticlePane, WINDOW_WIDTH, WINDOW_HEIGHT); // StartPage scene
+//        sceneController.addScene("UpdateArticle", UpdateArticleScene);
+        
+//        Pane ViewLabelPane = new Pane();  // Initialize StartPane
+//        new ViewLabelPage(ViewLabelPane, sceneController); // Pass RegisterScene to StartPage
+//        Scene ViewLabelScene = new Scene(ViewLabelPane, WINDOW_WIDTH, WINDOW_HEIGHT); // StartPage scene
+//        sceneController.addScene("ViewLabel", ViewLabelScene);
+        
+//        sceneController.switchTo("ViewLabel");
         
         try {
 	        databaseHelper.connectToDatabase();
-	        //databaseHelper.storeOTP("student", 123456);
-	        //databaseHelper.register("Hello", "123", 123456);
+//	        databaseHelper.storeOTP("student", 123456);
+//	        databaseHelper.register("Hello", "123", 123456);
+
 	        
 	        databaseHelper.displayUsersByAdmin(); // REMOVE LATER
 	        

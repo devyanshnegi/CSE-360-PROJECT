@@ -45,26 +45,26 @@ public class AdminPage {
     /** Button to list all users */
     private Button ShowList = new Button("Click here to List all Users");
 
-    /** Label for deleting a user */
-    //private Label DeleteUsers = new Label("Delete User");
+    /** Label for the instructor page title */
+    private Label titleLabel = new Label("Instructor Page");
 
-    /** Button to delete a user */
-    //private Button deleteUser = new Button("Click here to Delete User");
+    /** Button to view articles */
+    private Button viewArticlesButton = new Button("View Articles");
 
-    /** Label for adding or removing a user role */
-    //private Label AddorRemoveRole = new Label("Add or Remove Role of a User");
-
-    /** Button to edit a user's role */
-    //private Button addOrRemove = new Button("Click here to edit Role");
-
-    /** Label for password reset */
-    //private Label passwordReset = new Label("Password Reset");
-
-    /** Button to reset the password */
-    //private Button PasswordReset = new Button("Click here to Reset Password");
+    /** Button to publish articles */
+    private Button publishArticlesButton = new Button("Publish Articles");
+    
+    /** Button to publish articles */
+    private Button BackupButton = new Button("Backup Articles");
+    
+    /** Button to publish articles */
+    private Button RestoreBackupButton = new Button("Restore Articles");
 
     /** Button for logging out */
     private Button logoutButton = new Button("Logout");
+    
+    private static ArticleDBHelper articleDBHelper = new ArticleDBHelper();
+
 
     /**********
      * Constructor for AdminPage
@@ -101,26 +101,44 @@ public class AdminPage {
         ShowList.setLayoutX(190);
         ShowList.setLayoutY(170);        
 
-        /* Set up the Delete User label and button
-        setupLabelUI(DeleteUsers, "Arial", 14, MainApp.WINDOW_WIDTH - 10, Pos.CENTER, 10, 210);
-        Font fontDelete = Font.font("Arial", FontWeight.BOLD, 14);
-        DeleteUsers.setFont(fontDelete);
-        deleteUser.setLayoutX(190);
-        deleteUser.setLayoutY(240);
+     // Set up the View Articles button
+        viewArticlesButton.setLayoutX(200);
+        viewArticlesButton.setLayoutY(200);
+        viewArticlesButton.setOnAction(e -> sceneController.switchTo("ListArticle"));
 
-        // Set up the Add or Remove Role label and button
-        setupLabelUI(AddorRemoveRole, "Arial", 14, MainApp.WINDOW_WIDTH - 10, Pos.CENTER, 10, 280);
-        Font fontRole = Font.font("Arial", FontWeight.BOLD, 14);
-        AddorRemoveRole.setFont(fontRole);
-        addOrRemove.setLayoutX(190);
-        addOrRemove.setLayoutY(310);
+        // Set up the Publish Articles button
+        publishArticlesButton.setLayoutX(200);
+        publishArticlesButton.setLayoutY(250);
+        publishArticlesButton.setOnAction(e -> sceneController.switchTo("CreateArticle"));
+        
+        BackupButton.setLayoutX(200);
+        BackupButton.setLayoutY(300);
+        BackupButton.setOnAction(e -> {
+			try {
+	        	articleDBHelper.connectToDatabase();
+				articleDBHelper.createBackup("backup.txt");
+			} catch (Exception e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}finally {
+	        	articleDBHelper.closeConnection();
+	        }
+		});
 
-        // Set up the Password Reset label and button
-        setupLabelUI(passwordReset, "Arial", 14, MainApp.WINDOW_WIDTH - 10, Pos.CENTER, 10, 360);
-        Font fontReset = Font.font("Arial", FontWeight.BOLD, 14);
-        passwordReset.setFont(fontReset);
-        PasswordReset.setLayoutX(170);
-        PasswordReset.setLayoutY(390);*/
+        // Set up the Publish Articles button
+        RestoreBackupButton.setLayoutX(200);
+        RestoreBackupButton.setLayoutY(350);
+        RestoreBackupButton.setOnAction(e -> {
+			try {
+	        	articleDBHelper.connectToDatabase();
+				articleDBHelper.restoreBackup("backup.txt");
+			} catch (Exception e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}finally {
+	        	articleDBHelper.closeConnection();
+	        }
+		});
 
         // Set up the Logout button
         logoutButton.setText("Logout");
@@ -134,7 +152,7 @@ public class AdminPage {
         });
 
         // Add all elements to the root pane
-        Root.getChildren().addAll(Title2, Invite, InviteAction, ListUsers, ShowList, logoutButton);
+        Root.getChildren().addAll(Title2, Invite, InviteAction, ListUsers, ShowList, logoutButton, BackupButton, RestoreBackupButton, viewArticlesButton, publishArticlesButton);
     }
 
 

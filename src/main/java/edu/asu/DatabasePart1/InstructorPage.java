@@ -31,7 +31,14 @@ public class InstructorPage {
 
     /** Button to publish articles */
     private Button publishArticlesButton = new Button("Publish Articles");
+    
+    /** Button to publish articles */
+    private Button BackupButton = new Button("Backup Articles");
+    
+    /** Button to publish articles */
+    private Button RestoreBackupButton = new Button("Restore Articles");
 
+    private static ArticleDBHelper articleDBHelper = new ArticleDBHelper();
     /**********
      * Constructor for InstructorPage
      * 
@@ -55,9 +62,38 @@ public class InstructorPage {
         publishArticlesButton.setLayoutX(150);
         publishArticlesButton.setLayoutY(150);
         publishArticlesButton.setOnAction(e -> sceneController.switchTo("CreateArticle"));
+        
+        BackupButton.setLayoutX(150);
+        BackupButton.setLayoutY(2000);
+        BackupButton.setOnAction(e -> {
+			try {
+	        	articleDBHelper.connectToDatabase();
+				articleDBHelper.createBackup("backup.txt");
+			} catch (Exception e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}finally {
+	        	articleDBHelper.closeConnection();
+	        }
+		});
+
+        // Set up the Publish Articles button
+        RestoreBackupButton.setLayoutX(150);
+        RestoreBackupButton.setLayoutY(250);
+        RestoreBackupButton.setOnAction(e -> {
+			try {
+	        	articleDBHelper.connectToDatabase();
+				articleDBHelper.restoreBackup("backup.txt");
+			} catch (Exception e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}finally {
+	        	articleDBHelper.closeConnection();
+	        }
+		});
 
         // Add all components to the root pane
-        root.getChildren().addAll(titleLabel, viewArticlesButton, publishArticlesButton);
+        root.getChildren().addAll(titleLabel, viewArticlesButton, BackupButton, RestoreBackupButton);
     }
 
     /**********

@@ -95,18 +95,18 @@ public class LoginPage {
             	
             	sceneController.setData("username", username);
             	sceneController.setData("role", role);
+            	if(role.equals("admin")) {
+        			sceneController.switchTo("Admin");
+        		}
+        		else if(role.equals("student")) {            			
+        			sceneController.switchTo("StudentHome");
+        		}
+        		else if(role.equals("instructor")) {
+        			sceneController.switchTo("InstructorHome");
+        		}
+            	
             	if(isAfterRegister) {
             		sceneController.switchTo("CompleteProfile");
-            	} else {
-            		if(role.equals("admin")) {
-            			sceneController.switchTo("Admin");
-            		}
-            		else if(role.equals("student")) {            			
-            			sceneController.switchTo("StudentHome");
-            		}
-            		else if(role.equals("instructor")) {
-            			sceneController.switchTo("InstructorHome");
-            		}
             	}
             }
             else {

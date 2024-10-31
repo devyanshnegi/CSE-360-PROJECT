@@ -112,7 +112,7 @@ public class CompleteProfilePage {
         // Add action to Complete Profile button to switch to HomePage
         completeProfile.setOnAction(event -> {
             printProfileInputs();  // Print the inputs to console
-            sceneController.switchTo("Home");
+            sceneController.switchTo("StudentHome");
         });
     }
 

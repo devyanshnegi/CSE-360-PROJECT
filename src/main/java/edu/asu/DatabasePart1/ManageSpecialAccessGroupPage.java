@@ -142,7 +142,7 @@ public class ManageSpecialAccessGroupPage {
             databaseHelper.connectToDatabase();
 
         	String username = (String) sceneController.getData("username");
-            if(databaseHelper.doesUserHaveAccess(username, groupName)){
+            if(databaseHelper.doesUserHaveSpecialAccess(username, groupName)){
             	boolean success = databaseHelper.setSpecialAccessGroupUser(selectedUsername, nameField.getText());
                 if (success) {
                     sceneController.switchTo("InstructorHome");
@@ -175,7 +175,7 @@ public class ManageSpecialAccessGroupPage {
             databaseHelper.connectToDatabase();
 
         	String username = (String) sceneController.getData("username");
-            if(databaseHelper.doesUserHaveAccess(username, groupName)){
+            if(databaseHelper.doesUserHaveSpecialAccess(username, groupName)){
             	boolean success = databaseHelper.removeSpecialAccessGroupUser(selectedUsername, nameField.getText());
                 if (success) {
                     sceneController.switchTo("InstructorHome");

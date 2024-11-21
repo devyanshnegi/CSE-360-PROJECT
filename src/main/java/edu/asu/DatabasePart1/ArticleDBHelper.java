@@ -140,11 +140,63 @@ import java.util.List;
 	    				
 	    }
 	    
+	    public List<String[]> listArticlesByGroupsAndLevel(String group, String levelSearch) throws SQLException{
+	    	String query = "SELECT * FROM cse360articles WHERE groupName LIKE ? AND level = ?";
+	    	List<String[]> articles = new ArrayList<>();
+	    	try(PreparedStatement pstmt = connection.prepareStatement(query)){
+	    		pstmt.setString(1, "%" + group + "%");
+	    		pstmt.setString(2, levelSearch);
+	    		ResultSet rs = pstmt.executeQuery();
+	    		while (rs.next()) {
+	    			long uid = rs.getLong("uid");
+	    			String level = rs.getString("level");
+	                String title = rs.getString("title");
+	                String authors = rs.getString("author");
+	                String groups = rs.getString("groupName");
+	                
+	                articles.add(new String[] {Long.toString(uid), level, title, authors, groups});
+	    			
+	    			
+	    		}
+	    		
+	    	}catch(SQLException e) {
+	    		System.out.println(e.getMessage());
+	    	}
+	    	return articles;
+	    				
+	    }
+	    
 	    public List<String[]> listArticlesBySpecialAccessGroups(String group) throws SQLException{
 	    	String query = "SELECT * FROM cse360articles WHERE specialAccessGroup LIKE ?";
 	    	List<String[]> articles = new ArrayList<>();
 	    	try(PreparedStatement pstmt = connection.prepareStatement(query)){
 	    		pstmt.setString(1, "%" + group + "%");
+	    		ResultSet rs = pstmt.executeQuery();
+	    		while (rs.next()) {
+	    			long uid = rs.getLong("uid");
+	    			String level = rs.getString("level");
+	                String title = rs.getString("title");
+	                String authors = rs.getString("author");
+	                String groups = rs.getString("specialAccessGroup");
+	                
+	                articles.add(new String[] {Long.toString(uid), level, title, authors, groups});
+	    			
+	    			
+	    		}
+	    		
+	    	}catch(SQLException e) {
+	    		System.out.println(e.getMessage());
+	    	}
+	    	return articles;
+	    				
+	    }
+	    
+	    public List<String[]> listArticlesBySpecialAccessGroupsAndLevel(String group, String levelSearch) throws SQLException{
+	    	String query = "SELECT * FROM cse360articles WHERE specialAccessGroup LIKE ? AND level = ?";
+	    	List<String[]> articles = new ArrayList<>();
+	    	try(PreparedStatement pstmt = connection.prepareStatement(query)){
+	    		pstmt.setString(1, "%" + group + "%");
+	    		pstmt.setString(2, levelSearch);
 	    		ResultSet rs = pstmt.executeQuery();
 	    		while (rs.next()) {
 	    			long uid = rs.getLong("uid");

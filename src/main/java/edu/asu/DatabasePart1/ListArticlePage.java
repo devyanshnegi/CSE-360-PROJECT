@@ -65,10 +65,15 @@ public class ListArticlePage {
         TextField groupingField = new TextField();
         groupingField.setPromptText("Enter grouping identifier");
         
+        Label levelLabel = new Label("Article Level:");
+        ComboBox<String> levelComboBox = new ComboBox<>();
+        levelComboBox.getItems().addAll("All","Beginner", "Intermediate", "Advanced", "Expert");
+        
+        
         Button submitButton = new Button("Submit");
-        submitButton.setOnAction(e -> handleSubmit(sceneController, groupingField.getText())); // Displays articles on submit
+        submitButton.setOnAction(e -> handleSubmit(sceneController, groupingField.getText(),levelComboBox.getValue())); // Displays articles on submit
 
-        identifierBox.getChildren().addAll(groupingLabel, groupingField, submitButton);
+        identifierBox.getChildren().addAll(groupingLabel, groupingField, levelLabel, levelComboBox, submitButton);
         layout.getChildren().add(identifierBox);
 
         // Article Display Area with Radio Buttons
@@ -117,7 +122,7 @@ public class ListArticlePage {
      *
      * @param groupingIdentifier The grouping identifier entered by the user.
      */
-    private void handleSubmit(SceneController sceneController, String groupingIdentifier) {
+    private void handleSubmit(SceneController sceneController, String groupingIdentifier, String levelIdentifier) {
         articlesContainer.getChildren().clear();
         articleToggleGroup.getToggles().clear();
         try {
@@ -127,13 +132,28 @@ public class ListArticlePage {
         		// DO NOTHING
         	}
         	else if (groupingIdentifier.toLowerCase().equals("all")) {
-	        	displayArticles(articleDBHelper.listArticlesByGroups("%"));
+        		if(levelIdentifier.toLowerCase().equals("all")) {
+    	        	displayArticles(articleDBHelper.listArticlesByGroups("%"));
+        		}
+        		else {
+        			displayArticles(articleDBHelper.listArticlesByGroupsAndLevel("%",levelIdentifier));
+        		}
 	        } else {
-	        	displayArticles(articleDBHelper.listArticlesByGroups(groupingIdentifier));
 	        	String username = (String) sceneController.getData("username");
-	        	if(databaseHelper.doesUserHaveAccess(username, groupingIdentifier)){
-	        		displayArticles(articleDBHelper.listArticlesBySpecialAccessGroups(groupingIdentifier));
-	        	}
+	        	
+	        	if(levelIdentifier.toLowerCase().equals("all")) {
+		        	displayArticles(articleDBHelper.listArticlesByGroups(groupingIdentifier));
+
+		        	if(databaseHelper.doesUserHaveSpecialAccess(username, groupingIdentifier)){
+		        		displayArticles(articleDBHelper.listArticlesBySpecialAccessGroups(groupingIdentifier));
+		        	}
+        		}
+        		else {
+    	        	displayArticles(articleDBHelper.listArticlesByGroupsAndLevel(groupingIdentifier,levelIdentifier));
+    	        	if(databaseHelper.doesUserHaveSpecialAccess(username, groupingIdentifier)){
+    	        		displayArticles(articleDBHelper.listArticlesBySpecialAccessGroupsAndLevel(groupingIdentifier,levelIdentifier));
+    	        	}
+        		}
 	        }
         }
         catch (SQLException e) {

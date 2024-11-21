@@ -57,6 +57,10 @@ public class InstructorPage {
 
     Button logOutButton = new Button("Logout");
     
+    /** Button for Instructor to remove Student */
+    private Button viewMessage = new Button("View Messages from Students");
+    
+    
     /**********
      * Constructor for InstructorPage
      * 
@@ -131,10 +135,17 @@ public class InstructorPage {
         //Set up the removeStudent button
         removeStudent.setLayoutX(200);
         removeStudent.setLayoutY(280);
-        removeStudent.setOnAction(e -> sceneController.switchTo("ManageStudentRole"));        
+        removeStudent.setOnAction(e -> sceneController.switchTo("ManageStudentRole")); 
         
+        
+        //Setup the viewMessages Button
+        viewMessage.setLayoutX(200);
+        viewMessage.setLayoutY(320);
+        viewMessage.setOnAction(e -> sceneController.switchTo("MessagesView"));
+        
+
         ManageSAGPButton.setLayoutX(150);
-        ManageSAGPButton.setLayoutY(350);
+        ManageSAGPButton.setLayoutY(360);
         ManageSAGPButton.setOnAction(e -> sceneController.switchTo("ManageSpecialAccessGroup"));
         
         ManageGGPButton.setLayoutX(150);
@@ -151,7 +162,7 @@ public class InstructorPage {
       
         // Add all components to the root pane
         root.getChildren().addAll(titleLabel, viewArticlesButton, publishArticlesButton, BackUpArticlesButton,restoreArticlesButton,
-        		addStudent, removeStudent, ManageSAGPButton, ManageGGPButton, logOutButton);
+        		addStudent, removeStudent, ManageSAGPButton, ManageGGPButton, logOutButton, viewMessage);
 
     }
 

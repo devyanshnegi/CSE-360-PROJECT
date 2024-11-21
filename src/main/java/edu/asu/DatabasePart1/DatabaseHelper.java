@@ -54,7 +54,8 @@ class DatabaseHelper {
 				+ "viewAccess TEXT DEFAULT NULL,"
 				+ "specialAdminAccess TEXT DEFAULT NULL,"
 				+ "otp INT UNIQUE,"
-				+ "expiry DATETIME)";
+				+ "expiry DATETIME,"
+				+ "MESSAGES VARCHAR(255))";
 		statement.execute(userTable);
 		
 	}
@@ -634,6 +635,40 @@ class DatabaseHelper {
 	    return false; // If an error occurs, assume user doesn't exist
 	}
 	
+	public boolean sendHelpMessage(String message, String username) {
+	    String updateQuery = "UPDATE cse360users SET MESSAGES = ? WHERE username = ?";
+	    try (PreparedStatement pstmt = connection.prepareStatement(updateQuery)) {
+	        pstmt.setString(1, message);
+	        pstmt.setString(2, username);
+	        int rowsUpdated = pstmt.executeUpdate();
+	        if (rowsUpdated > 0) {
+	            return true; // Successfully updated the message
+	        } else {
+	            System.out.println("No user found with the given username.");
+	        }
+	    } catch (SQLException ex) {
+	        ex.printStackTrace();
+	    }
+	    return false; // Update failed
+	}
+
+	
+	public List<String> getAllMessages() {
+	    List<String> messages = new ArrayList<>();
+	    String retrieveQuery = "SELECT username, MESSAGES FROM cse360users";
+	    try (PreparedStatement pstmt = connection.prepareStatement(retrieveQuery)) {
+	        ResultSet rs = pstmt.executeQuery();
+	        while (rs.next()) {
+	            String username = rs.getString("username");
+	            String message = rs.getString("MESSAGES");
+	            messages.add(username + ": " + message);
+	        }
+	    } catch (SQLException ex) {
+	        ex.printStackTrace();
+	    }
+	    return messages;
+	}
+
 	public int numberOfUsers() throws SQLException {
 		String sql = "SELECT COUNT(*) FROM cse360users WHERE username IS NOT NULL"; 
 	    try (Statement stmt = connection.createStatement();
@@ -670,6 +705,33 @@ class DatabaseHelper {
 	    }
 	    return users;
 	}
+	
+	public List<String[]> listArticlesByKeyword(String keyword) throws SQLException{
+    	String query = "SELECT * FROM cse360articles WHERE title LIKE ? OR abstract LIKE ? OR author LIKE ?";
+    	List<String[]> articles = new ArrayList<>();
+    	try(PreparedStatement pstmt = connection.prepareStatement(query)){
+    		pstmt.setString(1, "%" + keyword + "%");
+    		pstmt.setString(2, "%" + keyword + "%");
+    		pstmt.setString(3, "%" + keyword + "%");
+    		ResultSet rs = pstmt.executeQuery();
+    		while (rs.next()) {
+    			long uid = rs.getLong("uid");
+    			String level = rs.getString("level");
+                String title = rs.getString("title");
+                String authors = rs.getString("author");
+                String groups = rs.getString("groupName");
+                
+                articles.add(new String[] {Long.toString(uid), level, title, authors, groups});
+    			
+    			
+    		}
+    		
+    	}catch(SQLException e) {
+    		System.out.println(e.getMessage());
+    	}
+    	return articles;
+    				
+    }
 	
 	public List<String[]> getAllInstructors() throws SQLException {
 	    String sql = "SELECT * FROM cse360users WHERE role = ?"; // Skips the first row

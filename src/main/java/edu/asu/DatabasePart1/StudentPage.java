@@ -25,8 +25,22 @@ import javafx.application.Platform;
 
 public class StudentPage {
 
+    private Label Title2 = new Label("Student Home Page");
+    
+    /** Label prompting the user to click the logout button */
+    private Label logOut = new Label("Click Here to LogOut");
+    
+    /** Button for logging out of the application */
+    private Button logOutButton = new Button("Logout");
+    
+    /** Button for logging out of the application */
+    private Button helpMessage = new Button("Send Help Messagw to Instructor");
+    
+    /** Button for searching Article */
+    private Button search = new Button("Search Articles using keywords");
     /** VBox layout for the StudentPage */
     private VBox root;
+
 
     /** Constructor for StudentPage
      * 
@@ -43,6 +57,14 @@ public class StudentPage {
         root.setAlignment(Pos.CENTER); // Center align all elements
         root.setPrefSize(MainApp.WINDOW_WIDTH, MainApp.WINDOW_HEIGHT);
 
+        Font fontlogout = Font.font("Arial", FontWeight.BOLD, 14);
+        logOut.setFont(fontlogout);
+        
+        
+        //Setup the send message button
+        helpMessage.setLayoutX(215);
+        helpMessage.setLayoutY(140);
+        helpMessage.setOnAction(e -> sceneController.switchTo("HelpMessage"));
         // Title label
         Label titleLabel = new Label("Home Page");
         titleLabel.setFont(Font.font("Arial", FontWeight.BOLD, 25));
@@ -57,8 +79,17 @@ public class StudentPage {
             System.out.println("Logout button clicked. Closing the application...");
             Platform.exit(); // Gracefully close the application
         });
+        
+        //setup search button
+        search.setLayoutX(215);
+        search.setLayoutY(180);
+        search.setOnAction(e -> sceneController.switchTo("searchArticles"));
+        
         root.getChildren().add(logOutButton);
         root.getChildren().add(viewArticles);
+  
+        root.getChildren().add(helpMessage);
+        root.getChildren().add(search);
 
         // Add the VBox layout to the parent Pane
         parent.getChildren().add(root);

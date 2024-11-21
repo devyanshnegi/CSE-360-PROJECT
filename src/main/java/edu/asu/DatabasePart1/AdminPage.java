@@ -11,6 +11,7 @@ import javafx.scene.text.Font;
 import javafx.scene.text.FontPosture;
 import javafx.scene.text.Text;
 import javafx.scene.text.TextFlow;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.text.FontWeight;
 import javafx.stage.Stage;
@@ -131,31 +132,41 @@ public class AdminPage {
         BackupButton.setLayoutX(200);
         BackupButton.setLayoutY(300);
         BackupButton.setOnAction(e -> {
-			try {
-	        	articleDBHelper.connectToDatabase();
-				articleDBHelper.createBackup("backup.txt");
-			} catch (Exception e1) {
-				// TODO Auto-generated catch block
-				e1.printStackTrace();
-			}finally {
-	        	articleDBHelper.closeConnection();
-	        }
-		});
+        	ArticleDBHelper helper = new ArticleDBHelper();
+        	try {
+        		helper.connectToDatabase();
+        		helper.createBackup("ArticleBackup.txt");
+        		showAlert("Backup Successfull message: ", "Articles have been backed up to ArticleBackup.txt file");
+ 
+        		
+        	}catch(Exception ex) {
+        		showAlert("Backup Failed message: ", "Articles could not be backed up to ArticleBackup.txt file");
+        		ex.printStackTrace();
+        	}finally {
+        		helper.closeConnection();
+        	}
+ 
+ 
+        });
 
         // Set up the Publish Articles button
         RestoreBackupButton.setLayoutX(200);
         RestoreBackupButton.setLayoutY(350);
         RestoreBackupButton.setOnAction(e -> {
-			try {
-	        	articleDBHelper.connectToDatabase();
-				articleDBHelper.restoreBackup("backup.txt");
-			} catch (Exception e1) {
-				// TODO Auto-generated catch block
-				e1.printStackTrace();
-			}finally {
-	        	articleDBHelper.closeConnection();
-	        }
-		});
+        	ArticleDBHelper helper1 = new ArticleDBHelper();
+        	try{
+        		helper1.connectToDatabase();
+        		helper1.restoreBackup("ArticleBackup.txt");
+        		showAlert("Restore Success: ", "Articles have been restored from ArticleBackup.txt");
+        	}catch(Exception ex){
+        		showAlert("Restore Failed: ", "Articles could not be restored from ArticleBackup.txt");
+        		ex.printStackTrace();
+        		
+        	}finally {
+        		helper1.closeConnection();
+        	}
+        	
+        });
         
         CreateSpecialAccessGroupButton.setLayoutX(200);
         CreateSpecialAccessGroupButton.setLayoutY(440);
@@ -242,5 +253,13 @@ public class AdminPage {
         t.setLayoutX(x);
         t.setLayoutY(y);
         t.setEditable(e);
+    }
+    
+    private void showAlert(String title, String message) {
+        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+        alert.setTitle(title);
+        alert.setHeaderText(null);
+        alert.setContentText(message);
+        alert.showAndWait();
     }
 }

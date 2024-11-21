@@ -96,7 +96,7 @@ public class CreateArticlePage {
         bodyArea = new TextArea();
         bodyArea.setPromptText("Enter article content here...");
         bodyArea.setWrapText(true);
-        bodyArea.setPrefHeight(200);
+        bodyArea.setPrefHeight(50);
         grid.add(bodyLabel, 0, 7);
         grid.add(bodyArea, 1, 7);
 
@@ -105,7 +105,7 @@ public class CreateArticlePage {
         referencesArea = new TextArea();
         referencesArea.setPromptText("Enter reference links here...");
         referencesArea.setWrapText(true);
-        referencesArea.setPrefHeight(60);
+        referencesArea.setPrefHeight(20);
         grid.add(referencesLabel, 0, 8);
         grid.add(referencesArea, 1, 8);
         

@@ -2,6 +2,7 @@ package edu.asu.DatabasePart1;
 
 import java.sql.SQLException;
 
+import javafx.application.Platform;
 // JavaFX imports needed to support the Graphical User Interface
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
@@ -36,8 +37,13 @@ public class InstructorPage {
 
     /** Button to publish articles */
     private Button publishArticlesButton = new Button("Publish Articles");
+ 
+    private Button ManageSAGPButton = new Button("Manage Special Access Group");
     
-    /** Button to publish articles */
+    private Button ManageGGPButton = new Button("Manage General Group");
+
+    private static ArticleDBHelper articleDBHelper = new ArticleDBHelper();
+
     private Button BackUpArticlesButton = new Button("BackUp Articles");
     
     /** Button to publish articles */
@@ -48,6 +54,8 @@ public class InstructorPage {
     
     /** Button for Instructor to remove Student */
     private Button removeStudent = new Button("Remove Student from System");
+
+    Button logOutButton = new Button("Logout");
     
     /** Button for Instructor to remove Student */
     private Button viewMessage = new Button("View Messages from Students");
@@ -135,9 +143,27 @@ public class InstructorPage {
         viewMessage.setLayoutY(320);
         viewMessage.setOnAction(e -> sceneController.switchTo("MessagesView"));
         
+
+        ManageSAGPButton.setLayoutX(150);
+        ManageSAGPButton.setLayoutY(360);
+        ManageSAGPButton.setOnAction(e -> sceneController.switchTo("ManageSpecialAccessGroup"));
+        
+        ManageGGPButton.setLayoutX(150);
+        ManageGGPButton.setLayoutY(400);
+        ManageGGPButton.setOnAction(e -> sceneController.switchTo("ManageGeneralGroup"));
+        
+
+        logOutButton.setLayoutX(150);
+        logOutButton.setLayoutY(450);
+        logOutButton.setOnAction(event -> {
+            System.out.println("Logout button clicked. Closing the application...");
+            Platform.exit(); // Gracefully close the application
+        });
+      
         // Add all components to the root pane
         root.getChildren().addAll(titleLabel, viewArticlesButton, publishArticlesButton, BackUpArticlesButton,restoreArticlesButton,
-        		addStudent, removeStudent, viewMessage);
+        		addStudent, removeStudent, ManageSAGPButton, ManageGGPButton, logOutButton, viewMessage);
+
     }
 
     /**********

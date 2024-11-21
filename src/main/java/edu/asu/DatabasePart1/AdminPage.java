@@ -1,5 +1,6 @@
 package edu.asu.DatabasePart1;
 
+import javafx.application.Platform;
 // JavaFX imports needed to support the Graphical User Interface
 import javafx.geometry.Pos;
 import javafx.scene.control.Label;
@@ -66,6 +67,16 @@ public class AdminPage {
     
     /** Button for logging out */
     private Button logoutButton = new Button("Logout");
+
+    private Button ManageSAGPButton = new Button("Manage Special Access Group");
+    
+    private Button ManageGGPButton = new Button("Manage General Group");
+
+    /** Button for Instructor to Add Student */
+    private Button addStudent = new Button("Add Student to System");
+    
+    /** Button for Instructor to remove Student */
+    private Button removeStudent = new Button("Remove Student from System");
     
     private static ArticleDBHelper articleDBHelper = new ArticleDBHelper();
     
@@ -163,7 +174,7 @@ public class AdminPage {
 
         // Set up the Logout button
         logoutButton.setText("Logout");
-        logoutButton.setLayoutX(190); // Set X position
+        logoutButton.setLayoutX(200); // Set X position
         logoutButton.setLayoutY(530); // Move the Y position higher, closer to the bottom of the visible window
         logoutButton.setMinWidth(100); // Set minimum width
 
@@ -171,9 +182,29 @@ public class AdminPage {
         logoutButton.setOnAction(event -> {
             sceneController.exit();
         });
+        
+      //Set up the addStudent button
+        addStudent.setLayoutX(200);
+        addStudent.setLayoutY(570);
+        addStudent.setOnAction(e -> sceneController.switchTo("ManageStudentRole"));
+      
+        //Set up the removeStudent button
+        removeStudent.setLayoutX(200);
+        removeStudent.setLayoutY(600);
+        removeStudent.setOnAction(e -> sceneController.switchTo("ManageStudentRole"));        
+        
+        ManageSAGPButton.setLayoutX(150);
+        ManageSAGPButton.setLayoutY(640);
+        ManageSAGPButton.setOnAction(e -> sceneController.switchTo("ManageSpecialAccessGroup"));
+        
+        ManageGGPButton.setLayoutX(150);
+        ManageGGPButton.setLayoutY(680);
+        ManageGGPButton.setOnAction(e -> sceneController.switchTo("ManageGeneralGroup"));
+        
 
         // Add all elements to the root pane
-        Root.getChildren().addAll(Title2, Invite, InviteAction, ListUsers, ShowList, logoutButton, BackupButton, RestoreBackupButton,CreateSpecialAccessGroupButton, viewArticlesButton, publishArticlesButton);
+        Root.getChildren().addAll(Title2, Invite, InviteAction, ListUsers, ShowList, logoutButton, BackupButton, RestoreBackupButton,CreateSpecialAccessGroupButton
+        		, viewArticlesButton, publishArticlesButton, addStudent, removeStudent, ManageSAGPButton, ManageGGPButton);
     }
 
 

@@ -31,13 +31,14 @@ import javafx.scene.text.Font;
 public class ViewLabelPage {
     
     private static ArticleDBHelper articleDBHelper = new ArticleDBHelper();
+    private static DatabaseHelper databaseHelper = new DatabaseHelper();
 
     public ViewLabelPage(Pane rootPane, SceneController sceneController) {
     	Button Load = new Button("Load Article");
         Load.setOnAction(e -> {
         	
         rootPane.getChildren().remove(Load);
-    	
+            	
         // Set up the main layout as a GridPane
         GridPane grid = new GridPane();
         grid.setPadding(new Insets(20));
@@ -51,7 +52,17 @@ public class ViewLabelPage {
         grid.add(pageTitle, 0, 0, 2, 1);
         try {
         	articleDBHelper.connectToDatabase();
-        	String[] article = articleDBHelper.viewArticle((long)sceneController.getData("uid")).get(0);
+        	databaseHelper.connectToDatabase();
+        	List<String> allSpecialAccess = databaseHelper.listAllSpecialAccessGroup();
+        	
+        	String [] article;
+        	
+        	if(allSpecialAccess != null && allSpecialAccess.contains(sceneController.getData("group"))) {
+            	article = articleDBHelper.viewArticleSpecial((long)sceneController.getData("uid")).get(0);
+        	}
+        	else {
+            	article = articleDBHelper.viewArticle((long)sceneController.getData("uid")).get(0);
+        	}
         	// Add labels and information fields
             addLabelAndInfo(grid, "Article Level:", article[1], 1);
             addLabelAndInfo(grid, "Title:", article[2], 2);
@@ -62,6 +73,7 @@ public class ViewLabelPage {
             addLabelAndInfo(grid, "References:", article[7], 7);
             addLabelAndInfo(grid, "Grouping Identifiers:", article[8], 8);
             sceneController.removeData("uid");
+            sceneController.removeData("group");
         }
         catch (SQLException er) {
         	er.printStackTrace();

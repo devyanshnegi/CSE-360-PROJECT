@@ -14,7 +14,9 @@
 	import java.sql.SQLException;
 	import java.sql.Statement;
 import java.util.ArrayList;
+import java.util.Base64;
 import java.util.List;
+
 	
 	
 	/*******
@@ -45,6 +47,9 @@ import java.util.List;
 	
 	    private Connection connection = null;
 	    private Statement statement = null; 
+	    
+	    private EncryptionHelper encryptionHelper;
+
 	
 	    /*******
 	     * Default constructor for the DatabaseHelper class. It initializes the EncryptionHelper object.
@@ -86,7 +91,7 @@ import java.util.List;
 	                + "body TEXT,"
 	                + "references TEXT,"
 	                + "groupName TEXT,"
-	        		+ "specialAccessGroup TEXT DEFAULT NULL)";
+	        		+ "specialAccessGroup TEXT DEFAULT '')";
 	        statement.execute(userTable);
 	    }
 	
@@ -141,7 +146,7 @@ import java.util.List;
 	    }
 	    
 	    public List<String[]> listArticlesByGroupsAndLevel(String group, String levelSearch) throws SQLException{
-	    	String query = "SELECT * FROM cse360articles WHERE groupName LIKE ? AND level = ?";
+	    	String query = "SELECT * FROM cse360articles WHERE title LIKE ? AND level = ?";
 	    	List<String[]> articles = new ArrayList<>();
 	    	try(PreparedStatement pstmt = connection.prepareStatement(query)){
 	    		pstmt.setString(1, "%" + group + "%");
@@ -263,6 +268,35 @@ import java.util.List;
 	        }
 			return articles;        
 	    }
+	    
+	    public List<String[]> viewArticleSpecial(long uid) throws Exception {
+	        String query = "SELECT * FROM cse360articles WHERE uid = ?"; 
+	        List<String[]> articles = new ArrayList<>();
+	        try (PreparedStatement pstmt = connection.prepareStatement(query)) {
+	            pstmt.setLong(1, uid);
+	            try (ResultSet rs = pstmt.executeQuery()) {
+	                if(rs.next()) {
+	                	String level = rs.getString("level"); 
+	                	String title = rs.getString("title"); 
+	                    String author = rs.getString("author");
+	                    String articleAbstract = rs.getString("abstract");
+	                    String keywords = rs.getString("keywords");
+	                    String encryptedBody = rs.getString("body");
+	                    String references = rs.getString("references");
+	                    String groupName = rs.getString("groupName");
+	                    
+	                    String body = EncryptionUtils.toCharArray(
+	                            encryptionHelper.decrypt(
+	                                Base64.getDecoder().decode(encryptedBody), 
+	                                EncryptionUtils.getInitializationVector(title.toCharArray())
+	                            )    
+	                        ).toString();
+	                    articles.add(new String[] {Long.toString(uid), level, title, author, articleAbstract, keywords, body , references, groupName});
+	                }
+	            }
+	        }
+			return articles;        
+	    }
 	
 	    /*******
 	     * Reads and decrypts a specific article from the database based on the provided article ID.
@@ -331,6 +365,10 @@ import java.util.List;
 	    
 public void storeArticleSpecial(String level, String title, String author, String abstracts, String keywords, String body, String references, String groupName) throws Exception {
 	        
+	String encryptedBody = Base64.getEncoder().encodeToString(
+            encryptionHelper.encrypt(body.getBytes(), EncryptionUtils.getInitializationVector(title.toCharArray()))
+        );
+	
 	    	long uid = System.currentTimeMillis();
 	    	
 	        String query = "INSERT INTO cse360articles (uid, level, title, author, abstract, keywords, body, references, specialAccessGroup) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
@@ -341,7 +379,7 @@ public void storeArticleSpecial(String level, String title, String author, Strin
 	            pstmt.setString(4, author);
 	            pstmt.setString(5, abstracts);
 	            pstmt.setString(6, keywords);
-	            pstmt.setString(7, body);
+	            pstmt.setString(7, encryptedBody);
 	            pstmt.setString(8, references);
 	            pstmt.setString(9, groupName);
 	            pstmt.executeUpdate();
@@ -350,6 +388,7 @@ public void storeArticleSpecial(String level, String title, String author, Strin
 	    
 public void updateArticle(long uid, String level, String title, String author, String abstracts, String keywords, String body, String references, String groupName) throws Exception {
 	            	
+	
 	        String query = "UPDATE cse360articles SET level = ?, title = ?, author = ?, abstract = ?, keywords = ?, body = ?, references = ?, groupName = ? WHERE uid = ?";
 	        try (PreparedStatement pstmt = connection.prepareStatement(query)) {
 	            pstmt.setString(1, level);
@@ -366,7 +405,11 @@ public void updateArticle(long uid, String level, String title, String author, S
 	    }
 
 public void updateArticleSpecial(long uid, String level, String title, String author, String abstracts, String keywords, String body, String references, String groupName) throws Exception {
-	String sql = "UPDATE cse360articles SET groupName = NULL, specialAccessGroup = NULL WHERE uid = ?";
+	String encryptedBody = Base64.getEncoder().encodeToString(
+            encryptionHelper.encrypt(body.getBytes(), EncryptionUtils.getInitializationVector(title.toCharArray()))
+        );
+	
+	String sql = "UPDATE cse360articles SET groupName = NULL, specialAccessGroup = '' WHERE uid = ?";
 	try (PreparedStatement pstmt = connection.prepareStatement(sql)) {
         pstmt.setLong(1, uid);
         pstmt.executeUpdate();
@@ -378,7 +421,7 @@ public void updateArticleSpecial(long uid, String level, String title, String au
         pstmt.setString(3, author);
         pstmt.setString(4, abstracts);
         pstmt.setString(5, keywords);
-        pstmt.setString(6, body);
+        pstmt.setString(6, encryptedBody);
         pstmt.setString(7, references);
         pstmt.setString(8, groupName);
         pstmt.setLong(9, uid);

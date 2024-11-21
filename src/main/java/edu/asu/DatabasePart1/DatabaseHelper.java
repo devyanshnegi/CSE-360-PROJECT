@@ -690,7 +690,7 @@ class DatabaseHelper {
 	}
 	
 	public List<String[]> getAllAdmins() throws SQLException {
-	    String sql = "SELECT * FROM cse360users WHERE role = 'admin' ASC OFFSET 1"; 
+	    String sql = "SELECT * FROM cse360users WHERE role = 'admin' ORDER BY id ASC OFFSET 1"; 
 	    List<String[]> users = new ArrayList<>();
 	    
 	    try (Statement stmt = connection.createStatement();

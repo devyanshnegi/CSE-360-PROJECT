@@ -211,7 +211,7 @@ public class ListArticlePage {
 	        		}
         		}
 	        } else {
-	        	if(viewAccess.contains(groupingIdentifier)) {
+	        	if(viewAccess != null && viewAccess.contains(groupingIdentifier)) {
 		        	if(levelIdentifier.toLowerCase().equals("all")) {
 		        		displayArticles(articleDBHelper.listArticlesByGroups(groupingIdentifier));
 		        		displayArticles(articleDBHelper.listArticlesBySpecialAccessGroups(groupingIdentifier));
@@ -253,6 +253,7 @@ public class ListArticlePage {
         if (selectedRadioButton != null) {
             String selectedArticle = selectedRadioButton.getText();
             sceneController.setData("uid", UIDdb.get(selectedArticle));
+            sceneController.setData("group", Groupdb.get(selectedArticle));
             sceneController.switchTo("ViewLabel");
         } else {
             showAlert("View Article", "Please select an article to view.");
@@ -277,9 +278,9 @@ public class ListArticlePage {
             	databaseHelper.connectToDatabase();
             	
             	List<String> allSpecialAccess = databaseHelper.listAllSpecialAccessGroup();
-                if(allSpecialAccess.contains(Groupdb.get(selectedArticle))) {
+                if(allSpecialAccess != null &&allSpecialAccess.contains(Groupdb.get(selectedArticle))) {
                 	List<String> specialAccess = databaseHelper.listAllViewAccess((String) sceneController.getData("username"));
-                	if(specialAccess.contains(Groupdb.get(selectedArticle))) {
+                	if(specialAccess != null && specialAccess.contains(Groupdb.get(selectedArticle))) {
                         sceneController.setData("uid", UIDdb.get(selectedArticle));
                         sceneController.switchTo("UpdateArticle");
                 	}
@@ -315,9 +316,9 @@ public class ListArticlePage {
             	databaseHelper.connectToDatabase();
             	
             	List<String> allSpecialAccess = databaseHelper.listAllSpecialAccessGroup();
-                if(allSpecialAccess.contains(Groupdb.get(selectedArticle))) {
+                if(allSpecialAccess != null && allSpecialAccess.contains(Groupdb.get(selectedArticle))) {
                 	List<String> specialAccess = databaseHelper.listAllViewAccess((String) sceneController.getData("username"));
-                	if(specialAccess.contains(Groupdb.get(selectedArticle))) {
+                	if(specialAccess != null && specialAccess.contains(Groupdb.get(selectedArticle))) {
                     	articleDBHelper.deleteArticle(UIDdb.get(selectedArticle));
                 	}
                 	else {

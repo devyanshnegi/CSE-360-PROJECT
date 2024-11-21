@@ -64,7 +64,7 @@ public class InstructorPage {
         publishArticlesButton.setOnAction(e -> sceneController.switchTo("CreateArticle"));
         
         BackupButton.setLayoutX(150);
-        BackupButton.setLayoutY(2000);
+        BackupButton.setLayoutY(200);
         BackupButton.setOnAction(e -> {
 			try {
 	        	articleDBHelper.connectToDatabase();
@@ -93,7 +93,7 @@ public class InstructorPage {
 		});
 
         // Add all components to the root pane
-        root.getChildren().addAll(titleLabel, viewArticlesButton, BackupButton, RestoreBackupButton);
+        root.getChildren().addAll(titleLabel, publishArticlesButton, viewArticlesButton, BackupButton, RestoreBackupButton);
     }
 
     /**********

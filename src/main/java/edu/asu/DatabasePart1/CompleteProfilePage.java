@@ -112,7 +112,16 @@ public class CompleteProfilePage {
         // Add action to Complete Profile button to switch to HomePage
         completeProfile.setOnAction(event -> {
             printProfileInputs();  // Print the inputs to console
-            sceneController.switchTo("StudentHome");
+            String role = (String) sceneController.getData("role");
+            if(role.equals("admin")) {
+    			sceneController.switchTo("Admin");
+    		}
+    		else if(role.equals("student")) {            			
+    			sceneController.switchTo("StudentHome");
+    		}
+    		else if(role.equals("instructor")) {
+    			sceneController.switchTo("InstructorHome");
+    		}
         });
     }
 

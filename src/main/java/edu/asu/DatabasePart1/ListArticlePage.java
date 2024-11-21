@@ -33,9 +33,20 @@ public class ListArticlePage {
     private ToggleGroup articleToggleGroup;
     private static ArticleDBHelper articleDBHelper = new ArticleDBHelper();
     private Map<String, Long> UIDdb = new HashMap<>();
+    private static DatabaseHelper databaseHelper = new DatabaseHelper();
 
     // Updated constructor
     public ListArticlePage(Pane root, SceneController sceneController) {
+    	try {
+        	articleDBHelper.connectToDatabase();
+	        articleDBHelper.list();
+        }
+        catch (Exception e) {
+        	e.printStackTrace();
+        } finally {
+        	articleDBHelper.closeConnection();
+        }
+    	
         // Main layout
         VBox layout = new VBox(10);
         layout.setPadding(new Insets(20));
@@ -55,7 +66,7 @@ public class ListArticlePage {
         groupingField.setPromptText("Enter grouping identifier");
         
         Button submitButton = new Button("Submit");
-        submitButton.setOnAction(e -> handleSubmit(groupingField.getText())); // Displays articles on submit
+        submitButton.setOnAction(e -> handleSubmit(sceneController, groupingField.getText())); // Displays articles on submit
 
         identifierBox.getChildren().addAll(groupingLabel, groupingField, submitButton);
         layout.getChildren().add(identifierBox);
@@ -73,13 +84,26 @@ public class ListArticlePage {
         Button viewButton = new Button("View Article");  // View button with no functionality yet
         Button updateButton = new Button("Update Article");
         Button deleteButton = new Button("Delete Article");
+        Button Back = new Button("Back");
 
         // Set button actions for Update and Delete
         viewButton.setOnAction(e -> handleViewArticle(sceneController));
         updateButton.setOnAction(e -> handleUpdateArticle(sceneController));
         deleteButton.setOnAction(e -> handleDeleteArticle(sceneController));
+        Back.setOnAction(e -> {
+        	String role = (String) sceneController.getData("role");
+            if(role.equals("admin")) {
+    			sceneController.switchTo("Admin");
+    		}
+    		else if(role.equals("student")) {            			
+    			sceneController.switchTo("StudentHome");
+    		}
+    		else if(role.equals("instructor")) {
+    			sceneController.switchTo("InstructorHome");
+    		}
+        });
 
-        actionButtonsBox.getChildren().addAll(viewButton, updateButton, deleteButton);
+        actionButtonsBox.getChildren().addAll(viewButton, updateButton, deleteButton, Back);
         layout.getChildren().add(actionButtonsBox);
 
         // Add the layout to the root pane
@@ -93,21 +117,31 @@ public class ListArticlePage {
      *
      * @param groupingIdentifier The grouping identifier entered by the user.
      */
-    private void handleSubmit(String groupingIdentifier) {
+    private void handleSubmit(SceneController sceneController, String groupingIdentifier) {
         articlesContainer.getChildren().clear();
         articleToggleGroup.getToggles().clear();
         try {
         	articleDBHelper.connectToDatabase();
-	        if (groupingIdentifier.isEmpty()) {
+        	databaseHelper.connectToDatabase();
+        	if(groupingIdentifier.isEmpty()) {
+        		// DO NOTHING
+        	}
+        	else if (groupingIdentifier.toLowerCase().equals("all")) {
 	        	displayArticles(articleDBHelper.listArticlesByGroups("%"));
 	        } else {
 	        	displayArticles(articleDBHelper.listArticlesByGroups(groupingIdentifier));
+	        	String username = (String) sceneController.getData("username");
+	        	System.out.println(databaseHelper.doesUserHaveAccess(username, groupingIdentifier));
+	        	if(databaseHelper.doesUserHaveAccess(username, groupingIdentifier)){
+	        		displayArticles(articleDBHelper.listArticlesBySpecialAccessGroups(groupingIdentifier));
+	        	}
 	        }
         }
         catch (SQLException e) {
         	e.printStackTrace();
         } finally {
         	articleDBHelper.closeConnection();
+    		databaseHelper.closeConnection();
         }
     }
 
@@ -132,6 +166,7 @@ public class ListArticlePage {
         if (selectedRadioButton != null) {
             String selectedArticle = selectedRadioButton.getText();
             sceneController.setData("uid", UIDdb.get(selectedArticle));
+            sceneController.switchTo("ViewLabel");
         } else {
             showAlert("View Article", "Please select an article to view.");
         }
@@ -146,6 +181,7 @@ public class ListArticlePage {
         if (selectedRadioButton != null) {
             String selectedArticle = selectedRadioButton.getText();
             sceneController.setData("uid", UIDdb.get(selectedArticle));
+            sceneController.switchTo("UpdateArticle");
         } else {
             showAlert("Update Article", "Please select an article to update.");
         }

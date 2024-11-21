@@ -1,5 +1,10 @@
 package edu.asu.DatabasePart1;
 
+import javafx.scene.control.*;
+import javafx.geometry.Insets;
+import javafx.scene.layout.GridPane;
+import javafx.scene.layout.Pane;
+import javafx.scene.text.Font;
 import java.sql.SQLException;
 import java.util.List;
 
@@ -28,6 +33,11 @@ public class ViewLabelPage {
     private static ArticleDBHelper articleDBHelper = new ArticleDBHelper();
 
     public ViewLabelPage(Pane rootPane, SceneController sceneController) {
+    	Button Load = new Button("Load Article");
+        Load.setOnAction(e -> {
+        	
+        rootPane.getChildren().remove(Load);
+    	
         // Set up the main layout as a GridPane
         GridPane grid = new GridPane();
         grid.setPadding(new Insets(20));
@@ -53,17 +63,23 @@ public class ViewLabelPage {
             addLabelAndInfo(grid, "Grouping Identifiers:", article[8], 8);
             sceneController.removeData("uid");
         }
-        catch (SQLException e) {
-        	e.printStackTrace();
-        } catch (Exception e) {
+        catch (SQLException er) {
+        	er.printStackTrace();
+        } catch (Exception er) {
 			// TODO Auto-generated catch block
-			e.printStackTrace();
+			er.printStackTrace();
 		} finally {
         	articleDBHelper.closeConnection();
         }
+        
+        Button Back = new Button("Back");
+        Back.setOnAction(event -> sceneController.switchTo("ListArticle"));
 
         // Add the GridPane to the provided root Pane
         rootPane.getChildren().add(grid);
+        rootPane.getChildren().add(Back);
+        });
+        rootPane.getChildren().add(Load);
     }
 
     /**

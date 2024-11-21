@@ -13,7 +13,7 @@ import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Font;
 
-public class ManageSpecialAccessGroupPage {
+public class ManageGeneralGroupPage {
 
     /** Label for the group name field */
     private Label nameLabel = new Label("Enter Special Access Group Name:");
@@ -36,7 +36,7 @@ public class ManageSpecialAccessGroupPage {
     /** Selected User's username */
     private String selectedUsername = null;
 
-    public ManageSpecialAccessGroupPage(Pane root, SceneController sceneController) {
+    public ManageGeneralGroupPage(Pane root, SceneController sceneController) {
     	
     	Button Load = new Button("Load");
         Load.setOnAction(e -> {
@@ -65,24 +65,23 @@ public class ManageSpecialAccessGroupPage {
         try {
             databaseHelper.connectToDatabase();
 
-            // Retrieve all Users
-            List<String[]> Users = databaseHelper.getAllAdmins();
-            Users.addAll(databaseHelper.getAllInstructors());
-            Users.addAll(databaseHelper.getAllStudents());
+            // Retrieve all Student
+            List<String[]> Student = databaseHelper.getAllStudents();
+            
             int count =0;
             
-            if (Users.isEmpty()) {
-                Label noUsersLabel = new Label("No Users available.");
-                UserListContainer.getChildren().add(noUsersLabel);
+            if (Student.isEmpty()) {
+                Label noStudentLabel = new Label("No Student available.");
+                UserListContainer.getChildren().add(noStudentLabel);
             } else {
                 // ToggleGroup for exclusive selection of RadioButtons
                 ToggleGroup toggleGroup = new ToggleGroup();
 
-                VBox UserList = new VBox(10); // Vertical layout for Users
+                VBox UserList = new VBox(10); // Vertical layout for Student
 
                 // Add each User as an entry in the list
                 String username = (String) sceneController.getData("username");
-                for (String[] User : Users) {
+                for (String[] User : Student) {
                 	if(User[0].equals(username))continue;
                     RadioButton radioButton = new RadioButton(User[0]); // User username
                     radioButton.setToggleGroup(toggleGroup);
@@ -97,8 +96,8 @@ public class ManageSpecialAccessGroupPage {
                 }
                 if(count == 0 ) {
 
-                    Label noUsersLabel = new Label("No Users available.");
-                    UserListContainer.getChildren().add(noUsersLabel);
+                    Label noStudentLabel = new Label("No Students available.");
+                    UserListContainer.getChildren().add(noStudentLabel);
                 }
                 else {
                     UserListContainer.getChildren().add(UserList);
@@ -143,8 +142,9 @@ public class ManageSpecialAccessGroupPage {
             databaseHelper.connectToDatabase();
 
         	String username = (String) sceneController.getData("username");
-            if(databaseHelper.doesUserHaveSpecialAccess(username, groupName)){
-            	boolean success = databaseHelper.setSpecialAccessGroupUser(selectedUsername, nameField.getText());
+        	        	        	
+            if(databaseHelper.doesUserHaveAccess(username, groupName)){
+            	boolean success = databaseHelper.setViewAccessGroupUser(selectedUsername, groupName);
                 if (success) {
                 	String role = (String) sceneController.getData("role");
                 	if(role.equals("admin")) {
@@ -156,6 +156,7 @@ public class ManageSpecialAccessGroupPage {
             		else if(role.equals("instructor")) {
             			sceneController.switchTo("InstructorHome");
             		}
+                	
                 } else {
                     showErrorMessage("Failed to add User. Please try again.");
                 }
@@ -185,8 +186,8 @@ public class ManageSpecialAccessGroupPage {
             databaseHelper.connectToDatabase();
 
         	String username = (String) sceneController.getData("username");
-            if(databaseHelper.doesUserHaveSpecialAccess(username, groupName)){
-            	boolean success = databaseHelper.removeSpecialAccessGroupUser(selectedUsername, nameField.getText());
+            if(databaseHelper.doesUserHaveAccess(username, groupName)){
+            	boolean success = databaseHelper.removeViewAccessGroupUser(selectedUsername, groupName);
                 if (success) {
                 	String role = (String) sceneController.getData("role");
                 	if(role.equals("admin")) {

@@ -32,6 +32,8 @@ public class CreateArticlePage {
     private TextField keywordsField;
     private TextArea bodyArea;
     private TextArea referencesArea;
+    private TextArea checkboxArea;
+    private boolean Special;
 
     public CreateArticlePage(Pane rootPane, SceneController sceneController) {
         // Set up the main layout as a GridPane
@@ -106,6 +108,17 @@ public class CreateArticlePage {
         referencesArea.setPrefHeight(60);
         grid.add(referencesLabel, 0, 8);
         grid.add(referencesArea, 1, 8);
+        
+        CheckBox checkBox = new CheckBox("Special Access Group");
+        checkboxArea = new TextArea();
+        grid.add(checkBox, 0, 9);
+        grid.add(checkboxArea, 1, 8);
+        
+        Special = false;
+        
+        checkBox.setOnAction(event -> {
+            Special = checkBox.isSelected();
+        });
 
         // Submit button
         Button submitButton = new Button("Submit Article");
@@ -141,8 +154,13 @@ public class CreateArticlePage {
         try {
             // Store the article in the database
         	articleDBHelper.connectToDatabase();
-            articleDBHelper.storeArticle(level, title, author, description, keywords, body, references, grouping);
-
+        	
+        	if(Special) {
+        		articleDBHelper.storeArticleSpecial(level, title, author, description, keywords, body, references, grouping);	
+        	}else {
+        		articleDBHelper.storeArticle(level, title, author, description, keywords, body, references, grouping);
+        	}
+        		
             // Show success alert
             showAlert(Alert.AlertType.INFORMATION, "Article Submission", "Article submitted successfully!");
 

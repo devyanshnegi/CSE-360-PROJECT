@@ -37,6 +37,9 @@ public class InstructorPage {
     
     /** Button to publish articles */
     private Button RestoreBackupButton = new Button("Restore Articles");
+    
+    
+    private Button ManageSAGPButton = new Button("Manage Special Access Group");
 
     private static ArticleDBHelper articleDBHelper = new ArticleDBHelper();
     /**********
@@ -64,7 +67,7 @@ public class InstructorPage {
         publishArticlesButton.setOnAction(e -> sceneController.switchTo("CreateArticle"));
         
         BackupButton.setLayoutX(150);
-        BackupButton.setLayoutY(2000);
+        BackupButton.setLayoutY(200);
         BackupButton.setOnAction(e -> {
 			try {
 	        	articleDBHelper.connectToDatabase();
@@ -91,9 +94,13 @@ public class InstructorPage {
 	        	articleDBHelper.closeConnection();
 	        }
 		});
+        
+        ManageSAGPButton.setLayoutX(150);
+        ManageSAGPButton.setLayoutY(300);
+        ManageSAGPButton.setOnAction(e -> sceneController.switchTo("ManageSpecialAccessGroup"));
 
         // Add all components to the root pane
-        root.getChildren().addAll(titleLabel, viewArticlesButton, BackupButton, RestoreBackupButton);
+        root.getChildren().addAll(titleLabel, publishArticlesButton, viewArticlesButton, BackupButton, RestoreBackupButton, ManageSAGPButton);
     }
 
     /**********

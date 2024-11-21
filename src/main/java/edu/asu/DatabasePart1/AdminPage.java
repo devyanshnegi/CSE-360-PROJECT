@@ -60,10 +60,16 @@ public class AdminPage {
     /** Button to publish articles */
     private Button RestoreBackupButton = new Button("Restore Articles");
 
+    /** Button to publish articles */
+    private Button CreateSpecialAccessGroupButton = new Button("Create Special Access Group Articles");
+    
     /** Button for logging out */
     private Button logoutButton = new Button("Logout");
     
     private static ArticleDBHelper articleDBHelper = new ArticleDBHelper();
+    
+    private static DatabaseHelper databaseHelper = new DatabaseHelper();
+
 
 
     /**********
@@ -139,11 +145,15 @@ public class AdminPage {
 	        	articleDBHelper.closeConnection();
 	        }
 		});
+        
+        CreateSpecialAccessGroupButton.setLayoutX(200);
+        CreateSpecialAccessGroupButton.setLayoutY(440);
+        CreateSpecialAccessGroupButton.setOnAction(e -> sceneController.switchTo("CreateSpecialAccessGroup"));
 
         // Set up the Logout button
         logoutButton.setText("Logout");
         logoutButton.setLayoutX(190); // Set X position
-        logoutButton.setLayoutY(440); // Move the Y position higher, closer to the bottom of the visible window
+        logoutButton.setLayoutY(530); // Move the Y position higher, closer to the bottom of the visible window
         logoutButton.setMinWidth(100); // Set minimum width
 
         // Set action to close the application when clicked
@@ -152,7 +162,7 @@ public class AdminPage {
         });
 
         // Add all elements to the root pane
-        Root.getChildren().addAll(Title2, Invite, InviteAction, ListUsers, ShowList, logoutButton, BackupButton, RestoreBackupButton, viewArticlesButton, publishArticlesButton);
+        Root.getChildren().addAll(Title2, Invite, InviteAction, ListUsers, ShowList, logoutButton, BackupButton, RestoreBackupButton,CreateSpecialAccessGroupButton, viewArticlesButton, publishArticlesButton);
     }
 
 

@@ -433,7 +433,7 @@ public void updateArticleSpecial(long uid, String level, String title, String au
 	                     String references = rs.getString("references");
 	                     String groupName = rs.getString("groupName");
 	
-	                     writer.write(uid +"|"+level+"|"+title + "|" + author + "|" + articleAbstract + "|" + keywords + "|" + body + "|" + references+"|"+groupName);
+	                     writer.write(uid +" | "+level+" | "+title + " | " + author + " | " + articleAbstract + " | " + keywords + " | " + body + " | " + references+" | "+groupName);
 	                     writer.newLine();
 	                }
 	                writer.close();

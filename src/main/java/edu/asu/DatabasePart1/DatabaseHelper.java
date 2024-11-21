@@ -50,9 +50,9 @@ class DatabaseHelper {
 				+ "preferredname VARCHAR(255), "
 				+ "password VARCHAR(255), "
 				+ "role VARCHAR(20), "
-				+ "specialAccessGroup TEXT DEFAULT NULL, "
+				+ "specialAccessGroup TEXT DEFAULT '', "
 				+ "viewAccess TEXT DEFAULT NULL,"
-				+ "specialAdminAccess TEXT DEFAULT NULL,"
+				+ "specialAdminAccess TEXT DEFAULT '',"
 				+ "otp INT UNIQUE,"
 				+ "expiry DATETIME,"
 				+ "MESSAGES VARCHAR(255))";

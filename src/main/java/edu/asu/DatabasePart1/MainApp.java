@@ -172,20 +172,30 @@ public class MainApp extends Application {
 //        Scene BackUpArticlePane = new Scene(BackUpArticlePane, WINDOW_WIDTH, WINDOW_HEIGHT); // StartPage scene
 //        sceneController.addScene("BackUpArticle", BackUpArticlePane);
         
-//        Pane UpdateArticlePane = new Pane();  // Initialize StartPane
-//        new UpdateArticlePage(UpdateArticlePane, sceneController); // Pass RegisterScene to StartPage
-//        Scene UpdateArticleScene = new Scene(UpdateArticlePane, WINDOW_WIDTH, WINDOW_HEIGHT); // StartPage scene
-//        sceneController.addScene("UpdateArticle", UpdateArticleScene);
+        Pane UpdateArticlePane = new Pane();  // Initialize StartPane
+        new UpdateArticlePage(UpdateArticlePane, sceneController); // Pass RegisterScene to StartPage
+        Scene UpdateArticleScene = new Scene(UpdateArticlePane, WINDOW_WIDTH, WINDOW_HEIGHT); // StartPage scene
+        sceneController.addScene("UpdateArticle", UpdateArticleScene);
         
-//        Pane ViewLabelPane = new Pane();  // Initialize StartPane
-//        new ViewLabelPage(ViewLabelPane, sceneController); // Pass RegisterScene to StartPage
-//        Scene ViewLabelScene = new Scene(ViewLabelPane, WINDOW_WIDTH, WINDOW_HEIGHT); // StartPage scene
-//        sceneController.addScene("ViewLabel", ViewLabelScene);
+        Pane ViewLabelPane = new Pane();  // Initialize StartPane
+        new ViewLabelPage(ViewLabelPane, sceneController); // Pass RegisterScene to StartPage
+        Scene ViewLabelScene = new Scene(ViewLabelPane, WINDOW_WIDTH, WINDOW_HEIGHT); // StartPage scene
+        sceneController.addScene("ViewLabel", ViewLabelScene);
         
         Pane ManageGeneralGroupPane = new Pane();  // Initialize StartPane
         new ManageGeneralGroupPage(ManageGeneralGroupPane, sceneController); // Pass RegisterScene to StartPage
         Scene ManageGeneralGroupScene = new Scene(ManageGeneralGroupPane, WINDOW_WIDTH, WINDOW_HEIGHT); // StartPage scene
         sceneController.addScene("ManageGeneralGroup", ManageGeneralGroupScene);
+        
+        Pane CreateSpecialAccessGroupPane = new Pane();  // Initialize StartPane
+        new CreateSpecialAccessGroupPage(CreateSpecialAccessGroupPane, sceneController); // Pass RegisterScene to StartPage
+        Scene CreateSpecialAccessGroupScene = new Scene(CreateSpecialAccessGroupPane, WINDOW_WIDTH, WINDOW_HEIGHT); // StartPage scene
+        sceneController.addScene("CreateSpecialAccessGroup", CreateSpecialAccessGroupScene);
+        
+        Pane ManageSpecialAccessGroupPane = new Pane();  // Initialize StartPane
+        new ManageSpecialAccessGroupPage(ManageSpecialAccessGroupPane, sceneController); // Pass RegisterScene to StartPage
+        Scene ManageSpecialAccessGroupScene = new Scene(ManageSpecialAccessGroupPane, WINDOW_WIDTH, WINDOW_HEIGHT); // StartPage scene
+        sceneController.addScene("ManageSpecialAccessGroup", ManageSpecialAccessGroupScene);
         
 //        sceneController.switchTo("ViewLabel");
         

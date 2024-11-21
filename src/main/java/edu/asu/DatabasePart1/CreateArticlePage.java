@@ -157,12 +157,13 @@ public class CreateArticlePage {
         	
         	if(Special) {
         		articleDBHelper.storeArticleSpecial(level, title, author, description, keywords, body, references, grouping);	
+        		showAlert(Alert.AlertType.INFORMATION, "Article Submission", "Article submitted successfully!");
         	}else {
         		articleDBHelper.storeArticle(level, title, author, description, keywords, body, references, grouping);
+        		showAlert(Alert.AlertType.INFORMATION, "Article Submission", "Article submitted successfully!");
         	}
         		
             // Show success alert
-            showAlert(Alert.AlertType.INFORMATION, "Article Submission", "Article submitted successfully!");
 
             // Clear fields after submission
             clearFields();

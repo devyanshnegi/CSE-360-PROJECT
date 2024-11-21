@@ -48,7 +48,6 @@ import java.util.List;
 	    private Connection connection = null;
 	    private Statement statement = null; 
 	    
-	    private EncryptionHelper encryptionHelper;
 
 	
 	    /*******
@@ -270,6 +269,7 @@ import java.util.List;
 	    }
 	    
 	    public List<String[]> viewArticleSpecial(long uid) throws Exception {
+		    EncryptionHelper encryptionHelper = new EncryptionHelper();
 	        String query = "SELECT * FROM cse360articles WHERE uid = ?"; 
 	        List<String[]> articles = new ArrayList<>();
 	        try (PreparedStatement pstmt = connection.prepareStatement(query)) {
@@ -364,7 +364,8 @@ import java.util.List;
 	    }
 	    
 public void storeArticleSpecial(String level, String title, String author, String abstracts, String keywords, String body, String references, String groupName) throws Exception {
-	        
+
+    EncryptionHelper encryptionHelper = new EncryptionHelper();
 	String encryptedBody = Base64.getEncoder().encodeToString(
             encryptionHelper.encrypt(body.getBytes(), EncryptionUtils.getInitializationVector(title.toCharArray()))
         );
@@ -405,6 +406,8 @@ public void updateArticle(long uid, String level, String title, String author, S
 	    }
 
 public void updateArticleSpecial(long uid, String level, String title, String author, String abstracts, String keywords, String body, String references, String groupName) throws Exception {
+
+    EncryptionHelper encryptionHelper = new EncryptionHelper();
 	String encryptedBody = Base64.getEncoder().encodeToString(
             encryptionHelper.encrypt(body.getBytes(), EncryptionUtils.getInitializationVector(title.toCharArray()))
         );

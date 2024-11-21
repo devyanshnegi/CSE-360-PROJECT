@@ -85,7 +85,8 @@ import java.util.List;
 	                + "keywords TEXT,"
 	                + "body TEXT,"
 	                + "references TEXT,"
-	                + "groupName TEXT)";
+	                + "groupName TEXT,"
+	        		+ "specialAccessGroup TEXT DEFAULT NULL)";
 	        statement.execute(userTable);
 	    }
 	
@@ -104,9 +105,13 @@ import java.util.List;
 	            long id  = rs.getLong("uid"); 
 	            String title = rs.getString("title"); 
 	            String author = rs.getString("author");   
+	            String specialAccessGroup = rs.getString("specialAccessGroup");   
+	            String groupName = rs.getString("groupName"); 
 	            System.out.print("ID: " + id); 
 	            System.out.print(", Title: " + title);
-	            System.out.println(", Author(s): " + author);
+	            System.out.print(", Author(s): " + author);
+	            System.out.print(", GP: " + groupName); 
+	            System.out.println(", SAGP: " + specialAccessGroup);
 	        } 
 	    }
 	    
@@ -115,6 +120,107 @@ import java.util.List;
 	    	List<String[]> articles = new ArrayList<>();
 	    	try(PreparedStatement pstmt = connection.prepareStatement(query)){
 	    		pstmt.setString(1, "%" + group + "%");
+	    		ResultSet rs = pstmt.executeQuery();
+	    		while (rs.next()) {
+	    			long uid = rs.getLong("uid");
+	    			String level = rs.getString("level");
+	                String title = rs.getString("title");
+	                String authors = rs.getString("author");
+	                String groups = rs.getString("groupName");
+	                
+	                articles.add(new String[] {Long.toString(uid), level, title, authors, groups});
+	    			
+	    			
+	    		}
+	    		
+	    	}catch(SQLException e) {
+	    		System.out.println(e.getMessage());
+	    	}
+	    	return articles;
+	    				
+	    }
+	    
+	    public List<String[]> listArticlesByGroupsAndLevel(String group, String levelSearch) throws SQLException{
+	    	String query = "SELECT * FROM cse360articles WHERE groupName LIKE ? AND level = ?";
+	    	List<String[]> articles = new ArrayList<>();
+	    	try(PreparedStatement pstmt = connection.prepareStatement(query)){
+	    		pstmt.setString(1, "%" + group + "%");
+	    		pstmt.setString(2, levelSearch);
+	    		ResultSet rs = pstmt.executeQuery();
+	    		while (rs.next()) {
+	    			long uid = rs.getLong("uid");
+	    			String level = rs.getString("level");
+	                String title = rs.getString("title");
+	                String authors = rs.getString("author");
+	                String groups = rs.getString("groupName");
+	                
+	                articles.add(new String[] {Long.toString(uid), level, title, authors, groups});
+	    			
+	    			
+	    		}
+	    		
+	    	}catch(SQLException e) {
+	    		System.out.println(e.getMessage());
+	    	}
+	    	return articles;
+	    				
+	    }
+	    
+	    public List<String[]> listArticlesBySpecialAccessGroups(String group) throws SQLException{
+	    	String query = "SELECT * FROM cse360articles WHERE specialAccessGroup LIKE ?";
+	    	List<String[]> articles = new ArrayList<>();
+	    	try(PreparedStatement pstmt = connection.prepareStatement(query)){
+	    		pstmt.setString(1, "%" + group + "%");
+	    		ResultSet rs = pstmt.executeQuery();
+	    		while (rs.next()) {
+	    			long uid = rs.getLong("uid");
+	    			String level = rs.getString("level");
+	                String title = rs.getString("title");
+	                String authors = rs.getString("author");
+	                String groups = rs.getString("specialAccessGroup");
+	                
+	                articles.add(new String[] {Long.toString(uid), level, title, authors, groups});
+	    			
+	    			
+	    		}
+	    		
+	    	}catch(SQLException e) {
+	    		System.out.println(e.getMessage());
+	    	}
+	    	return articles;
+	    				
+	    }
+	    
+	    public List<String[]> listArticlesBySpecialAccessGroupsAndLevel(String group, String levelSearch) throws SQLException{
+	    	String query = "SELECT * FROM cse360articles WHERE specialAccessGroup LIKE ? AND level = ?";
+	    	List<String[]> articles = new ArrayList<>();
+	    	try(PreparedStatement pstmt = connection.prepareStatement(query)){
+	    		pstmt.setString(1, "%" + group + "%");
+	    		pstmt.setString(2, levelSearch);
+	    		ResultSet rs = pstmt.executeQuery();
+	    		while (rs.next()) {
+	    			long uid = rs.getLong("uid");
+	    			String level = rs.getString("level");
+	                String title = rs.getString("title");
+	                String authors = rs.getString("author");
+	                String groups = rs.getString("specialAccessGroup");
+	                
+	                articles.add(new String[] {Long.toString(uid), level, title, authors, groups});
+	    			
+	    			
+	    		}
+	    		
+	    	}catch(SQLException e) {
+	    		System.out.println(e.getMessage());
+	    	}
+	    	return articles;
+	    				
+	    }
+	    
+	    public List<String[]> listAllArticles() throws SQLException{
+	    	String query = "SELECT * FROM cse360articles WHERE specialAccessGroup = NULL";
+	    	List<String[]> articles = new ArrayList<>();
+	    	try(PreparedStatement pstmt = connection.prepareStatement(query)){
 	    		ResultSet rs = pstmt.executeQuery();
 	    		while (rs.next()) {
 	    			long uid = rs.getLong("uid");
@@ -223,9 +329,28 @@ import java.util.List;
 	        }    
 	    }
 	    
+public void storeArticleSpecial(String level, String title, String author, String abstracts, String keywords, String body, String references, String groupName) throws Exception {
+	        
+	    	long uid = System.currentTimeMillis();
+	    	
+	        String query = "INSERT INTO cse360articles (uid, level, title, author, abstract, keywords, body, references, specialAccessGroup) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
+	        try (PreparedStatement pstmt = connection.prepareStatement(query)) {
+	            pstmt.setLong(1, uid);
+	            pstmt.setString(2, level);
+	            pstmt.setString(3, title);
+	            pstmt.setString(4, author);
+	            pstmt.setString(5, abstracts);
+	            pstmt.setString(6, keywords);
+	            pstmt.setString(7, body);
+	            pstmt.setString(8, references);
+	            pstmt.setString(9, groupName);
+	            pstmt.executeUpdate();
+	        }    
+	    }
+	    
 public void updateArticle(long uid, String level, String title, String author, String abstracts, String keywords, String body, String references, String groupName) throws Exception {
 	            	
-	        String query = "UPDATE cse360articles SET level = ?, title = ?, author = ?, abstract = ?, keywords = ?, body = ?, references = ?, groupName = ?) WHERE uid = ?";
+	        String query = "UPDATE cse360articles SET level = ?, title = ?, author = ?, abstract = ?, keywords = ?, body = ?, references = ?, groupName = ? WHERE uid = ?";
 	        try (PreparedStatement pstmt = connection.prepareStatement(query)) {
 	            pstmt.setString(1, level);
 	            pstmt.setString(2, title);
@@ -239,6 +364,27 @@ public void updateArticle(long uid, String level, String title, String author, S
 	            pstmt.executeUpdate();
 	        }    
 	    }
+
+public void updateArticleSpecial(long uid, String level, String title, String author, String abstracts, String keywords, String body, String references, String groupName) throws Exception {
+	String sql = "UPDATE cse360articles SET groupName = NULL, specialAccessGroup = NULL WHERE uid = ?";
+	try (PreparedStatement pstmt = connection.prepareStatement(sql)) {
+        pstmt.setLong(1, uid);
+        pstmt.executeUpdate();
+    } 
+    String query = "UPDATE cse360articles SET level = ?, title = ?, author = ?, abstract = ?, keywords = ?, body = ?, references = ?, specialAccessGroup = ?) WHERE uid = ?";
+    try (PreparedStatement pstmt = connection.prepareStatement(query)) {
+        pstmt.setString(1, level);
+        pstmt.setString(2, title);
+        pstmt.setString(3, author);
+        pstmt.setString(4, abstracts);
+        pstmt.setString(5, keywords);
+        pstmt.setString(6, body);
+        pstmt.setString(7, references);
+        pstmt.setString(8, groupName);
+        pstmt.setLong(9, uid);
+        pstmt.executeUpdate();
+    }    
+}
 	
 	    /*******
 	     * Deletes an article from the database based on the provided article ID.

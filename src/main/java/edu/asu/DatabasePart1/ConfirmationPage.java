@@ -28,7 +28,7 @@ import javafx.scene.text.FontWeight;
  *                  action confirmation within the multi-page application.
  */
 
-public class confirmationPage {
+public class ConfirmationPage {
 
     /** Label displaying the confirmation question */
     private Label Title2 = new Label("Are You Sure?");
@@ -49,7 +49,7 @@ public class confirmationPage {
      * 
      * @param Root2 The root Pane where the UI components will be added.
      */
-    public confirmationPage(Pane Root2, SceneController sceneController) {
+    public ConfirmationPage(Pane Root2, SceneController sceneController) {
         // Set up the title label at the top of the pane
         setupLabelUI(Title2, "Arial", 24, MainApp.WINDOW_WIDTH, Pos.CENTER, 0, 10);
 

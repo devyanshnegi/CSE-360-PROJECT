@@ -36,6 +36,9 @@ public class StudentPage {
     
     /** Button for logging out of the application */
     private Button helpMessage = new Button("Send Help Messagw to Instructor");
+    
+    /** Button for searching Article */
+    private Button search = new Button("Search Articles using keywords");
 
     /**********
      * Constructor for HomePage
@@ -75,11 +78,15 @@ public class StudentPage {
             Platform.exit(); // Gracefully close the application
         });
         
+        //setup search button
+        search.setLayoutX(215);
+        search.setLayoutY(180);
+        search.setOnAction(e -> sceneController.switchTo("searchArticles"));
         
         
 
         // Add all components to the pane
-        Root.getChildren().addAll(Title2, logOut, logOutButton, helpMessage);
+        Root.getChildren().addAll(Title2, logOut, logOutButton, helpMessage, search);
     }
 
     /**********

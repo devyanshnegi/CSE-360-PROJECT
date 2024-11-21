@@ -25,6 +25,8 @@ class DatabaseHelper {
 	private Statement statement = null; 
 	//	PreparedStatement pstmt
 
+	
+	
 	public void connectToDatabase() throws SQLException {
 		try {
 			Class.forName(JDBC_DRIVER); // Load the JDBC driver
@@ -47,28 +49,113 @@ class DatabaseHelper {
 				+ "lastname VARCHAR(255), "
 				+ "preferredname VARCHAR(255), "
 				+ "password VARCHAR(255), "
-				+ "role VARCHAR(20),"
+				+ "role VARCHAR(20), "
+				+ "specialAccessGroup TEXT DEFAULT NULL, "
+				+ "viewAccess TEXT DEFAULT NULL,"
 				+ "otp INT UNIQUE,"
 				+ "expiry DATETIME,"
 				+ "MESSAGES VARCHAR(255))";
 		statement.execute(userTable);
 		
-//		String otpTable = "CREATE TABLE IF NOT EXISTS otp ("
-//				+ "id INT AUTO_INCREMENT PRIMARY KEY, "
-//				+ "code VARCHAR(255) UNIQUE, "
-//				+ "created DATETIME, "
-//				+ "flag BIT)";
-//		statement.execute(otpTable);
 	}
 	
-//	public void storeOTP(String otp, String Date) throws SQLException {
-//		String insertUser = "INSERT INTO otp (password, created, flag) VALUES (?, ?, True)";
-//		try (PreparedStatement pstmt = connection.prepareStatement(insertUser)) {
-//			pstmt.setString(1, otp);
-//			pstmt.setString(2, Date);
-//			pstmt.executeUpdate();
-//		}
-//	}
+	public boolean doesUserHaveSpecialAccess(String username, String specialAccessGroup) {
+		String query = "SELECT COUNT(*) FROM cse360users WHERE username = ? AND specialAccessGroup LIKE ?";
+	    try (PreparedStatement pstmt = connection.prepareStatement(query)) {
+	        
+	        pstmt.setString(1, username);
+	        pstmt.setString(2, "%"+specialAccessGroup+"%");
+	        ResultSet rs = pstmt.executeQuery();
+	        
+	        if (rs.next()) {
+	            // If the count is greater than 0, the user exists
+	            if (rs.getInt(1) > 0) {
+	            	
+	        		return rs.getInt(1) > 0;
+	            }
+	        }
+	    } catch (SQLException e) {
+	        e.printStackTrace();
+	    }
+	    return false; // If an error occurs, assume user doesn't exist
+	}
+	
+	public boolean setSpecialAccessGroupUser(String username, String specialAccessGroup) {
+		String currentSpecialAccessGroup = "";
+		 String sql = "SELECT specialAccessGroup FROM cse360users WHERE username = ?";
+		    try (PreparedStatement pstmt = connection.prepareStatement(sql)) {
+		        pstmt.setString(1, username);
+		        try (ResultSet rs = pstmt.executeQuery()) {
+		            if (rs.next()) {
+		                currentSpecialAccessGroup = rs.getString("specialAccessGroup"); // Retrieve the special access group string
+		            }
+		        }
+		    } catch (SQLException e) {
+				e.printStackTrace();
+			}
+		
+		if(currentSpecialAccessGroup!=null) {
+			specialAccessGroup = currentSpecialAccessGroup +", " + specialAccessGroup; 
+		}
+		    
+		String query = "UPDATE cse360users SET specialAccessGroup = ? WHERE username = ?";
+		try (PreparedStatement pstmt = connection.prepareStatement(query)) {
+			pstmt.setString(1, specialAccessGroup);
+			pstmt.setString(2, username);
+			pstmt.executeUpdate();
+		} catch (SQLException e) {
+	        e.printStackTrace();
+	        return false;
+	    }
+		return true;
+	}
+	
+	public boolean removeSpecialAccessGroupUser(String username, String specialAccessGroup) {
+		String currentSpecialAccessGroup = "";
+		 String sql = "SELECT specialAccessGroup FROM cse360users WHERE username = ?";
+		    try (PreparedStatement pstmt = connection.prepareStatement(sql)) {
+		        pstmt.setString(1, username);
+		        try (ResultSet rs = pstmt.executeQuery()) {
+		            if (rs.next()) {
+		                currentSpecialAccessGroup = rs.getString("specialAccessGroup"); // Retrieve the special access group string
+		            }
+		        }
+		    } catch (SQLException e) {
+				e.printStackTrace();
+			}
+		
+		if(currentSpecialAccessGroup!=null) {
+			List<String> groups = new ArrayList<>(List.of(currentSpecialAccessGroup.split(", ")));
+	        if (groups.remove(specialAccessGroup)) {
+	        	if(groups.isEmpty()) {
+	        		String query = "UPDATE cse360users SET specialAccessGroup = NULL WHERE username = ?";
+	        		try (PreparedStatement pstmt = connection.prepareStatement(query)) {
+	        			pstmt.setString(1, username);
+	        			pstmt.executeUpdate();
+	        		} catch (SQLException e) {
+	        	        e.printStackTrace();
+	        	        return false;
+	        	    }
+	        		return true;
+	        	}
+	            currentSpecialAccessGroup = String.join(", ", groups);
+	        } else {
+	            System.out.println("Group not found: " + specialAccessGroup);
+	            return false; // Group not found, nothing to remove
+	        }
+		}
+		    
+		String query = "UPDATE cse360users SET specialAccessGroup = ? WHERE username = ?";
+		try (PreparedStatement pstmt = connection.prepareStatement(query)) {
+			pstmt.setString(1, currentSpecialAccessGroup);
+			pstmt.setString(2, username);
+			pstmt.executeUpdate();
+		} catch (SQLException e) {
+	        e.printStackTrace();
+	        return false;
+	    }
+		return true;
+	}
 	
 	public void storeOTP(String role, int otp) {
 		String insertUser = "INSERT INTO cse360users (role, otp) VALUES (?, ?)";
@@ -334,6 +421,64 @@ class DatabaseHelper {
 	        while (rs.next()) {
 	            users.add(new String[] {rs.getString("username"),rs.getString("preferredname"),rs.getString("role")}); // Adjust to retrieve specific columns
 	        }
+	    }
+	    return users;
+	}
+
+	public List<String[]> getAllStudents() throws SQLException {
+	    String sql = "SELECT * FROM cse360users WHERE role = 'student'"; // Skips the first row
+	    List<String[]> users = new ArrayList<>();
+	    
+	    try (Statement stmt = connection.createStatement();
+	         ResultSet rs = stmt.executeQuery(sql)) {
+	        while (rs.next()) {
+	            users.add(new String[] {rs.getString("username"),rs.getString("preferredname"),rs.getString("role")}); // Adjust to retrieve specific columns
+	        }
+	    }
+	    return users;
+	}
+	
+	public List<String[]> listArticlesByKeyword(String keyword) throws SQLException{
+    	String query = "SELECT * FROM cse360articles WHERE title LIKE ? OR abstract LIKE ? OR author LIKE ?";
+    	List<String[]> articles = new ArrayList<>();
+    	try(PreparedStatement pstmt = connection.prepareStatement(query)){
+    		pstmt.setString(1, "%" + keyword + "%");
+    		pstmt.setString(2, "%" + keyword + "%");
+    		pstmt.setString(3, "%" + keyword + "%");
+    		ResultSet rs = pstmt.executeQuery();
+    		while (rs.next()) {
+    			long uid = rs.getLong("uid");
+    			String level = rs.getString("level");
+                String title = rs.getString("title");
+                String authors = rs.getString("author");
+                String groups = rs.getString("groupName");
+                
+                articles.add(new String[] {Long.toString(uid), level, title, authors, groups});
+    			
+    			
+    		}
+    		
+    	}catch(SQLException e) {
+    		System.out.println(e.getMessage());
+    	}
+    	return articles;
+    				
+    }
+	
+	public List<String[]> getAllInstructors() throws SQLException {
+	    String sql = "SELECT * FROM cse360users WHERE role = ?"; // Skips the first row
+	    List<String[]> users = new ArrayList<>();
+	    
+	    try (PreparedStatement pstmt = connection.prepareStatement(sql)) {
+	        
+	        pstmt.setString(1, "instructor");
+	        ResultSet rs = pstmt.executeQuery();
+	        
+	        while (rs.next()) {
+	            users.add(new String[] {rs.getString("username"),rs.getString("preferredname"),rs.getString("role")}); // Adjust to retrieve specific columns
+	        }
+	    } catch (SQLException e) {
+	        e.printStackTrace();
 	    }
 	    return users;
 	}

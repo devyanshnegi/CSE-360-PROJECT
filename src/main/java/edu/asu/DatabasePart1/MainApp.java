@@ -129,7 +129,7 @@ public class MainApp extends Application {
         sceneController.addScene("Invite", InviteScene);
         
         Pane ConfirmationPane = new Pane();  // Initialize StartPane
-        new confirmationPage(ConfirmationPane, sceneController); // Pass RegisterScene to StartPage
+        new ConfirmationPage(ConfirmationPane, sceneController); // Pass RegisterScene to StartPage
         Scene ConfirmationScene = new Scene(ConfirmationPane, WINDOW_WIDTH, WINDOW_HEIGHT); // StartPage scene
         sceneController.addScene("Confirmation", ConfirmationScene);
         
@@ -160,6 +160,11 @@ public class MainApp extends Application {
         new ViewMessages(MessageViewPane, sceneController);
         Scene MessageViewScene = new Scene(MessageViewPane, WINDOW_WIDTH, WINDOW_HEIGHT);
         sceneController.addScene("MessagesView",MessageViewScene);
+        
+        Pane searchArticlePane = new Pane();
+        new searchArticles(searchArticlePane, sceneController);
+        Scene searchArticleScene = new Scene(searchArticlePane, WINDOW_WIDTH, WINDOW_HEIGHT);
+        sceneController.addScene("searchArticles", searchArticleScene);
 
         
 //        Pane BackUpArticlePane = new Pane();  // Initialize StartPane

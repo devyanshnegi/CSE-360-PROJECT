@@ -108,6 +108,53 @@ class DatabaseHelper {
 		return true;
 	}
 	
+	public boolean removeSpecialAccessGroupUser(String username, String specialAccessGroup) {
+		String currentSpecialAccessGroup = "";
+		 String sql = "SELECT specialAccessGroup FROM cse360users WHERE username = ?";
+		    try (PreparedStatement pstmt = connection.prepareStatement(sql)) {
+		        pstmt.setString(1, username);
+		        try (ResultSet rs = pstmt.executeQuery()) {
+		            if (rs.next()) {
+		                currentSpecialAccessGroup = rs.getString("specialAccessGroup"); // Retrieve the special access group string
+		            }
+		        }
+		    } catch (SQLException e) {
+				e.printStackTrace();
+			}
+		
+		if(currentSpecialAccessGroup!=null) {
+			List<String> groups = new ArrayList<>(List.of(currentSpecialAccessGroup.split(", ")));
+	        if (groups.remove(specialAccessGroup)) {
+	        	if(groups.isEmpty()) {
+	        		String query = "UPDATE cse360users SET specialAccessGroup = NULL WHERE username = ?";
+	        		try (PreparedStatement pstmt = connection.prepareStatement(query)) {
+	        			pstmt.setString(1, username);
+	        			pstmt.executeUpdate();
+	        		} catch (SQLException e) {
+	        	        e.printStackTrace();
+	        	        return false;
+	        	    }
+	        		return true;
+	        	}
+	            currentSpecialAccessGroup = String.join(", ", groups);
+	        } else {
+	            System.out.println("Group not found: " + specialAccessGroup);
+	            return false; // Group not found, nothing to remove
+	        }
+		}
+		    
+		String query = "UPDATE cse360users SET specialAccessGroup = ? WHERE username = ?";
+		try (PreparedStatement pstmt = connection.prepareStatement(query)) {
+			pstmt.setString(1, currentSpecialAccessGroup);
+			pstmt.setString(2, username);
+			pstmt.executeUpdate();
+		} catch (SQLException e) {
+	        e.printStackTrace();
+	        return false;
+	    }
+		return true;
+	}
+	
 	public void storeOTP(String role, int otp) {
 		String insertUser = "INSERT INTO cse360users (role, otp) VALUES (?, ?)";
 		try (PreparedStatement pstmt = connection.prepareStatement(insertUser)) {
@@ -343,7 +390,7 @@ class DatabaseHelper {
 	}
 
 	public List<String[]> getAllStudents() throws SQLException {
-	    String sql = "SELECT * FROM cse360users WHERE role = student"; // Skips the first row
+	    String sql = "SELECT * FROM cse360users WHERE role = 'student'"; // Skips the first row
 	    List<String[]> users = new ArrayList<>();
 	    
 	    try (Statement stmt = connection.createStatement();

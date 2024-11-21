@@ -164,6 +164,11 @@ public class MainApp extends Application {
         Scene CreateSpecialAccessGroupScene = new Scene(CreateSpecialAccessGroupPane, WINDOW_WIDTH, WINDOW_HEIGHT); // StartPage scene
         sceneController.addScene("CreateSpecialAccessGroup", CreateSpecialAccessGroupScene);
         
+        Pane ManageSpecialAccessGroupPane = new Pane();  // Initialize StartPane
+        new ManageSpecialAccessGroupPage(ManageSpecialAccessGroupPane, sceneController); // Pass RegisterScene to StartPage
+        Scene ManageSpecialAccessGroupScene = new Scene(ManageSpecialAccessGroupPane, WINDOW_WIDTH, WINDOW_HEIGHT); // StartPage scene
+        sceneController.addScene("ManageSpecialAccessGroup", ManageSpecialAccessGroupScene);
+        
 //        sceneController.switchTo("ViewLabel");
         
         try {

@@ -131,7 +131,6 @@ public class ListArticlePage {
 	        } else {
 	        	displayArticles(articleDBHelper.listArticlesByGroups(groupingIdentifier));
 	        	String username = (String) sceneController.getData("username");
-	        	System.out.println(databaseHelper.doesUserHaveAccess(username, groupingIdentifier));
 	        	if(databaseHelper.doesUserHaveAccess(username, groupingIdentifier)){
 	        		displayArticles(articleDBHelper.listArticlesBySpecialAccessGroups(groupingIdentifier));
 	        	}

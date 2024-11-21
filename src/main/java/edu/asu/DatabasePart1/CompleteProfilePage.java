@@ -63,6 +63,8 @@ public class CompleteProfilePage {
     /** Button to complete the profile setup and proceed */
     private Button completeProfile = new Button("Complete Profile");
 
+    private static DatabaseHelper databaseHelper = new DatabaseHelper();
+
     /**********
      * Constructor for CompleteProfilePage
      * 
@@ -112,6 +114,17 @@ public class CompleteProfilePage {
         // Add action to Complete Profile button to switch to HomePage
         completeProfile.setOnAction(event -> {
             printProfileInputs();  // Print the inputs to console
+            try {
+        		databaseHelper.connectToDatabase();
+        		String username = (String) sceneController.getData("username");
+        		databaseHelper.completeProfile(username, firstName.getText(), middleName.getText(), lastName.getText(), prefName.getText(), emailEnter.getText());
+        	}
+        	catch (Exception e){
+        		System.out.print(e);
+        	}
+        	finally {
+        		databaseHelper.closeConnection();
+        	}
             String role = (String) sceneController.getData("role");
             if(role.equals("admin")) {
     			sceneController.switchTo("Admin");

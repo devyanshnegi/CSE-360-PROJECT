@@ -1,11 +1,16 @@
 package edu.asu.DatabasePart1;
 
+import java.sql.SQLException;
+
 // JavaFX imports needed to support the Graphical User Interface
 import javafx.geometry.Pos;
+import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.control.TextField;
 import javafx.scene.layout.Pane;
+import javafx.scene.layout.VBox;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import javafx.stage.Stage;
@@ -31,17 +36,22 @@ public class InstructorPage {
 
     /** Button to publish articles */
     private Button publishArticlesButton = new Button("Publish Articles");
-    
-    /** Button to publish articles */
-    private Button BackupButton = new Button("Backup Articles");
-    
-    /** Button to publish articles */
-    private Button RestoreBackupButton = new Button("Restore Articles");
-    
-    
+ 
     private Button ManageSAGPButton = new Button("Manage Special Access Group");
 
     private static ArticleDBHelper articleDBHelper = new ArticleDBHelper();
+
+    private Button BackUpArticlesButton = new Button("BackUp Articles");
+    
+    /** Button to publish articles */
+    private Button restoreArticlesButton = new Button("Restore Articles");
+    
+    /** Button for Instructor to Add Student */
+    private Button addStudent = new Button("Add Student to System");
+    
+    /** Button for Instructor to remove Student */
+    private Button removeStudent = new Button("Remove Student from System");
+    
     /**********
      * Constructor for InstructorPage
      * 
@@ -57,50 +67,75 @@ public class InstructorPage {
         titleLabel.setFont(fontTitle);
 
         // Set up the View Articles button
-        viewArticlesButton.setLayoutX(150);
-        viewArticlesButton.setLayoutY(100);
+        viewArticlesButton.setLayoutX(200);
+        viewArticlesButton.setLayoutY(80);
         viewArticlesButton.setOnAction(e -> sceneController.switchTo("ListArticle"));
 
         // Set up the Publish Articles button
-        publishArticlesButton.setLayoutX(150);
-        publishArticlesButton.setLayoutY(150);
+        publishArticlesButton.setLayoutX(200);
+        publishArticlesButton.setLayoutY(120);
         publishArticlesButton.setOnAction(e -> sceneController.switchTo("CreateArticle"));
         
-        BackupButton.setLayoutX(150);
-        BackupButton.setLayoutY(200);
-        BackupButton.setOnAction(e -> {
-			try {
-	        	articleDBHelper.connectToDatabase();
-				articleDBHelper.createBackup("backup.txt");
-			} catch (Exception e1) {
-				// TODO Auto-generated catch block
-				e1.printStackTrace();
-			}finally {
-	        	articleDBHelper.closeConnection();
-	        }
-		});
-
-        // Set up the Publish Articles button
-        RestoreBackupButton.setLayoutX(150);
-        RestoreBackupButton.setLayoutY(250);
-        RestoreBackupButton.setOnAction(e -> {
-			try {
-	        	articleDBHelper.connectToDatabase();
-				articleDBHelper.restoreBackup("backup.txt");
-			} catch (Exception e1) {
-				// TODO Auto-generated catch block
-				e1.printStackTrace();
-			}finally {
-	        	articleDBHelper.closeConnection();
-	        }
-		});
+        //Set up the Backup Articles button
+        BackUpArticlesButton.setLayoutX(200);
+        BackUpArticlesButton.setLayoutY(160);
+        BackUpArticlesButton.setOnAction(e -> sceneController.switchTo("BackUpArticle"));
+        BackUpArticlesButton.setOnAction(e -> {
+        	ArticleDBHelper helper = new ArticleDBHelper();
+        	try {
+        		helper.connectToDatabase();
+        		helper.createBackup("ArticleBackup.txt");
+        		showAlert("Backup Successfull message: ", "Articles have been backed up to ArticleBackup.txt file");
+ 
+        		
+        	}catch(Exception ex) {
+        		showAlert("Backup Failed message: ", "Articles could not be backed up to ArticleBackup.txt file");
+        		ex.printStackTrace();
+        	}finally {
+        		helper.closeConnection();
+        	}
+        	
+        });
+        
+        //Set up the Restore Articles button
+        restoreArticlesButton.setLayoutX(200);
+        restoreArticlesButton.setLayoutY(200);
+        restoreArticlesButton.setOnAction(e -> sceneController.switchTo("RestoreArticle"));
+        restoreArticlesButton.setOnAction(e -> {
+        	ArticleDBHelper helper1 = new ArticleDBHelper();
+        	try{
+        		helper1.connectToDatabase();
+        		helper1.restoreBackup("ArticleBackup.txt");
+        		showAlert("Restore Success: ", "Articles have been restored from ArticleBackup.txt");
+        	}catch(Exception ex){
+        		showAlert("Restore Failed: ", "Articles could not be restored from ArticleBackup.txt");
+        		ex.printStackTrace();
+        		
+        	}finally {
+        		helper1.closeConnection();
+        	}
+        	
+        });
+        
+        
+      //Set up the addStudent button
+        addStudent.setLayoutX(200);
+        addStudent.setLayoutY(240);
+        addStudent.setOnAction(e -> sceneController.switchTo("ManageStudentRole"));
+      
+        //Set up the removeStudent button
+        removeStudent.setLayoutX(200);
+        removeStudent.setLayoutY(280);
+        removeStudent.setOnAction(e -> sceneController.switchTo("ManageStudentRole"));        
         
         ManageSAGPButton.setLayoutX(150);
-        ManageSAGPButton.setLayoutY(300);
+        ManageSAGPButton.setLayoutY(350);
         ManageSAGPButton.setOnAction(e -> sceneController.switchTo("ManageSpecialAccessGroup"));
-
+      
         // Add all components to the root pane
-        root.getChildren().addAll(titleLabel, publishArticlesButton, viewArticlesButton, BackupButton, RestoreBackupButton, ManageSAGPButton);
+        root.getChildren().addAll(titleLabel, viewArticlesButton, publishArticlesButton, BackUpArticlesButton,restoreArticlesButton,
+        		addStudent, removeStudent, ManageSAGPButton);
+
     }
 
     /**********

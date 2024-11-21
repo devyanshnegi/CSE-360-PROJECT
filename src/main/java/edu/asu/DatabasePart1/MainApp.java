@@ -154,6 +154,11 @@ public class MainApp extends Application {
         Scene ViewLabelScene = new Scene(ViewLabelPane, WINDOW_WIDTH, WINDOW_HEIGHT); // StartPage scene
         sceneController.addScene("ViewLabel", ViewLabelScene);
         
+        Pane ManageStudentPane = new Pane();  // Initialize StartPane
+        new ManageStudentRole(ManageStudentPane, sceneController); // Pass RegisterScene to StartPage
+        Scene ManageStudentScene = new Scene(ManageStudentPane, WINDOW_WIDTH, WINDOW_HEIGHT); // StartPage scene
+        sceneController.addScene("ManageStudentRole", ManageStudentScene);
+        
         Pane InstructorListPane = new Pane();  // Initialize StartPane
         new InstructorListPage(InstructorListPane, sceneController); // Pass RegisterScene to StartPage
         Scene InstructorListScene = new Scene(InstructorListPane, WINDOW_WIDTH, WINDOW_HEIGHT); // StartPage scene

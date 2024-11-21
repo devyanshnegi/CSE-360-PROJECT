@@ -51,13 +51,14 @@ class DatabaseHelper {
 				+ "password VARCHAR(255), "
 				+ "role VARCHAR(20), "
 				+ "specialAccessGroup TEXT DEFAULT NULL, "
+				+ "viewAccess TEXT DEFAULT NULL,"
 				+ "otp INT UNIQUE,"
 				+ "expiry DATETIME)";
 		statement.execute(userTable);
 		
 	}
 	
-	public boolean doesUserHaveAccess(String username, String specialAccessGroup) {
+	public boolean doesUserHaveSpecialAccess(String username, String specialAccessGroup) {
 		String query = "SELECT COUNT(*) FROM cse360users WHERE username = ? AND specialAccessGroup LIKE ?";
 	    try (PreparedStatement pstmt = connection.prepareStatement(query)) {
 	        

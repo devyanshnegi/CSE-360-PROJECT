@@ -304,8 +304,6 @@ class DatabaseHelper {
 	}
 
 
-
-
 	public void displayUsersByAdmin() throws SQLException{
 		String sql = "SELECT * FROM cse360users"; 
 		Statement stmt = connection.createStatement();
@@ -351,6 +349,32 @@ class DatabaseHelper {
 			System.out.println(", OTP: " + otp); 
 		} 
 	}
+	
+	public boolean addStudent(String username) {
+		String roleQuery = "INSERT INTO cse360users (role, username) VALUES (?, ?)";
+		try(PreparedStatement pstmt = connection.prepareStatement(roleQuery)){
+			pstmt.setString(1, "student");
+	        pstmt.setString(2, username);
+	        int rowsUpdated = pstmt.executeUpdate();
+	        return rowsUpdated > 0;
+		}catch(SQLException e) {
+			e.printStackTrace();
+			return false;
+		}
+	}
+	
+	public boolean removeStudent(String username) {
+	    String roleQuery = "DELETE FROM cse360users WHERE username = ?";
+	    try (PreparedStatement pstmt = connection.prepareStatement(roleQuery)) {
+	        pstmt.setString(1, username);
+	        int rowsUpdated = pstmt.executeUpdate();
+	        return rowsUpdated > 0;
+	    } catch (SQLException e) {
+	        e.printStackTrace();
+	        return false;
+	    }
+	}
+
 
 	public void closeConnection() {
 		try{ 

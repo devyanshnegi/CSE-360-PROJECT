@@ -144,6 +144,17 @@ public class MainApp extends Application {
         Scene ListArticleScene = new Scene(ListArticlePane, WINDOW_WIDTH, WINDOW_HEIGHT); // StartPage scene
         sceneController.addScene("ListArticle", ListArticleScene);
         
+        
+        Pane ManageStudentPane = new Pane();  // Initialize StartPane
+        new ManageStudentRole(ManageStudentPane, sceneController); // Pass RegisterScene to StartPage
+        Scene ManageStudentScene = new Scene(ManageStudentPane, WINDOW_WIDTH, WINDOW_HEIGHT); // StartPage scene
+        sceneController.addScene("ManageStudentRole", ManageStudentScene);
+        
+//        Pane BackUpArticlePane = new Pane();  // Initialize StartPane
+//        new BackUpArticlePage(BackUpArticlePane, sceneController); // Pass RegisterScene to StartPage
+//        Scene BackUpArticlePane = new Scene(BackUpArticlePane, WINDOW_WIDTH, WINDOW_HEIGHT); // StartPage scene
+//        sceneController.addScene("BackUpArticle", BackUpArticlePane);
+        
 //        Pane UpdateArticlePane = new Pane();  // Initialize StartPane
 //        new UpdateArticlePage(UpdateArticlePane, sceneController); // Pass RegisterScene to StartPage
 //        Scene UpdateArticleScene = new Scene(UpdateArticlePane, WINDOW_WIDTH, WINDOW_HEIGHT); // StartPage scene

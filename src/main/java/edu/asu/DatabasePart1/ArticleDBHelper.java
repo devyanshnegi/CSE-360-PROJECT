@@ -287,7 +287,7 @@ public void updateArticle(long uid, String level, String title, String author, S
 	                     String references = rs.getString("references");
 	                     String groupName = rs.getString("groupName");
 	
-	                     writer.write(uid +"|"+level+"|"+title + "|" + author + "|" + articleAbstract + "|" + keywords + "|" + body + "|" + references+"|"+groupName);
+	                     writer.write(uid +" | "+level+" | "+title + " | " + author + " | " + articleAbstract + " | " + keywords + " | " + body + " | " + references+" | "+groupName);
 	                     writer.newLine();
 	                }
 	                writer.close();

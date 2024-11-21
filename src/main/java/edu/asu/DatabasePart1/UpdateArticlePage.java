@@ -35,8 +35,16 @@ public class UpdateArticlePage {
     private TextField keywordsField;
     private TextArea bodyArea;
     private TextArea referencesArea;
+    private TextArea checkboxArea;
+    private boolean Special;
 
     public UpdateArticlePage(Pane rootPane, SceneController sceneController) {
+    	
+    	Button Load = new Button("Load Article");
+        Load.setOnAction(e -> {
+        	
+        rootPane.getChildren().remove(Load);
+        
         // Set up the main layout as a GridPane
         GridPane grid = new GridPane();
         grid.setPadding(new Insets(20));
@@ -44,7 +52,7 @@ public class UpdateArticlePage {
         grid.setHgap(10);
 
         // Add title for the Create Article page
-        Label pageTitle = new Label("Create New Article");
+        Label pageTitle = new Label("Update Article");
         pageTitle.setFont(Font.font("Arial", 24));
         grid.add(pageTitle, 0, 0, 2, 1);
 
@@ -102,10 +110,15 @@ public class UpdateArticlePage {
         referencesArea.setPrefHeight(60);
         grid.add(referencesLabel, 0, 8);
         grid.add(referencesArea, 1, 8);
+        
+        CheckBox checkBox = new CheckBox("Special Access Group");
+        checkboxArea = new TextArea();
+        grid.add(checkBox, 0, 9);
+        grid.add(checkboxArea, 1, 8);
 
         // Submit button
         Button submitButton = new Button("Submit Article");
-        submitButton.setOnAction(e -> handleSubmitAction(sceneController));
+        submitButton.setOnAction(event -> handleSubmitAction(sceneController));
         grid.add(submitButton, 1, 9);
         GridPane.setMargin(submitButton, new Insets(10, 0, 0, 0));
 
@@ -113,25 +126,44 @@ public class UpdateArticlePage {
         	articleDBHelper.connectToDatabase();
         	String[] article = articleDBHelper.viewArticle((long)sceneController.getData("uid")).get(0);
         	// Add labels and information fields
-        	groupingField.setText(article[2]);
+        	levelComboBox.setValue(toCamelCase(article[1].toLowerCase()));
+        	titleField.setText(article[2]);
         	authorField.setText(article[3]);  // New Author Label
-        	titleField.setText(article[4]);
-        	descriptionArea.setText(article[5]);
-        	keywordsField.setText(article[6]);
-        	bodyArea.setText(article[7]);
-        	referencesArea.setText(article[8]);
+        	descriptionArea.setText(article[4]);
+        	keywordsField.setText(article[5]);
+        	bodyArea.setText(article[6]);
+        	referencesArea.setText(article[7]);
+        	groupingField.setText(article[8]);
         }
-        catch (SQLException e) {
-        	e.printStackTrace();
-        } catch (Exception e) {
+        catch (SQLException er) {
+        	er.printStackTrace();
+        } catch (Exception er) {
 			// TODO Auto-generated catch block
-			e.printStackTrace();
+			er.printStackTrace();
 		} finally {
         	articleDBHelper.closeConnection();
         }
         
         // Add the grid to the root pane
         rootPane.getChildren().add(grid);
+        });
+
+        rootPane.getChildren().add(Load);
+    }
+    
+    public static String toCamelCase(String input) {
+        // Split the input string by spaces
+        String[] words = input.split("\\s+");
+        StringBuilder camelCase = new StringBuilder();
+
+        for (String word : words) {
+            if (!word.isEmpty()) {
+                // Capitalize the first letter and make the rest lowercase
+                String camelWord = word.substring(0, 1).toUpperCase() + word.substring(1).toLowerCase();
+                camelCase.append(camelWord);
+            }
+        }
+        return camelCase.toString();
     }
 
     /**
@@ -158,7 +190,12 @@ public class UpdateArticlePage {
         try {
             // Store the article in the database
         	articleDBHelper.connectToDatabase();
-            articleDBHelper.updateArticle((long)sceneController.getData("uid"), level, title, author, description, keywords, body, references, grouping);
+        	if(Special) {
+        		articleDBHelper.updateArticleSpecial((long)sceneController.getData("uid"), level, title, author, description, keywords, body, references, grouping);	
+        	}
+        	else {
+        		articleDBHelper.updateArticle((long)sceneController.getData("uid"), level, title, author, description, keywords, body, references, grouping);
+        	}
         } catch (Exception ex) {
             ex.printStackTrace();
             showAlert(Alert.AlertType.ERROR, "Database Error", "Failed to store the article in the database.");

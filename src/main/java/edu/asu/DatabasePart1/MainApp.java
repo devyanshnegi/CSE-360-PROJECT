@@ -1,4 +1,4 @@
-	package edu.asu.DatabasePart1;
+package edu.asu.DatabasePart1;
 
 import javafx.application.Application;
 import java.time.format.DateTimeFormatter;
@@ -129,7 +129,7 @@ public class MainApp extends Application {
         sceneController.addScene("Invite", InviteScene);
         
         Pane ConfirmationPane = new Pane();  // Initialize StartPane
-        new confirmationPage(ConfirmationPane, sceneController); // Pass RegisterScene to StartPage
+        new ConfirmationPage(ConfirmationPane, sceneController); // Pass RegisterScene to StartPage
         Scene ConfirmationScene = new Scene(ConfirmationPane, WINDOW_WIDTH, WINDOW_HEIGHT); // StartPage scene
         sceneController.addScene("Confirmation", ConfirmationScene);
         
@@ -143,27 +143,36 @@ public class MainApp extends Application {
         new ListArticlePage(ListArticlePane, sceneController); // Pass RegisterScene to StartPage
         Scene ListArticleScene = new Scene(ListArticlePane, WINDOW_WIDTH, WINDOW_HEIGHT); // StartPage scene
         sceneController.addScene("ListArticle", ListArticleScene);
+                
+        Pane UpdateArticlePane = new Pane();  // Initialize StartPane
+        new UpdateArticlePage(UpdateArticlePane, sceneController); // Pass RegisterScene to StartPage
+        Scene UpdateArticleScene = new Scene(UpdateArticlePane, WINDOW_WIDTH, WINDOW_HEIGHT); // StartPage scene
+        sceneController.addScene("UpdateArticle", UpdateArticleScene);
         
+        Pane ViewLabelPane = new Pane();  // Initialize StartPane
+        new ViewLabelPage(ViewLabelPane, sceneController); // Pass RegisterScene to StartPage
+        Scene ViewLabelScene = new Scene(ViewLabelPane, WINDOW_WIDTH, WINDOW_HEIGHT); // StartPage scene
+        sceneController.addScene("ViewLabel", ViewLabelScene);
         
         Pane ManageStudentPane = new Pane();  // Initialize StartPane
         new ManageStudentRole(ManageStudentPane, sceneController); // Pass RegisterScene to StartPage
         Scene ManageStudentScene = new Scene(ManageStudentPane, WINDOW_WIDTH, WINDOW_HEIGHT); // StartPage scene
         sceneController.addScene("ManageStudentRole", ManageStudentScene);
         
-//        Pane BackUpArticlePane = new Pane();  // Initialize StartPane
-//        new BackUpArticlePage(BackUpArticlePane, sceneController); // Pass RegisterScene to StartPage
-//        Scene BackUpArticlePane = new Scene(BackUpArticlePane, WINDOW_WIDTH, WINDOW_HEIGHT); // StartPage scene
-//        sceneController.addScene("BackUpArticle", BackUpArticlePane);
+        Pane InstructorListPane = new Pane();  // Initialize StartPane
+        new InstructorListPage(InstructorListPane, sceneController); // Pass RegisterScene to StartPage
+        Scene InstructorListScene = new Scene(InstructorListPane, WINDOW_WIDTH, WINDOW_HEIGHT); // StartPage scene
+        sceneController.addScene("InstructorList", InstructorListScene);
         
-//        Pane UpdateArticlePane = new Pane();  // Initialize StartPane
-//        new UpdateArticlePage(UpdateArticlePane, sceneController); // Pass RegisterScene to StartPage
-//        Scene UpdateArticleScene = new Scene(UpdateArticlePane, WINDOW_WIDTH, WINDOW_HEIGHT); // StartPage scene
-//        sceneController.addScene("UpdateArticle", UpdateArticleScene);
+        Pane CreateSpecialAccessGroupPane = new Pane();  // Initialize StartPane
+        new CreateSpecialAccessGroupPage(CreateSpecialAccessGroupPane, sceneController); // Pass RegisterScene to StartPage
+        Scene CreateSpecialAccessGroupScene = new Scene(CreateSpecialAccessGroupPane, WINDOW_WIDTH, WINDOW_HEIGHT); // StartPage scene
+        sceneController.addScene("CreateSpecialAccessGroup", CreateSpecialAccessGroupScene);
         
-//        Pane ViewLabelPane = new Pane();  // Initialize StartPane
-//        new ViewLabelPage(ViewLabelPane, sceneController); // Pass RegisterScene to StartPage
-//        Scene ViewLabelScene = new Scene(ViewLabelPane, WINDOW_WIDTH, WINDOW_HEIGHT); // StartPage scene
-//        sceneController.addScene("ViewLabel", ViewLabelScene);
+        Pane ManageSpecialAccessGroupPane = new Pane();  // Initialize StartPane
+        new ManageSpecialAccessGroupPage(ManageSpecialAccessGroupPane, sceneController); // Pass RegisterScene to StartPage
+        Scene ManageSpecialAccessGroupScene = new Scene(ManageSpecialAccessGroupPane, WINDOW_WIDTH, WINDOW_HEIGHT); // StartPage scene
+        sceneController.addScene("ManageSpecialAccessGroup", ManageSpecialAccessGroupScene);
         
 //        sceneController.switchTo("ViewLabel");
         

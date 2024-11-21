@@ -36,8 +36,11 @@ public class InstructorPage {
 
     /** Button to publish articles */
     private Button publishArticlesButton = new Button("Publish Articles");
-    
-    /** Button to publish articles */
+ 
+    private Button ManageSAGPButton = new Button("Manage Special Access Group");
+
+    private static ArticleDBHelper articleDBHelper = new ArticleDBHelper();
+
     private Button BackUpArticlesButton = new Button("BackUp Articles");
     
     /** Button to publish articles */
@@ -48,7 +51,6 @@ public class InstructorPage {
     
     /** Button for Instructor to remove Student */
     private Button removeStudent = new Button("Remove Student from System");
-    
     
     /**********
      * Constructor for InstructorPage
@@ -126,9 +128,14 @@ public class InstructorPage {
         removeStudent.setLayoutY(280);
         removeStudent.setOnAction(e -> sceneController.switchTo("ManageStudentRole"));        
         
+        ManageSAGPButton.setLayoutX(150);
+        ManageSAGPButton.setLayoutY(350);
+        ManageSAGPButton.setOnAction(e -> sceneController.switchTo("ManageSpecialAccessGroup"));
+      
         // Add all components to the root pane
         root.getChildren().addAll(titleLabel, viewArticlesButton, publishArticlesButton, BackUpArticlesButton,restoreArticlesButton,
-        		addStudent, removeStudent);
+        		addStudent, removeStudent, ManageSAGPButton);
+
     }
 
     /**********

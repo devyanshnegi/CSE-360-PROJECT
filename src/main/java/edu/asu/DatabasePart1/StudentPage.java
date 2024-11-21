@@ -26,13 +26,16 @@ import javafx.application.Platform;
 public class StudentPage {
 
     /** Label displaying the title of the home page */
-    private Label Title2 = new Label("Home Page");
+    private Label Title2 = new Label("Student Home Page");
     
     /** Label prompting the user to click the logout button */
     private Label logOut = new Label("Click Here to LogOut");
     
     /** Button for logging out of the application */
     private Button logOutButton = new Button("Logout");
+    
+    /** Button for logging out of the application */
+    private Button helpMessage = new Button("Send Help Messagw to Instructor");
 
     /**********
      * Constructor for HomePage
@@ -55,6 +58,12 @@ public class StudentPage {
 
         Font fontlogout = Font.font("Arial", FontWeight.BOLD, 14);
         logOut.setFont(fontlogout);
+        
+        
+        //Setup the send message button
+        helpMessage.setLayoutX(215);
+        helpMessage.setLayoutY(140);
+        helpMessage.setOnAction(e -> sceneController.switchTo("HelpMessage"));
 
         // Position the logout button
         logOutButton.setLayoutX(215);
@@ -65,9 +74,12 @@ public class StudentPage {
             System.out.println("Logout button clicked. Closing the application...");
             Platform.exit(); // Gracefully close the application
         });
+        
+        
+        
 
         // Add all components to the pane
-        Root.getChildren().addAll(Title2, logOut, logOutButton);
+        Root.getChildren().addAll(Title2, logOut, logOutButton, helpMessage);
     }
 
     /**********

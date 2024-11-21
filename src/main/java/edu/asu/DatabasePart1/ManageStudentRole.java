@@ -68,7 +68,7 @@ public class ManageStudentRole {
         removeButton.setOnAction(e -> handleAction("Remove", popupStage, sceneController));
         grid.add(removeButton, 0, 2);
 
-        // Cancel button
+        // Back button
         Button back = new Button("Back");
         back.setOnAction(e -> sceneController.switchTo("InstructorHome"));
         grid.add(back, 0, 3);

@@ -103,6 +103,8 @@ public class CreateSpecialAccessGroupPage {
             try {
                 databaseHelper.connectToDatabase();
                 boolean success = databaseHelper.setSpecialAccessGroupUser(selectedUsername, nameField.getText());
+                databaseHelper.setSpecialAdminAccess(selectedUsername, nameField.getText());
+                databaseHelper.setSpecialNewGroup(groupName);
                 if (success) {
                     sceneController.switchTo("Admin");
                 } else {

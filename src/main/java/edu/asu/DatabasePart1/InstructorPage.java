@@ -2,6 +2,7 @@ package edu.asu.DatabasePart1;
 
 import java.sql.SQLException;
 
+import javafx.application.Platform;
 // JavaFX imports needed to support the Graphical User Interface
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
@@ -38,6 +39,8 @@ public class InstructorPage {
     private Button publishArticlesButton = new Button("Publish Articles");
  
     private Button ManageSAGPButton = new Button("Manage Special Access Group");
+    
+    private Button ManageGGPButton = new Button("Manage General Group");
 
     private static ArticleDBHelper articleDBHelper = new ArticleDBHelper();
 
@@ -51,6 +54,8 @@ public class InstructorPage {
     
     /** Button for Instructor to remove Student */
     private Button removeStudent = new Button("Remove Student from System");
+
+    Button logOutButton = new Button("Logout");
     
     /**********
      * Constructor for InstructorPage
@@ -131,10 +136,22 @@ public class InstructorPage {
         ManageSAGPButton.setLayoutX(150);
         ManageSAGPButton.setLayoutY(350);
         ManageSAGPButton.setOnAction(e -> sceneController.switchTo("ManageSpecialAccessGroup"));
+        
+        ManageGGPButton.setLayoutX(150);
+        ManageGGPButton.setLayoutY(400);
+        ManageGGPButton.setOnAction(e -> sceneController.switchTo("ManageGeneralGroup"));
+        
+
+        logOutButton.setLayoutX(150);
+        logOutButton.setLayoutY(450);
+        logOutButton.setOnAction(event -> {
+            System.out.println("Logout button clicked. Closing the application...");
+            Platform.exit(); // Gracefully close the application
+        });
       
         // Add all components to the root pane
         root.getChildren().addAll(titleLabel, viewArticlesButton, publishArticlesButton, BackUpArticlesButton,restoreArticlesButton,
-        		addStudent, removeStudent, ManageSAGPButton);
+        		addStudent, removeStudent, ManageSAGPButton, ManageGGPButton, logOutButton);
 
     }
 

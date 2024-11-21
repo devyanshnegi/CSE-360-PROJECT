@@ -33,6 +33,7 @@ public class ListArticlePage {
     private ToggleGroup articleToggleGroup;
     private static ArticleDBHelper articleDBHelper = new ArticleDBHelper();
     private Map<String, Long> UIDdb = new HashMap<>();
+    private Map<String, String> Groupdb = new HashMap<>();
     private static DatabaseHelper databaseHelper = new DatabaseHelper();
 
     // Updated constructor
@@ -123,26 +124,45 @@ public class ListArticlePage {
      * @param groupingIdentifier The grouping identifier entered by the user.
      */
     private void handleSubmit(SceneController sceneController, String groupingIdentifier, String levelIdentifier) {
-        articlesContainer.getChildren().clear();
+        String role = (String) sceneController.getData("role");
+        if(role.equals("student")) {
+        	studentSubmit(sceneController, groupingIdentifier, levelIdentifier);
+        }else {
+        	instructorAndAdminSubmit(sceneController, groupingIdentifier, levelIdentifier);
+        }
+    }
+    
+    private void instructorAndAdminSubmit(SceneController sceneController, String groupingIdentifier, String levelIdentifier) {
+    	articlesContainer.getChildren().clear();
         articleToggleGroup.getToggles().clear();
         try {
         	articleDBHelper.connectToDatabase();
         	databaseHelper.connectToDatabase();
+        	
+        	String username = (String) sceneController.getData("username");
+        	List<String> specialViewAccess = databaseHelper.listUserSpecialViewAccess(username);
+        	List<String> allSpecialAccess = databaseHelper.listAllSpecialAccessGroup();
+        	
         	if(groupingIdentifier.isEmpty()) {
         		// DO NOTHING
         	}
         	else if (groupingIdentifier.toLowerCase().equals("all")) {
         		if(levelIdentifier.toLowerCase().equals("all")) {
     	        	displayArticles(articleDBHelper.listArticlesByGroups("%"));
+	        		for(String specialGroup: specialViewAccess) {
+	        			displayArticles(articleDBHelper.listArticlesBySpecialAccessGroups(specialGroup));
+	        		}
         		}
         		else {
         			displayArticles(articleDBHelper.listArticlesByGroupsAndLevel("%",levelIdentifier));
+        			for(String specialGroup: specialViewAccess) {
+	        			displayArticles(articleDBHelper.listArticlesBySpecialAccessGroupsAndLevel(specialGroup,levelIdentifier));
+	        		}
         		}
 	        } else {
-	        	String username = (String) sceneController.getData("username");
 	        	
 	        	if(levelIdentifier.toLowerCase().equals("all")) {
-		        	displayArticles(articleDBHelper.listArticlesByGroups(groupingIdentifier));
+	        		displayArticles(articleDBHelper.listArticlesByGroups(groupingIdentifier));
 
 		        	if(databaseHelper.doesUserHaveSpecialAccess(username, groupingIdentifier)){
 		        		displayArticles(articleDBHelper.listArticlesBySpecialAccessGroups(groupingIdentifier));
@@ -163,6 +183,53 @@ public class ListArticlePage {
     		databaseHelper.closeConnection();
         }
     }
+    
+    private void studentSubmit(SceneController sceneController, String groupingIdentifier, String levelIdentifier) {
+    	articlesContainer.getChildren().clear();
+        articleToggleGroup.getToggles().clear();
+        try {
+        	articleDBHelper.connectToDatabase();
+        	databaseHelper.connectToDatabase();
+        	
+        	String username = (String) sceneController.getData("username");
+        	List<String> viewAccess = databaseHelper.listAllViewAccess(username);
+        	
+        	if(groupingIdentifier.isEmpty()) {
+        		// DO NOTHING
+        	}
+        	else if (groupingIdentifier.toLowerCase().equals("all")) {
+        		if(levelIdentifier.toLowerCase().equals("all")) {
+	        		for(String group: viewAccess) {
+	    	        	displayArticles(articleDBHelper.listArticlesByGroups(group));
+	        			displayArticles(articleDBHelper.listArticlesBySpecialAccessGroups(group));
+	        		}
+        		}
+        		else {
+        			for(String group: viewAccess) {
+        				displayArticles(articleDBHelper.listArticlesByGroupsAndLevel(group,levelIdentifier));
+	        			displayArticles(articleDBHelper.listArticlesBySpecialAccessGroupsAndLevel(group,levelIdentifier));
+	        		}
+        		}
+	        } else {
+	        	if(viewAccess != null && viewAccess.contains(groupingIdentifier)) {
+		        	if(levelIdentifier.toLowerCase().equals("all")) {
+		        		displayArticles(articleDBHelper.listArticlesByGroups(groupingIdentifier));
+		        		displayArticles(articleDBHelper.listArticlesBySpecialAccessGroups(groupingIdentifier));
+	        		}
+	        		else {
+	    	        	displayArticles(articleDBHelper.listArticlesByGroupsAndLevel(groupingIdentifier,levelIdentifier));
+    	        		displayArticles(articleDBHelper.listArticlesBySpecialAccessGroupsAndLevel(groupingIdentifier,levelIdentifier));
+	        		}
+		        }
+	        }
+        }
+        catch (SQLException e) {
+        	e.printStackTrace();
+        } finally {
+        	articleDBHelper.closeConnection();
+    		databaseHelper.closeConnection();
+        }
+    }
 
     /**
      * Display articles in the articles container with radio buttons.
@@ -173,6 +240,7 @@ public class ListArticlePage {
         for (String[] article : articles) {
         	String s = String.format("Level: %s, Title: %s, Author(s): %s, Group(s): %s", article[1],article[2],article[3],article[4]);
         	UIDdb.put(s, Long.parseLong(article[0]));
+        	Groupdb.put(s, article[4]);
         	
             RadioButton radioButton = new RadioButton(s);
             radioButton.setToggleGroup(articleToggleGroup);
@@ -185,6 +253,7 @@ public class ListArticlePage {
         if (selectedRadioButton != null) {
             String selectedArticle = selectedRadioButton.getText();
             sceneController.setData("uid", UIDdb.get(selectedArticle));
+            sceneController.setData("group", Groupdb.get(selectedArticle));
             sceneController.switchTo("ViewLabel");
         } else {
             showAlert("View Article", "Please select an article to view.");
@@ -196,11 +265,39 @@ public class ListArticlePage {
      * Opens the selected article in an editable format for updating.
      */
     private void handleUpdateArticle(SceneController sceneController) {
+    	if(sceneController.getData("role").equals("student")) {
+    		return;
+    	}
+    	
         RadioButton selectedRadioButton = (RadioButton) articleToggleGroup.getSelectedToggle();
         if (selectedRadioButton != null) {
             String selectedArticle = selectedRadioButton.getText();
-            sceneController.setData("uid", UIDdb.get(selectedArticle));
-            sceneController.switchTo("UpdateArticle");
+            
+            try {
+            	articleDBHelper.connectToDatabase();
+            	databaseHelper.connectToDatabase();
+            	
+            	List<String> allSpecialAccess = databaseHelper.listAllSpecialAccessGroup();
+                if(allSpecialAccess != null &&allSpecialAccess.contains(Groupdb.get(selectedArticle))) {
+                	List<String> specialAccess = databaseHelper.listAllViewAccess((String) sceneController.getData("username"));
+                	if(specialAccess != null && specialAccess.contains(Groupdb.get(selectedArticle))) {
+                        sceneController.setData("uid", UIDdb.get(selectedArticle));
+                        sceneController.switchTo("UpdateArticle");
+                	}
+                	else {
+                        showAlert("No admin rights", "You do not have admin rights to this article.");
+                	}
+                }else {
+                    sceneController.setData("uid", UIDdb.get(selectedArticle));
+                    sceneController.switchTo("UpdateArticle");
+                }
+            }catch (SQLException e) {
+            	e.printStackTrace();
+            } finally {
+            	articleDBHelper.closeConnection();
+        		databaseHelper.closeConnection();
+            }
+        	
         } else {
             showAlert("Update Article", "Please select an article to update.");
         }
@@ -216,14 +313,28 @@ public class ListArticlePage {
             String selectedArticle = selectedRadioButton.getText();
             try {
             	articleDBHelper.connectToDatabase();
-            	articleDBHelper.deleteArticle(UIDdb.get(selectedArticle));
-            }
-            catch (SQLException e) {
+            	databaseHelper.connectToDatabase();
+            	
+            	List<String> allSpecialAccess = databaseHelper.listAllSpecialAccessGroup();
+                if(allSpecialAccess != null && allSpecialAccess.contains(Groupdb.get(selectedArticle))) {
+                	List<String> specialAccess = databaseHelper.listAllViewAccess((String) sceneController.getData("username"));
+                	if(specialAccess != null && specialAccess.contains(Groupdb.get(selectedArticle))) {
+                    	articleDBHelper.deleteArticle(UIDdb.get(selectedArticle));
+                	}
+                	else {
+                        showAlert("No admin rights", "You do not have admin rights to this article.");
+                	}
+                }else {
+                	articleDBHelper.deleteArticle(UIDdb.get(selectedArticle));
+                }
+            }catch (SQLException e) {
             	e.printStackTrace();
             } catch (Exception e) {
+				// TODO Auto-generated catch block
 				e.printStackTrace();
 			} finally {
             	articleDBHelper.closeConnection();
+        		databaseHelper.closeConnection();
             }
             showAlert("Delete Article", "Article '" + selectedArticle + "' has been deleted.");
             articlesContainer.getChildren().remove(selectedRadioButton); // Remove deleted article from display

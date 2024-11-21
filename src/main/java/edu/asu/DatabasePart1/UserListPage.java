@@ -74,8 +74,17 @@ public class UserListPage {
             Button backButton = new Button("Back");
 	        backButton.setOnAction(e -> {
 	            System.out.println("Back button clicked.");
-	            // Navigate back to Admin Page on back
-	            sceneController.switchTo("Admin");
+	            
+	            String role = (String) sceneController.getData("role");
+            	if(role.equals("admin")) {
+        			sceneController.switchTo("Admin");
+        		}
+        		else if(role.equals("student")) {            			
+        			sceneController.switchTo("StudentHome");
+        		}
+        		else if(role.equals("instructor")) {
+        			sceneController.switchTo("InstructorHome");
+        		}
 	        });
 
             // Arrange buttons in an HBox

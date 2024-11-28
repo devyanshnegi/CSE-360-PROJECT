@@ -42,7 +42,7 @@ class DatabaseHelper {
 	private void createTables() throws SQLException {
 		String userTable = "CREATE TABLE IF NOT EXISTS cse360users ("
 				+ "id INT AUTO_INCREMENT PRIMARY KEY, "
-				+ "username VARCHAR(16) UNIQUE, "
+				+ "username VARCHAR(255) UNIQUE, "
 				+ "email VARCHAR(255) UNIQUE, "
 				+ "firstname VARCHAR(255), "
 				+ "middlename VARCHAR(255), "
@@ -436,6 +436,22 @@ class DatabaseHelper {
 		}
 	}
 	
+	public boolean isOtpResetPassword(int otp) {
+	    String query = "SELECT COUNT(*) FROM cse360users WHERE otp = ? AND username IS NOT NULL";
+	    try (PreparedStatement pstmt = connection.prepareStatement(query)) {
+	        pstmt.setInt(1, otp); // Set the OTP value
+	        ResultSet rs = pstmt.executeQuery();
+	        
+	        if (rs.next()) {
+	            // Check if the count is greater than 0
+	            return rs.getInt(1) > 0;
+	        }
+	    } catch (SQLException e) {
+	        e.printStackTrace();
+	    }
+	    return false; // Return false if no match is found or an error occurs
+	}
+	
 	public boolean isOtpValid(int otp) {
 	    String query = "SELECT COUNT(*) FROM cse360users WHERE otp = ?";
 	    try (PreparedStatement pstmt = connection.prepareStatement(query)) {
@@ -456,60 +472,73 @@ class DatabaseHelper {
 	    return false; // If an error occurs, assume user doesn't exist
 	}
 	
-		public boolean isOtpPresentAndValid(int otp) {
-		String query = "SELECT COUNT(*) FROM cse360users WHERE otp = ?";
+	public boolean isOtpPresentAndValid(int otp) {
+	    String query = "SELECT expiry FROM cse360users WHERE otp = ?";
 	    try (PreparedStatement pstmt = connection.prepareStatement(query)) {
-	        
 	        pstmt.setInt(1, otp);
 	        ResultSet rs = pstmt.executeQuery();
-	        
-	        if (rs.next()) {
-	            // If the count is greater than 0, the user exists
-	            if(rs.getInt(1) > 0) {
-	            	LocalDateTime currentDateTime = LocalDateTime.now();
 
-	            	String expiry = rs.getString("expiry"); 
-	            	DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
-	            	LocalDateTime dateTime = LocalDateTime.parse(expiry, formatter);
-	            	
-	            	String insertUser = "UPDATE cse360users SET otp = ?, expiry = ? WHERE otp = ?";
-	        		try (PreparedStatement pstmt1 = connection.prepareStatement(insertUser)) {
-	        			pstmt1.setNull(1, java.sql.Types.INTEGER); // Set otp to null
-	        		    pstmt1.setNull(2, java.sql.Types.TIMESTAMP); // Set the DATETIME field to NULL
-	        			pstmt1.setInt(3, otp); 
-	        			pstmt1.executeUpdate();
-	        		} catch (SQLException e) {
-	        	        e.printStackTrace();
-	        	    }
-	            	
-	            	if(dateTime.isBefore(currentDateTime)) {
-	            		return false;
-	            	}
-	            	else {
-	            		return true;
-	            	}
+	        if (rs.next()) {
+	            String expiry = rs.getString("expiry"); // Ensure the column name matches the database
+	            if (expiry != null) {
+	                LocalDateTime currentDateTime = LocalDateTime.now();
+	                DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+	                LocalDateTime dateTime = LocalDateTime.parse(expiry, formatter);
+
+	                // Check if the OTP has expired
+	                if (dateTime.isBefore(currentDateTime)) {
+	                    // OTP has expired, clear it
+	                    clearOtp(otp);
+	                    return false;
+	                }
+	                return true;
 	            }
 	        }
 	    } catch (SQLException e) {
 	        e.printStackTrace();
 	    }
-	    return true; // If an error occurs, assume user doesn't exist
+	    return false;
 	}
 
-	public void storeResetPasswordOtp(int otp) {
-		
-		LocalDateTime currentDateTime = LocalDateTime.now();
-    	String expiry = currentDateTime.toString(); 
-    	
-    	String insertUser = "INSERT INTO cse360users (otp, expiry) VALUES (?, ?)";
-		try (PreparedStatement pstmt = connection.prepareStatement(insertUser)) {
-			pstmt.setInt(1, otp);
-			pstmt.setString(2, expiry);
-			pstmt.executeUpdate();
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
+	// Helper method to clear the OTP after validation
+	private void clearOtp(int otp) {
+	    String updateQuery = "UPDATE cse360users SET otp = NULL, expiry = NULL WHERE otp = ?";
+	    try (PreparedStatement pstmt = connection.prepareStatement(updateQuery)) {
+	        pstmt.setInt(1, otp);
+	        pstmt.executeUpdate();
+	    } catch (SQLException e) {
+	        e.printStackTrace();
+	    }
 	}
+
+	public void storeResetPasswordOtp(int otp, String username) {
+	    LocalDateTime currentDateTime = LocalDateTime.now();
+	    LocalDateTime oneHourFromNow = currentDateTime.plusHours(1);
+
+	    // Format expiry timestamp for compatibility with the database
+	    DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+	    String expiry = oneHourFromNow.format(formatter);
+
+	    // Use UPDATE instead of INSERT for existing rows
+	    String updateUser = "UPDATE cse360users SET otp = ?, expiry = ? WHERE username = ?";
+	    try (PreparedStatement pstmt = connection.prepareStatement(updateUser)) {
+	        pstmt.setInt(1, otp);          // Set the OTP
+	        pstmt.setString(2, expiry);   // Set the formatted expiry timestamp
+	        pstmt.setString(3, username); // Set the username for the WHERE clause
+
+	        int rowsUpdated = pstmt.executeUpdate();
+
+	        if (rowsUpdated == 0) {
+	            System.out.println("No user found with the username: " + username);
+	        } else {
+	            System.out.println("OTP and expiry updated successfully for user: " + username);
+	        }
+	    } catch (SQLException e) {
+	        System.err.println("Error while updating OTP and expiry for user: " + username);
+	        e.printStackTrace();
+	    }
+	}
+
 
 	// Check if the database is empty
 	public boolean isDatabaseEmpty() throws SQLException {

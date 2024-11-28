@@ -9,11 +9,13 @@ import javafx.scene.layout.VBox;
 import javafx.scene.layout.Pane;
 import java.sql.SQLException;
 import java.util.List;
+import java.util.Random;
 
 public class UserListPage {
 
     private static DatabaseHelper databaseHelper = new DatabaseHelper();
     private String selectedUsername = null;
+    Label OTPLabel  = new Label("");
 
     public UserListPage(Pane rootPane, SceneController sceneController) {
 
@@ -63,7 +65,7 @@ public class UserListPage {
 
             // Add action buttons
             Button resetPasswordButton = new Button("Reset Password");
-            resetPasswordButton.setOnAction(e -> handleResetPassword());
+            resetPasswordButton.setOnAction(e -> handleResetPassword(sceneController));
 
             Button editRoleButton = new Button("Edit Role");
             editRoleButton.setOnAction(e -> handleEditRole(sceneController));
@@ -90,6 +92,9 @@ public class UserListPage {
             // Arrange buttons in an HBox
             HBox buttonBox = new HBox(10, resetPasswordButton, editRoleButton, deleteUserButton, backButton);
             mainLayout.getChildren().add(buttonBox);
+            
+            mainLayout.getChildren().add(OTPLabel);
+             
 
         } catch (SQLException e) {
             e.printStackTrace();
@@ -102,11 +107,25 @@ public class UserListPage {
     }
 
     // Action handler methods
-    private void handleResetPassword() {
+    private void handleResetPassword(SceneController sceneController) {
         if (selectedUsername != null) {
             // Logic for resetting the password for the selected user
             System.out.println("Resetting password for user: " + selectedUsername);// TODO
-            // You can invoke a method in DatabaseHelper for this
+            try {
+        		Random random = new Random();
+                int randomNumber = 100000 + random.nextInt(900000);
+
+                databaseHelper.connectToDatabase();
+                
+        		databaseHelper.storeResetPasswordOtp(randomNumber, selectedUsername);
+        		databaseHelper.closeConnection();
+        		System.out.println("OTP:" + randomNumber);
+        		OTPLabel.setText("OTP:" + randomNumber);
+        	} catch(SQLException err) {
+        		err.printStackTrace();
+        	} finally {
+        		databaseHelper.closeConnection();
+        	}
         } else {
             System.out.println("No user selected to reset password.");
         }

@@ -93,6 +93,17 @@ import java.util.List;
 	        		+ "specialAccessGroup TEXT DEFAULT '')";
 	        statement.execute(userTable);
 	    }
+	    
+	    public void clearArticleTable() {
+	        String query = "DELETE FROM cse360articles";
+	        try (PreparedStatement pstmt = connection.prepareStatement(query)) {
+	            pstmt.executeUpdate();
+	            System.out.println("All rows have been cleared from cse360articles table.");
+	        } catch (SQLException e) {
+	            e.printStackTrace();
+	        }
+	    }
+
 	
 	    /*******
 	     * Lists all articles in the database by printing their ID, title, and author.
@@ -222,7 +233,7 @@ import java.util.List;
 	    }
 	    
 	    public List<String[]> listAllArticles() throws SQLException{
-	    	String query = "SELECT * FROM cse360articles WHERE specialAccessGroup = NULL";
+	    	String query = "SELECT * FROM cse360articles WHERE specialAccessGroup = ''";
 	    	List<String[]> articles = new ArrayList<>();
 	    	try(PreparedStatement pstmt = connection.prepareStatement(query)){
 	    		ResultSet rs = pstmt.executeQuery();

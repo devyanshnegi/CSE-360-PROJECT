@@ -1,260 +1,131 @@
 package edu.asu.DatabasePart1;
 
 import javafx.application.Platform;
-// JavaFX imports needed to support the Graphical User Interface
 import javafx.geometry.Pos;
-import javafx.scene.control.Label;
-import javafx.scene.control.TextField;
-import javafx.scene.layout.Pane;
-import javafx.scene.paint.Color;
-import javafx.scene.text.Font;
-import javafx.scene.text.FontPosture;
-import javafx.scene.text.Text;
-import javafx.scene.text.TextFlow;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
+import javafx.scene.control.Label;
+import javafx.scene.layout.Pane;
+import javafx.scene.layout.VBox;
+import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
-import javafx.stage.Stage;
 
 /*******
  * <p> AdminPage Class </p>
  * 
- * <p> Description: The AdminPage class provides the graphical user interface for administrators, 
- *                  allowing them to perform various administrative tasks such as inviting users, 
- *                  listing users, deleting users, modifying user roles, resetting passwords, and 
- *                  logging out. </p>
+ * <p> Description: The AdminPage class provides the graphical user interface for administrators,
+ *                  allowing them to perform various administrative tasks. </p>
  * 
  * <p> Copyright: Arizona State University © 2024 </p>
  * 
- * @version 1.00   2024-10-09 Initial implementation of the AdminPage class for managing 
- *                  administrative functionalities.
+ * @version 1.00   2024-10-09 Initial implementation of the AdminPage class
  */
 
 public class AdminPage {
 
-    /** Label for the admin page title */
     private Label Title2 = new Label("Admin Page");
-
-    /** Label prompting to invite a new user */
     private Label Invite = new Label("Invite a New User");
-
-    /** Button to start the invite process */
-    private Button InviteAction = new Button("Click here to Start Invite");
-
-    /** Label for listing users */
+    private Button InviteAction = new Button("Invite a New User");
     private Label ListUsers = new Label("List Users");
-
-    /** Button to list all users */
-    private Button ShowList = new Button("Click here to List all Users");
-
-    /** Label for the instructor page title */
-    private Label titleLabel = new Label("Instructor Page");
-
-    /** Button to view articles */
+    private Button ShowList = new Button("View User List");
     private Button viewArticlesButton = new Button("View Articles");
-
-    /** Button to publish articles */
     private Button publishArticlesButton = new Button("Publish Articles");
-    
-    /** Button to publish articles */
     private Button BackupButton = new Button("Backup Articles");
-    
-    /** Button to publish articles */
     private Button RestoreBackupButton = new Button("Restore Articles");
-
-    /** Button to publish articles */
     private Button CreateSpecialAccessGroupButton = new Button("Create Special Access Group Articles");
-    
-    /** Button for logging out */
     private Button logoutButton = new Button("Logout");
-
     private Button ManageSAGPButton = new Button("Manage Special Access Group");
-    
     private Button ManageGGPButton = new Button("Manage General Group");
-
-    /** Button for Instructor to Add Student */
     private Button addStudent = new Button("Add Student to System");
-    
-    /** Button for Instructor to remove Student */
     private Button removeStudent = new Button("Remove Student from System");
-    
+
     private static ArticleDBHelper articleDBHelper = new ArticleDBHelper();
-    
     private static DatabaseHelper databaseHelper = new DatabaseHelper();
 
-
-
-    /**********
-     * Constructor for AdminPage
-     * 
-     * <p> Sets up the user interface for the admin page, including all administrative options 
-     *     such as inviting users, listing users, deleting users, modifying roles, resetting 
-     *     passwords, and logging out. </p>
-     * 
-     * @param Root The root Pane where the UI components will be added.
-     */
     public AdminPage(Pane Root, SceneController sceneController) {
-        // Label the scene with the name of the testbed, centered at the top of the pane
-        setupLabelUI(Title2, "Arial", 24, MainApp.WINDOW_WIDTH, Pos.CENTER, 0, 10);
+        // Set title font
         Font fontTitle = Font.font("Arial", FontWeight.BOLD, 25);
         Title2.setFont(fontTitle);
-        
-        Button InviteAction = new Button("Invite a New User");
-        InviteAction.setOnAction(e -> sceneController.switchTo("Invite"));
 
-        // Set up the Invite label and button
-        setupLabelUI(Invite, "Arial", 14, MainApp.WINDOW_WIDTH, Pos.CENTER, 10, 70);
+        // Set fonts for Invite and ListUsers labels
         Font fontInvite = Font.font("Arial", FontWeight.BOLD, 14);
         Invite.setFont(fontInvite);
-        InviteAction.setLayoutX(190);
-        InviteAction.setLayoutY(100);
-        
-        Button ShowList = new Button("View User List");
-        ShowList.setOnAction(e -> sceneController.switchTo("UserList"));
-        
-        // Set up the List Users label and button
-        setupLabelUI(ListUsers, "Arial", 24, MainApp.WINDOW_WIDTH, Pos.CENTER, 10, 140);
+
         Font fontList = Font.font("Arial", FontWeight.BOLD, 14);
         ListUsers.setFont(fontList);
-        ShowList.setLayoutX(190);
-        ShowList.setLayoutY(170);        
 
-     // Set up the View Articles button
-        viewArticlesButton.setLayoutX(200);
-        viewArticlesButton.setLayoutY(200);
+        // Set button actions
+        InviteAction.setOnAction(e -> sceneController.switchTo("Invite"));
+        ShowList.setOnAction(e -> sceneController.switchTo("UserList"));
         viewArticlesButton.setOnAction(e -> sceneController.switchTo("ListArticle"));
-
-        // Set up the Publish Articles button
-        publishArticlesButton.setLayoutX(200);
-        publishArticlesButton.setLayoutY(250);
         publishArticlesButton.setOnAction(e -> sceneController.switchTo("CreateArticle"));
         
-        BackupButton.setLayoutX(200);
-        BackupButton.setLayoutY(300);
         BackupButton.setOnAction(e -> {
-        	ArticleDBHelper helper = new ArticleDBHelper();
-        	try {
-        		helper.connectToDatabase();
-        		helper.createBackup("ArticleBackup.txt");
-        		showAlert("Backup Successfull message: ", "Articles have been backed up to ArticleBackup.txt file");
- 
-        		
-        	}catch(Exception ex) {
-        		showAlert("Backup Failed message: ", "Articles could not be backed up to ArticleBackup.txt file");
-        		ex.printStackTrace();
-        	}finally {
-        		helper.closeConnection();
-        	}
- 
- 
+            ArticleDBHelper helper = new ArticleDBHelper();
+            try {
+                helper.connectToDatabase();
+                helper.createBackup("ArticleBackup.txt");
+                showAlert("Backup Successful:", "Articles have been backed up to ArticleBackup.txt file");
+            } catch(Exception ex) {
+                showAlert("Backup Failed:", "Articles could not be backed up to ArticleBackup.txt file");
+                ex.printStackTrace();
+            } finally {
+                helper.closeConnection();
+            }
         });
 
-        // Set up the Publish Articles button
-        RestoreBackupButton.setLayoutX(200);
-        RestoreBackupButton.setLayoutY(350);
         RestoreBackupButton.setOnAction(e -> {
-        	ArticleDBHelper helper1 = new ArticleDBHelper();
-        	try{
-        		helper1.connectToDatabase();
-        		helper1.restoreBackup("ArticleBackup.txt");
-        		showAlert("Restore Success: ", "Articles have been restored from ArticleBackup.txt");
-        	}catch(Exception ex){
-        		showAlert("Restore Failed: ", "Articles could not be restored from ArticleBackup.txt");
-        		ex.printStackTrace();
-        		
-        	}finally {
-        		helper1.closeConnection();
-        	}
-        	
+            ArticleDBHelper helper1 = new ArticleDBHelper();
+            try {
+                helper1.connectToDatabase();
+                helper1.restoreBackup("ArticleBackup.txt");
+                showAlert("Restore Success:", "Articles have been restored from ArticleBackup.txt");
+            } catch(Exception ex) {
+                showAlert("Restore Failed:", "Articles could not be restored from ArticleBackup.txt");
+                ex.printStackTrace();
+            } finally {
+                helper1.closeConnection();
+            }
         });
-        
-        CreateSpecialAccessGroupButton.setLayoutX(200);
-        CreateSpecialAccessGroupButton.setLayoutY(440);
+
         CreateSpecialAccessGroupButton.setOnAction(e -> sceneController.switchTo("CreateSpecialAccessGroup"));
-
-        // Set up the Logout button
-        logoutButton.setText("Logout");
-        logoutButton.setLayoutX(200); // Set X position
-        logoutButton.setLayoutY(530); // Move the Y position higher, closer to the bottom of the visible window
-        logoutButton.setMinWidth(100); // Set minimum width
-
-        // Set action to close the application when clicked
-        logoutButton.setOnAction(event -> {
-            sceneController.exit();
-        });
-        
-      //Set up the addStudent button
-        addStudent.setLayoutX(200);
-        addStudent.setLayoutY(570);
         addStudent.setOnAction(e -> sceneController.switchTo("ManageStudentRole"));
-      
-        //Set up the removeStudent button
-        removeStudent.setLayoutX(200);
-        removeStudent.setLayoutY(600);
-        removeStudent.setOnAction(e -> sceneController.switchTo("ManageStudentRole"));        
-        
-        ManageSAGPButton.setLayoutX(150);
-        ManageSAGPButton.setLayoutY(640);
+        removeStudent.setOnAction(e -> sceneController.switchTo("ManageStudentRole"));
         ManageSAGPButton.setOnAction(e -> sceneController.switchTo("ManageSpecialAccessGroup"));
-        
-        ManageGGPButton.setLayoutX(150);
-        ManageGGPButton.setLayoutY(680);
         ManageGGPButton.setOnAction(e -> sceneController.switchTo("ManageGeneralGroup"));
-        
 
-        // Add all elements to the root pane
-        Root.getChildren().addAll(Title2, Invite, InviteAction, ListUsers, ShowList, logoutButton, BackupButton, RestoreBackupButton,CreateSpecialAccessGroupButton
-        		, viewArticlesButton, publishArticlesButton, addStudent, removeStudent, ManageSAGPButton, ManageGGPButton);
+        logoutButton.setOnAction(event -> sceneController.exit());
+
+        // Create a VBox to align all elements vertically
+        VBox vbox = new VBox(15); // 15 px spacing
+        vbox.setAlignment(Pos.CENTER);
+
+        // Add all elements to the VBox in the desired order
+        vbox.getChildren().addAll(
+            Title2,
+            //Invite,
+            InviteAction,
+            //ListUsers, 
+            ShowList,
+            viewArticlesButton,
+            publishArticlesButton,
+            BackupButton,
+            RestoreBackupButton,
+            CreateSpecialAccessGroupButton,
+            addStudent,
+            removeStudent,
+            ManageSAGPButton,
+            ManageGGPButton,
+            logoutButton
+        );
+
+        vbox.setLayoutX(150); 
+        vbox.setLayoutY(50);
+
+        // Add the VBox to the root pane
+        Root.getChildren().add(vbox);
     }
 
-
-    /**********
-     * setupLabelUI method
-     * 
-     * <p> Configures a Label component's properties such as font, width, alignment, 
-     *     and position on the screen. </p>
-     * 
-     * @param l The Label to configure.
-     * @param ff The font family for the Label.
-     * @param f The font size for the Label.
-     * @param w The minimum width of the Label.
-     * @param p The alignment of the Label text.
-     * @param x The x-coordinate position of the Label.
-     * @param y The y-coordinate position of the Label.
-     */
-    private void setupLabelUI(Label l, String ff, double f, double w, Pos p, double x, double y) {
-        l.setFont(Font.font(ff, f));
-        l.setMinWidth(w);
-        l.setAlignment(p);
-        l.setLayoutX(x);
-        l.setLayoutY(y);
-    }
-
-    /**********
-     * setupTextUI method
-     * 
-     * <p> Configures a TextField component's properties such as font, width, alignment, 
-     *     editability, and position on the screen. </p>
-     * 
-     * @param t The TextField to configure.
-     * @param ff The font family for the TextField.
-     * @param f The font size for the TextField.
-     * @param w The minimum width of the TextField.
-     * @param p The alignment of the TextField text.
-     * @param x The x-coordinate position of the TextField.
-     * @param y The y-coordinate position of the TextField.
-     * @param e Specifies if the TextField is editable.
-     */
-    private void setupTextUI(TextField t, String ff, double f, double w, Pos p, double x, double y, boolean e) {
-        t.setFont(Font.font(ff, f));
-        t.setMinWidth(w);
-        t.setMaxWidth(w);
-        t.setAlignment(p);
-        t.setLayoutX(x);
-        t.setLayoutY(y);
-        t.setEditable(e);
-    }
-    
     private void showAlert(String title, String message) {
         Alert alert = new Alert(Alert.AlertType.INFORMATION);
         alert.setTitle(title);

@@ -119,7 +119,7 @@ public class MainApp extends Application {
         sceneController.addScene("Start", StartScene);
         
         Pane EditRolePane = new Pane();  // Initialize StartPane
-        new UserListPage(EditRolePane, sceneController); // Pass RegisterScene to StartPage
+        new EditRolePage(EditRolePane, sceneController); // Pass RegisterScene to StartPage
         Scene EditRoleScene = new Scene(EditRolePane, WINDOW_WIDTH, WINDOW_HEIGHT); // StartPage scene
         sceneController.addScene("EditRole", EditRoleScene);
         

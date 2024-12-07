@@ -150,13 +150,15 @@ public class ListArticlePage {
         		if(levelIdentifier.toLowerCase().equals("all")) {
     	        	displayArticles(articleDBHelper.listArticlesByGroups("%"));
 	        		for(String specialGroup: specialViewAccess) {
-	        			displayArticles(articleDBHelper.listArticlesBySpecialAccessGroups(specialGroup));
+	        			if(!specialGroup.equals(""))
+	        				displayArticles(articleDBHelper.listArticlesBySpecialAccessGroups(specialGroup));
 	        		}
         		}
         		else {
         			displayArticles(articleDBHelper.listArticlesByGroupsAndLevel("%",levelIdentifier));
         			for(String specialGroup: specialViewAccess) {
-	        			displayArticles(articleDBHelper.listArticlesBySpecialAccessGroupsAndLevel(specialGroup,levelIdentifier));
+        				if(!specialGroup.equals(""))
+        					displayArticles(articleDBHelper.listArticlesBySpecialAccessGroupsAndLevel(specialGroup,levelIdentifier));
 	        		}
         		}
 	        } else {

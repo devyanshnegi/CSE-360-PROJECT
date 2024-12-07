@@ -156,7 +156,7 @@ import java.util.List;
 	    }
 	    
 	    public List<String[]> listArticlesByGroupsAndLevel(String group, String levelSearch) throws SQLException{
-	    	String query = "SELECT * FROM cse360articles WHERE title LIKE ? AND level = ?";
+	    	String query = "SELECT * FROM cse360articles WHERE group LIKE ? AND level = ?";
 	    	List<String[]> articles = new ArrayList<>();
 	    	try(PreparedStatement pstmt = connection.prepareStatement(query)){
 	    		pstmt.setString(1, "%" + group + "%");
@@ -207,7 +207,7 @@ import java.util.List;
 	    }
 	    
 	    public List<String[]> listArticlesBySpecialAccessGroupsAndLevel(String group, String levelSearch) throws SQLException{
-	    	String query = "SELECT * FROM cse360articles WHERE specialAccessGroup LIKE ? AND level = ?";
+	    	String query = "SELECT * FROM cse360articles WHERE specialAccessGroup LIKE ? AND level LIKE ?";
 	    	List<String[]> articles = new ArrayList<>();
 	    	try(PreparedStatement pstmt = connection.prepareStatement(query)){
 	    		pstmt.setString(1, "%" + group + "%");

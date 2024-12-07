@@ -1,57 +1,59 @@
 package edu.asu.DatabasePart1;
 
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 
 import javafx.geometry.Insets;
-import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.control.CheckBox;
 import javafx.scene.control.Label;
-import javafx.scene.control.RadioButton;
-import javafx.scene.control.ToggleGroup;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.text.Font;
-import javafx.stage.Stage;
 
 public class EditRolePage {
-	
+    
     private static DatabaseHelper databaseHelper = new DatabaseHelper();
 
-	public EditRolePage(Pane root, SceneController sceneController) {
+    public EditRolePage(Pane root, SceneController sceneController) {
         // Title Label
         Label rolesLabel = new Label("Roles");
         rolesLabel.setFont(new Font("Arial", 16));
 
-        // Radio Buttons for Role Selection
-        ToggleGroup roleGroup = new ToggleGroup();
-        RadioButton studentRadio = new RadioButton("Student");
-        studentRadio.setToggleGroup(roleGroup);
-        RadioButton instructorRadio = new RadioButton("Instructor");
-        instructorRadio.setToggleGroup(roleGroup);
+        // CheckBoxes for Role Selection
+        CheckBox studentCheckBox = new CheckBox("Student");
+        CheckBox instructorCheckBox = new CheckBox("Instructor");
 
         // Submit Button
         Button submitButton = new Button("Submit");
         submitButton.setOnAction(e -> {
-        	RadioButton selectedRole = (RadioButton) roleGroup.getSelectedToggle();
-            if (selectedRole != null) {
-                System.out.println("Selected role: " + selectedRole.getText());
-                String selectedUsername = (String) sceneController.getData("Modifying User");
-				// Navigate to Admin Page on submit
-             // Logic for editing the role of the selected user
-                System.out.println("Editing role for user: " + selectedUsername + " to "+ selectedRole.getText().toLowerCase());
-                try {
-            		databaseHelper.connectToDatabase();
-            		databaseHelper.editRole(selectedUsername,selectedRole.getText().toLowerCase());
-            		databaseHelper.closeConnection();
-            	} catch(SQLException err) {
-            		err.printStackTrace();
-            	}
-            	finally {
-            		databaseHelper.closeConnection();
-            	}
-                sceneController.switchTo("Admin");
-            } else {
+            String selectedUsername = (String) sceneController.getData("Modifying User");
+            
+            // Collect selected roles
+            List<String> selectedRoles = new ArrayList<>();
+            if (studentCheckBox.isSelected()) {
+                selectedRoles.add("student");
+            }
+            if (instructorCheckBox.isSelected()) {
+                selectedRoles.add("instructor");
+            }
+
+            if (selectedRoles.isEmpty()) {
                 System.out.println("No role selected.");
+            } else {
+                // If multiple roles are selected, choose the first one
+                String chosenRole = selectedRoles.get(0);
+                System.out.println("Editing role for user: " + selectedUsername + " to " + chosenRole);
+                try {
+                    databaseHelper.connectToDatabase();
+                    databaseHelper.editRole(selectedUsername, chosenRole);
+                } catch (SQLException err) {
+                    err.printStackTrace();
+                } finally {
+                    databaseHelper.closeConnection();
+                }
+                sceneController.switchTo("Admin");
             }
         });
 
@@ -70,12 +72,11 @@ public class EditRolePage {
         gridPane.setVgap(10);
         
         gridPane.add(rolesLabel, 0, 0);
-        gridPane.add(studentRadio, 0, 1);
-        gridPane.add(instructorRadio, 1, 1);
+        gridPane.add(studentCheckBox, 0, 1);
+        gridPane.add(instructorCheckBox, 1, 1);
         gridPane.add(submitButton, 0, 2);
         gridPane.add(backButton, 1, 2);
 
         root.getChildren().add(gridPane);
     }
-	
 }

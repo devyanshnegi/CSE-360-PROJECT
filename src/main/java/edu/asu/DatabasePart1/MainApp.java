@@ -202,6 +202,11 @@ public class MainApp extends Application {
         Scene ResetPasswordScene = new Scene(ResetPasswordPane, WINDOW_WIDTH, WINDOW_HEIGHT); // StartPage scene
         sceneController.addScene("ResetPassword", ResetPasswordScene);
         
+        Pane LoginChoicePane = new Pane();  // Initialize StartPane
+        new LoginChoicePage(LoginChoicePane, sceneController); // Pass RegisterScene to StartPage
+        Scene LoginChoiceScene = new Scene(LoginChoicePane, WINDOW_WIDTH, WINDOW_HEIGHT); // StartPage scene
+        sceneController.addScene("LoginChoice", LoginChoiceScene);
+        
 //        sceneController.switchTo("ResetPassword");
         
         try {

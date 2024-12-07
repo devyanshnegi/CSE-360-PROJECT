@@ -94,20 +94,27 @@ public class LoginPage {
             	}
             	
             	sceneController.setData("username", username);
-            	sceneController.setData("role", role);
-            	if(role.equals("admin")) {
-        			sceneController.switchTo("Admin");
-        		}
-        		else if(role.equals("student")) {            			
-        			sceneController.switchTo("StudentHome");
-        		}
-        		else if(role.equals("instructor")) {
-        			sceneController.switchTo("InstructorHome");
-        		}
             	
-            	if(isAfterRegister) {
-            		sceneController.switchTo("CompleteProfile");
-            	}
+            	if(role.equals("instructor_student")) {
+            		sceneController.switchTo("LoginChoice");
+            		sceneController.setData("after_register", isAfterRegister);
+            	} 
+            	else {	
+            		sceneController.setData("role", role);
+	            	if(role.equals("admin")) {
+	        			sceneController.switchTo("Admin");
+	        		}
+	        		else if(role.equals("student")) {            			
+	        			sceneController.switchTo("StudentHome");
+	        		}
+	        		else if(role.equals("instructor")) {
+	        			sceneController.switchTo("InstructorHome");
+	        		}
+	            	
+	            	if(isAfterRegister) {
+	            		sceneController.switchTo("CompleteProfile");
+	            	}
+	            }
             }
             else {
                 errorMessage("Invalid username or password.");

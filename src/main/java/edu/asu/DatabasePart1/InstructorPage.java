@@ -1,20 +1,15 @@
 package edu.asu.DatabasePart1;
 
-import java.sql.SQLException;
-
 import javafx.application.Platform;
-// JavaFX imports needed to support the Graphical User Interface
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
-import javafx.scene.control.TextField;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
-import javafx.stage.Stage;
 
 /*******
  * <p> InstructorPage Class </p>
@@ -32,160 +27,92 @@ public class InstructorPage {
     /** Label for the instructor page title */
     private Label titleLabel = new Label("Instructor Page");
 
-    /** Button to view articles */
+    /** Buttons */
     private Button viewArticlesButton = new Button("View Articles");
-
-    /** Button to publish articles */
     private Button publishArticlesButton = new Button("Publish Articles");
- 
     private Button ManageSAGPButton = new Button("Manage Special Access Group");
-    
     private Button ManageGGPButton = new Button("Manage General Group");
+    private Button BackUpArticlesButton = new Button("BackUp Articles");
+    private Button restoreArticlesButton = new Button("Restore Articles");
+    private Button addStudent = new Button("Add Student to System");
+    private Button removeStudent = new Button("Remove Student from System");
+    private Button viewMessage = new Button("View Messages from Students");
+    private Button logOutButton = new Button("Logout");
 
     private static ArticleDBHelper articleDBHelper = new ArticleDBHelper();
 
-    private Button BackUpArticlesButton = new Button("BackUp Articles");
-    
-    /** Button to publish articles */
-    private Button restoreArticlesButton = new Button("Restore Articles");
-    
-    /** Button for Instructor to Add Student */
-    private Button addStudent = new Button("Add Student to System");
-    
-    /** Button for Instructor to remove Student */
-    private Button removeStudent = new Button("Remove Student from System");
-
-    Button logOutButton = new Button("Logout");
-    
-    /** Button for Instructor to remove Student */
-    private Button viewMessage = new Button("View Messages from Students");
-    
-    
-    /**********
-     * Constructor for InstructorPage
-     * 
-     * <p> Sets up the user interface for the instructor page, including options 
-     *     for viewing and publishing articles. </p>
-     * 
-     * @param root The root Pane where the UI components will be added.
-     */
     public InstructorPage(Pane root, SceneController sceneController) {
-        // Set up the page title label
-        setupLabelUI(titleLabel, "Arial", 24, 300, Pos.CENTER, 100, 20);
+        // Setup title label font
         Font fontTitle = Font.font("Arial", FontWeight.BOLD, 24);
         titleLabel.setFont(fontTitle);
 
-        // Set up the View Articles button
-        viewArticlesButton.setLayoutX(200);
-        viewArticlesButton.setLayoutY(80);
+        // Set button actions
         viewArticlesButton.setOnAction(e -> sceneController.switchTo("ListArticle"));
-
-        // Set up the Publish Articles button
-        publishArticlesButton.setLayoutX(200);
-        publishArticlesButton.setLayoutY(120);
         publishArticlesButton.setOnAction(e -> sceneController.switchTo("CreateArticle"));
-        
-        //Set up the Backup Articles button
-        BackUpArticlesButton.setLayoutX(200);
-        BackUpArticlesButton.setLayoutY(160);
-        BackUpArticlesButton.setOnAction(e -> sceneController.switchTo("BackUpArticle"));
         BackUpArticlesButton.setOnAction(e -> {
-        	ArticleDBHelper helper = new ArticleDBHelper();
-        	try {
-        		helper.connectToDatabase();
-        		helper.createBackup("ArticleBackup.txt");
-        		showAlert("Backup Successfull message: ", "Articles have been backed up to ArticleBackup.txt file");
- 
-        		
-        	}catch(Exception ex) {
-        		showAlert("Backup Failed message: ", "Articles could not be backed up to ArticleBackup.txt file");
-        		ex.printStackTrace();
-        	}finally {
-        		helper.closeConnection();
-        	}
-        	
+            ArticleDBHelper helper = new ArticleDBHelper();
+            try {
+                helper.connectToDatabase();
+                helper.createBackup("ArticleBackup.txt");
+                showAlert("Backup Successful:", "Articles have been backed up to ArticleBackup.txt file");
+            } catch (Exception ex) {
+                showAlert("Backup Failed:", "Articles could not be backed up to ArticleBackup.txt file");
+                ex.printStackTrace();
+            } finally {
+                helper.closeConnection();
+            }
         });
-        
-        //Set up the Restore Articles button
-        restoreArticlesButton.setLayoutX(200);
-        restoreArticlesButton.setLayoutY(200);
-        restoreArticlesButton.setOnAction(e -> sceneController.switchTo("RestoreArticle"));
+
         restoreArticlesButton.setOnAction(e -> {
-        	ArticleDBHelper helper1 = new ArticleDBHelper();
-        	try{
-        		helper1.connectToDatabase();
-        		helper1.restoreBackup("ArticleBackup.txt");
-        		showAlert("Restore Success: ", "Articles have been restored from ArticleBackup.txt");
-        	}catch(Exception ex){
-        		showAlert("Restore Failed: ", "Articles could not be restored from ArticleBackup.txt");
-        		ex.printStackTrace();
-        		
-        	}finally {
-        		helper1.closeConnection();
-        	}
-        	
+            ArticleDBHelper helper1 = new ArticleDBHelper();
+            try {
+                helper1.connectToDatabase();
+                helper1.restoreBackup("ArticleBackup.txt");
+                showAlert("Restore Success:", "Articles have been restored from ArticleBackup.txt");
+            } catch (Exception ex) {
+                showAlert("Restore Failed:", "Articles could not be restored from ArticleBackup.txt");
+                ex.printStackTrace();
+            } finally {
+                helper1.closeConnection();
+            }
         });
-        
-        
-      //Set up the addStudent button
-        addStudent.setLayoutX(200);
-        addStudent.setLayoutY(240);
+
         addStudent.setOnAction(e -> sceneController.switchTo("ManageStudentRole"));
-      
-        //Set up the removeStudent button
-        removeStudent.setLayoutX(200);
-        removeStudent.setLayoutY(280);
-        removeStudent.setOnAction(e -> sceneController.switchTo("ManageStudentRole")); 
-        
-        
-        //Setup the viewMessages Button
-        viewMessage.setLayoutX(200);
-        viewMessage.setLayoutY(320);
+        removeStudent.setOnAction(e -> sceneController.switchTo("ManageStudentRole"));
         viewMessage.setOnAction(e -> sceneController.switchTo("MessagesView"));
-        
-
-        ManageSAGPButton.setLayoutX(150);
-        ManageSAGPButton.setLayoutY(360);
         ManageSAGPButton.setOnAction(e -> sceneController.switchTo("ManageSpecialAccessGroup"));
-        
-        ManageGGPButton.setLayoutX(150);
-        ManageGGPButton.setLayoutY(400);
         ManageGGPButton.setOnAction(e -> sceneController.switchTo("ManageGeneralGroup"));
-        
 
-        logOutButton.setLayoutX(150);
-        logOutButton.setLayoutY(450);
         logOutButton.setOnAction(event -> {
             System.out.println("Logout button clicked. Closing the application...");
             Platform.exit(); // Gracefully close the application
         });
-      
-        // Add all components to the root pane
-        root.getChildren().addAll(titleLabel, viewArticlesButton, publishArticlesButton, BackUpArticlesButton,restoreArticlesButton,
-        		addStudent, removeStudent, ManageSAGPButton, ManageGGPButton, logOutButton, viewMessage);
 
-    }
+        // Create a VBox to hold all components in a vertical layout
+        VBox vbox = new VBox(15); // 15 px spacing between elements
+        vbox.setAlignment(Pos.CENTER);
 
-    /**********
-     * setupLabelUI method
-     * 
-     * <p> Configures a Label component's properties such as font, width, alignment, 
-     *     and position on the screen. </p>
-     * 
-     * @param l The Label to configure.
-     * @param ff The font family for the Label.
-     * @param f The font size for the Label.
-     * @param w The minimum width of the Label.
-     * @param p The alignment of the Label text.
-     * @param x The x-coordinate position of the Label.
-     * @param y The y-coordinate position of the Label.
-     */
-    private void setupLabelUI(Label l, String ff, double f, double w, Pos p, double x, double y) {
-        l.setFont(Font.font(ff, f));
-        l.setMinWidth(w);
-        l.setAlignment(p);
-        l.setLayoutX(x);
-        l.setLayoutY(y);
+        // Add all components to the VBox
+        vbox.getChildren().addAll(
+            titleLabel,
+            viewArticlesButton,
+            publishArticlesButton,
+//            BackUpArticlesButton,
+//            restoreArticlesButton,
+            addStudent,
+            removeStudent,
+            viewMessage,
+            ManageSAGPButton,
+            ManageGGPButton,
+            logOutButton
+        );
+
+        // Adjust VBox size/position as needed
+        vbox.setLayoutX(150); 
+        vbox.setLayoutY(50);
+
+        // Add the VBox to the root pane
+        root.getChildren().add(vbox);
     }
 
     /**********

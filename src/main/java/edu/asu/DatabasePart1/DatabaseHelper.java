@@ -22,10 +22,19 @@ class DatabaseHelper {
 	static final String PASS = ""; 
 
 	private Connection connection = null;
-	private Statement statement = null; 
+	protected Statement statement = null; 
 	//	PreparedStatement pstmt
 
-	
+	public void clearUserTable() {
+	    String query = "DELETE FROM cse360users";
+	    try (PreparedStatement pstmt = connection.prepareStatement(query)) {
+	        pstmt.executeUpdate();
+	        System.out.println("All rows have been cleared from cse360users table.");
+	    } catch (SQLException e) {
+	        e.printStackTrace();
+	    }
+	}
+
 	
 	public void connectToDatabase() throws SQLException {
 		try {
@@ -639,11 +648,12 @@ class DatabaseHelper {
 			pstmt.setString(1, role);
 			pstmt.setString(2, username);
 			pstmt.executeUpdate();
+			int rowsUpdated = pstmt.executeUpdate(); // Get the number of rows updated
+	        return rowsUpdated > 0; // Return true if at least one row was updated
 		} catch (SQLException e) {
 	        e.printStackTrace();
 	        return false;
 	    }
-		return true;
 	}
 	
 	

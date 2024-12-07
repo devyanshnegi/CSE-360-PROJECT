@@ -35,13 +35,13 @@ public class EditRolePage {
         	RadioButton selectedRole = (RadioButton) roleGroup.getSelectedToggle();
             if (selectedRole != null) {
                 System.out.println("Selected role: " + selectedRole.getText());
-                String selectedUsername = (String) sceneController.getData("Modifying Username");
+                String selectedUsername = (String) sceneController.getData("Modifying User");
 				// Navigate to Admin Page on submit
              // Logic for editing the role of the selected user
-                System.out.println("Editing role for user: " + selectedUsername);
+                System.out.println("Editing role for user: " + selectedUsername + " to "+ selectedRole.getText().toLowerCase());
                 try {
             		databaseHelper.connectToDatabase();
-            		databaseHelper.editRole(selectedRole.getText().toLowerCase(), selectedUsername);
+            		databaseHelper.editRole(selectedUsername,selectedRole.getText().toLowerCase());
             		databaseHelper.closeConnection();
             	} catch(SQLException err) {
             		err.printStackTrace();

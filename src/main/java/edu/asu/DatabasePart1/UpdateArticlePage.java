@@ -85,7 +85,7 @@ public class UpdateArticlePage {
         Label descriptionLabel = new Label("Abstract:");
         descriptionArea = new TextArea();
         descriptionArea.setWrapText(true);
-        descriptionArea.setPrefHeight(60);
+        descriptionArea.setPrefHeight(30);
         grid.add(descriptionLabel, 0, 5);
         grid.add(descriptionArea, 1, 5);
 
@@ -99,7 +99,7 @@ public class UpdateArticlePage {
         Label bodyLabel = new Label("Article Body:");
         bodyArea = new TextArea();
         bodyArea.setWrapText(true);
-        bodyArea.setPrefHeight(200);
+        bodyArea.setPrefHeight(100);
         grid.add(bodyLabel, 0, 7);
         grid.add(bodyArea, 1, 7);
 
@@ -107,7 +107,7 @@ public class UpdateArticlePage {
         Label referencesLabel = new Label("References:");
         referencesArea = new TextArea();
         referencesArea.setWrapText(true);
-        referencesArea.setPrefHeight(60);
+        referencesArea.setPrefHeight(20);
         grid.add(referencesLabel, 0, 8);
         grid.add(referencesArea, 1, 8);
         

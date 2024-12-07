@@ -197,7 +197,12 @@ public class MainApp extends Application {
         Scene ManageSpecialAccessGroupScene = new Scene(ManageSpecialAccessGroupPane, WINDOW_WIDTH, WINDOW_HEIGHT); // StartPage scene
         sceneController.addScene("ManageSpecialAccessGroup", ManageSpecialAccessGroupScene);
         
-//        sceneController.switchTo("ViewLabel");
+        Pane ResetPasswordPane = new Pane();  // Initialize StartPane
+        new ResetPasswordPage(ResetPasswordPane, sceneController); // Pass RegisterScene to StartPage
+        Scene ResetPasswordScene = new Scene(ResetPasswordPane, WINDOW_WIDTH, WINDOW_HEIGHT); // StartPage scene
+        sceneController.addScene("ResetPassword", ResetPasswordScene);
+        
+//        sceneController.switchTo("ResetPassword");
         
         try {
 	        databaseHelper.connectToDatabase();
